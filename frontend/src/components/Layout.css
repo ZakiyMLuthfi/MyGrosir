@@ -1,0 +1,55 @@
+.d-flex {
+  display: flex;
+}
+
+.sidebar-open {
+  width: 250px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.sidebar-closed {
+  width: 50px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.drawer-toggle {
+  position: absolute;
+  top: 20px;
+  right: -10px;
+  background-color: #343a40;
+  color: white;
+
+  padding: 3px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 1px;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-open ~ .main-content {
+  margin-left: 250px;
+}
+
+.sidebar-closed ~ .main-content {
+  margin-left: 50px;
+}
+
+/* Tambahkan di Layout.css */
+.list-group-item {
+  background-color: #495057; /* Warna gelap untuk item */
+  color: white; /* Teks berwarna putih */
+}
+
+.list-group-item:hover {
+  background-color: #6c757d; /* Warna saat hover */
+}
