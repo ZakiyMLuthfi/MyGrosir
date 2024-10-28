@@ -8,6 +8,66 @@ const PaginationComponent = ({
   onItemsPerPageChange,
   itemsPerPage,
 }) => {
+  const pageLimit = 2; // Jumlah halaman tetap di awal dan akhir
+
+  const paginationItems = [];
+
+  // Halaman awal
+  for (let i = 1; i <= pageLimit && i <= totalPages; i++) {
+    paginationItems.push(
+      <Pagination.Item
+        key={i}
+        active={i === currentPage}
+        onClick={() => onPageChange(i)}
+      >
+        {i}
+      </Pagination.Item>
+    );
+  }
+
+  // Elipsis di awal (jika currentPage lebih jauh dari batas awal yang ditentukan)
+  if (currentPage > pageLimit + 2) {
+    paginationItems.push(<Pagination.Ellipsis key="start-ellipsis" disabled />);
+  }
+
+  // Halaman sekitar currentPage, hindari batas dengan halaman awal dan akhir
+  for (
+    let i = Math.max(pageLimit + 1, currentPage - 1);
+    i <= Math.min(currentPage + 1, totalPages - pageLimit);
+    i++
+  ) {
+    paginationItems.push(
+      <Pagination.Item
+        key={i}
+        active={i === currentPage}
+        onClick={() => onPageChange(i)}
+      >
+        {i}
+      </Pagination.Item>
+    );
+  }
+
+  // Elipsis di akhir (jika currentPage lebih jauh dari batas akhir yang ditentukan)
+  if (currentPage < totalPages - pageLimit - 1) {
+    paginationItems.push(<Pagination.Ellipsis key="end-ellipsis" disabled />);
+  }
+
+  // Halaman akhir
+  for (let i = totalPages - pageLimit + 1; i <= totalPages; i++) {
+    if (i > pageLimit) {
+      // Pastikan tidak ada duplikasi dengan halaman sebelumnya
+      paginationItems.push(
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
+          onClick={() => onPageChange(i)}
+        >
+          {i}
+        </Pagination.Item>
+      );
+    }
+  }
+
   return (
     <div className="d-flex justify-content-between align-items-center mt-3">
       <div>
@@ -25,15 +85,23 @@ const PaginationComponent = ({
       </div>
 
       <Pagination>
-        {[...Array(totalPages)].map((_, index) => (
-          <Pagination.Item
-            key={index + 1}
-            active={index + 1 === currentPage}
-            onClick={() => onPageChange(index + 1)}
-          >
-            {index + 1}
-          </Pagination.Item>
-        ))}
+        <Pagination.First
+          onClick={() => onPageChange(1)}
+          disabled={currentPage === 1}
+        />
+        <Pagination.Prev
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        />
+        {paginationItems}
+        <Pagination.Next
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        />
+        <Pagination.Last
+          onClick={() => onPageChange(totalPages)}
+          disabled={currentPage === totalPages}
+        />
       </Pagination>
     </div>
   );

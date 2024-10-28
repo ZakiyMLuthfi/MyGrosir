@@ -94,10 +94,9 @@ const ProductDetailModal = ({
             <Form.Control
               name="weight"
               type="number"
-              disabled={!isEditing}
+              disabled
               value={displayWeight(formData.weight)}
               onChange={handleInputChange}
-              readOnly={!isEditing}
             />
           </Form.Group>
           <Form.Group>

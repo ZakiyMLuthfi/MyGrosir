@@ -1,8 +1,12 @@
 // ProductTable.jsx
 import React from "react";
-import { Button } from "react-bootstrap";
 import moment from "moment-timezone";
-import { ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
+import {
+  ArrowDropUp,
+  ArrowDropDown,
+  Article,
+  Delete,
+} from "@mui/icons-material";
 
 const ProductTable = ({
   products,
@@ -85,15 +89,24 @@ const ProductTable = ({
               <td>{formatDate(product.updatedAt)}</td>
               <td>{product.updated_by}</td>
               <td>
-                <Button
+                {/* Icon for Detail */}
+                <span
                   onClick={() => onDetailClick(product)}
-                  variant="primary"
+                  style={{
+                    cursor: "pointer",
+                    color: "blue",
+                    marginRight: "4px",
+                  }}
                 >
-                  Detail
-                </Button>
-                <Button onClick={() => onDeleteClick(product)} variant="danger">
-                  Delete
-                </Button>
+                  <Article />
+                </span>
+                {/* Icon for Delete */}
+                <span
+                  onClick={() => onDeleteClick(product)}
+                  style={{ cursor: "pointer", color: "red" }}
+                >
+                  <Delete />
+                </span>
               </td>
             </tr>
           ))
