@@ -1,10 +1,23 @@
-const { StockIn } = require("../../models");
+const { StockIn, Supplier, Product } = require("../../models");
 
 const stockInDetail = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const stockIn = await StockIn.findByPk(req.params.id);
+    const stockIn = await StockIn.findByPk(id, {
+      include: [
+        {
+          model: Supplier,
+          as: "supplier",
+          attributes: ["supplierId", "supplier_code", "supplier_name"],
+        },
+        {
+          model: Product,
+          as: "product",
+          attributes: ["productId", "product_code", "product_name"],
+        },
+      ],
+    });
 
     if (!stockIn) {
       return res.status(400).json({ error: "Stock-in not found" });

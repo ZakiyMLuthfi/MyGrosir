@@ -16,7 +16,7 @@ import PaginationComponent from "../PaginationComponent";
 
 const SupplierPage = () => {
   const dispatch = useDispatch();
-  const suppliers = useSelector((state) => state.inventory.suppliers);
+  const suppliers = useSelector((state) => state.inventory.suppliers || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);

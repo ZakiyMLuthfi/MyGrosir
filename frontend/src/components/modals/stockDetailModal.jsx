@@ -6,12 +6,15 @@ const StockDetailModal = ({
   show,
   onClose,
   stockData,
-  type,
+  type = "",
   isEditing,
   onUpdate,
   onToggleEdit,
 }) => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    // productName: "",
+    // supplierName: ""
+  });
 
   useEffect(() => {
     if (stockData) {
@@ -30,6 +33,10 @@ const StockDetailModal = ({
     return moment(dateString).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss");
   };
 
+  const safeReplace = (value, search, replace) => {
+    return typeof value === "string" ? value.replace(search, replace) : value;
+  };
+
   const handleSaveChanges = () => {
     onUpdate(formData);
   };
@@ -39,8 +46,8 @@ const StockDetailModal = ({
       <Modal.Header closeButton>
         <Modal.Title>
           {isEditing
-            ? `Update ${type}`
-            : `${type.replace("-", " ").toUpperCase()}`}
+            ? `Update ${safeReplace(type, "-", " ")}`
+            : `${safeReplace(type, "-", " ").toUpperCase()}`}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -58,8 +65,8 @@ const StockDetailModal = ({
           <Form.Group>
             <Form.Label>Supplier Code</Form.Label>
             <Form.Control
-              name="supplier_code.supplierId"
-              value={formData.supplier_code.supplierId || ""}
+              name="supplierCode"
+              value={formData.supplier?.supplier_code || ""}
               disabled
             />
           </Form.Group>
@@ -67,17 +74,18 @@ const StockDetailModal = ({
           <Form.Group>
             <Form.Label>Supplier Name</Form.Label>
             <Form.Control
-              name="supplier_name.supplierId"
-              value={formData.supplier_name.supplierId || ""}
-              disabled
+              name="supplierName"
+              value={formData.supplier?.supplier_name || ""}
+              disabled={!isEditing}
+              onChange={isEditing ? handleInputChange : undefined}
             />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Product Code</Form.Label>
             <Form.Control
-              name="product_code.productId"
-              value={formData.product_code.productId || ""}
+              name="productCode"
+              value={formData.product?.product_code || ""}
               disabled
             />
           </Form.Group>
@@ -85,9 +93,10 @@ const StockDetailModal = ({
           <Form.Group>
             <Form.Label>Product Name</Form.Label>
             <Form.Control
-              name="product_name.productId"
-              value={formData.productId.product_name || ""}
-              disabled
+              name="productName"
+              value={formData.product?.product_name || ""}
+              disabled={!isEditing}
+              onChange={isEditing ? handleInputChange : undefined}
             />
           </Form.Group>
 

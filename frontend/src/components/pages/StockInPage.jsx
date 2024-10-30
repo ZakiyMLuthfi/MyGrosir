@@ -1,43 +1,39 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchProducts,
-  fetchProductDetail,
-  updateProduct,
-  addProductService,
-  deleteProductService,
-  restoreProductService,
-} from "../../services/productService";
+  fetchStockIns,
+  addStockInService,
+  fetchStockInDetail,
+} from "../../services/stockService";
 import debounce from "lodash.debounce";
-import ProductDetailModal from "../modals/productDetailModal";
-import ProductTable from "../tables/ProductTable";
+import StockDetailModal from "../modals/stockDetailModal";
+import StockInTable from "../tables/StockInTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
 
-const ProductPage = () => {
+const StockInPage = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.inventory.products || []);
+  const stockIns = useSelector((state) => state.inventory.stockIns || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedStockIn, setSelectedStockIn] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleSearch = useCallback(
     debounce(async (keyword) => {
-      await fetchProducts(currentPage, itemsPerPage, dispatch, keyword);
+      await fetchStockIns(currentPage, itemsPerPage, dispatch, keyword);
     }, 500),
     [currentPage, itemsPerPage, dispatch]
   );
 
-  const sortedProducts = React.useMemo(() => {
-    let sortableProducts = [...products];
+  const sortedStockIns = React.useMemo(() => {
+    let sortableStockIns = [...stockIns];
     if (sortConfig !== null) {
-      sortableProducts.sort((a, b) => {
+      sortableStockIns.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
           return sortConfig.direction === "ascending" ? -1 : 1;
         }
@@ -47,8 +43,8 @@ const ProductPage = () => {
         return 0;
       });
     }
-    return sortableProducts;
-  }, [products, sortConfig]);
+    return sortableStockIns;
+  }, [stockIns, sortConfig]);
 
   const handleSort = (key) => {
     let direction = "ascending";
@@ -62,11 +58,11 @@ const ProductPage = () => {
     setSortConfig({ key, direction });
   };
 
-  // Memanggil all product
-  const fetchAndSetProducts = useCallback(async () => {
+  // Memanggil all stock-in
+  const fetchAndSetStockIns = useCallback(async () => {
     setLoading(true);
     try {
-      const totalPagesFromApi = await fetchProducts(
+      const totalPagesFromApi = await fetchStockIns(
         currentPage,
         itemsPerPage,
         dispatch,
@@ -81,8 +77,8 @@ const ProductPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    const loadProducts = async () => {
-      const totalPagesCount = await fetchProducts(
+    const loadStockIns = async () => {
+      const totalPagesCount = await fetchStockIns(
         currentPage,
         itemsPerPage,
         dispatch
@@ -91,38 +87,16 @@ const ProductPage = () => {
       setLoading(false);
     };
 
-    loadProducts();
+    loadStockIns();
   }, [currentPage, itemsPerPage, dispatch]);
 
   useEffect(() => {
-    fetchAndSetProducts();
-  }, [fetchAndSetProducts]);
+    fetchAndSetStockIns();
+  }, [fetchAndSetStockIns]);
 
-  const handleDeleteClick = async (product) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${product.product_name}?`
-    );
-    if (confirmDelete) {
-      try {
-        await deleteProductService(product.id, dispatch);
-      } catch (err) {
-        console.error("Failed to delete product:", err);
-      }
-    }
-  };
-
-  const handleToggleDelete = async (product) => {
-    if (product.isDeleted) {
-      await restoreProductService(product.id, dispatch);
-    } else {
-      await deleteProductService(product.id, dispatch);
-    }
-    fetchAndSetProducts();
-  };
-
-  const handleDetailClick = async (product) => {
-    const productDetail = await fetchProductDetail(product.id);
-    setSelectedProduct(productDetail);
+  const handleDetailClick = async (stockIn) => {
+    const stockInDetail = await fetchStockInDetail(stockIn.id);
+    setSelectedStockIn(stockInDetail);
     setShowModal(true);
   };
 
@@ -135,33 +109,19 @@ const ProductPage = () => {
     setCurrentPage(1);
   };
 
-  const handleAddProduct = async (formData) => {
+  const handleAddStockIn = async (formData) => {
     try {
-      await addProductService(formData, dispatch);
+      await addStockInService(formData, dispatch);
       setShowModal(false);
-      await fetchAndSetProducts();
+      await fetchAndSetStockIns();
     } catch (err) {
-      console.error("Error adding product", err);
+      console.error("Error adding stock-in", err);
     }
   };
 
-  const handleUpdateClick = () => {
-    setIsEditing(true);
-  };
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedProduct(null);
-    setIsEditing(false);
-  };
-
-  const handleSaveChanges = async (updatedProductData) => {
-    try {
-      await updateProduct(selectedProduct.id, updatedProductData);
-      await fetchAndSetProducts();
-      handleCloseModal(); // Menutup modal dan reset state
-    } catch (error) {
-      console.error("Error updating product", error);
-    }
+    setSelectedStockIn(null);
   };
 
   return (
@@ -170,20 +130,18 @@ const ProductPage = () => {
         <p>Loading...</p>
       ) : (
         <div className="container mt-4">
-          <h1 className="mb-4">Product List</h1>
+          <h1 className="mb-4">Stock-in List</h1>
           <TableAction
-            type="product"
-            onAddProduct={handleAddProduct}
+            type="stockIn"
+            onAddStockIn={handleAddStockIn}
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
-          <ProductTable
-            products={sortedProducts}
+          <StockInTable
+            stockIns={sortedStockIns}
             onDetailClick={handleDetailClick}
-            onDeleteClick={handleDeleteClick}
             onSort={handleSort}
-            onToggleClick={handleToggleDelete}
             sortConfig={sortConfig}
           />
           <PaginationComponent
@@ -194,13 +152,10 @@ const ProductPage = () => {
             itemsPerPage={itemsPerPage}
           />
 
-          <ProductDetailModal
+          <StockDetailModal
             show={showModal}
             onClose={handleCloseModal}
-            productData={selectedProduct}
-            isEditing={isEditing}
-            onUpdate={handleSaveChanges}
-            onToggleEdit={handleUpdateClick}
+            stockData={selectedStockIn}
           />
         </div>
       )}
@@ -208,4 +163,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default StockInPage;
