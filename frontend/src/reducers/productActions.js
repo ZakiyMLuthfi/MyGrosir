@@ -1,4 +1,4 @@
-// src/reducers/actions/productActions.js
+// src/reducers/productActions.js
 export const setProducts = (products) => ({
   type: "SET_PRODUCTS",
   payload: products,

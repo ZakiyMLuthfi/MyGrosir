@@ -1,14 +1,14 @@
-// src/services/productService.js
+// src/services/supplierService.js
 import axios from "axios";
 import {
-  addProduct,
-  setProducts,
-  removeProduct,
-} from "../reducers/productActions";
+  addSupplier,
+  setSuppliers,
+  removeSupplier,
+} from "../reducers/supplierActions";
 
-const API_URL = "http://localhost:5000/api/products";
+const API_URL = "http://localhost:5000/api/suppliers";
 
-export const fetchProducts = async (
+export const fetchSuppliers = async (
   currentPage,
   itemsPerPage,
   dispatch,
@@ -23,7 +23,7 @@ export const fetchProducts = async (
         search: searchTerm,
       },
     });
-    dispatch(setProducts(response.data.products));
+    dispatch(setSuppliers(response.data.suppliers));
     return response.data.totalPages;
   } catch (err) {
     console.error("Error fetching products", err);
@@ -31,7 +31,7 @@ export const fetchProducts = async (
   }
 };
 
-export const addProductService = async (formData, dispatch) => {
+export const addSupplierService = async (formData, dispatch) => {
   try {
     const formDataWithUserId = {
       ...formData,
@@ -41,56 +41,56 @@ export const addProductService = async (formData, dispatch) => {
 
     const response = await axios.post(`${API_URL}`, formDataWithUserId);
 
-    if (response.data.product) {
-      dispatch(addProduct(response.data.product));
-      console.log("Product added succesfully:", response.data.product);
+    if (response.data.supplier) {
+      dispatch(addSupplier(response.data.supplier));
+      console.log("Supplier added successfully:", response.data.supplier);
     } else {
-      console.error("Product not found in respons");
+      console.error("Supplier not found in respons");
     }
   } catch (error) {
-    console.error("Error adding product", error);
+    console.error("Error adding supplier", error);
     throw error;
   }
 };
 
-export const deleteProductService = async (id, dispatch) => {
+export const deleteSupplierService = async (id, dispatch) => {
   try {
     const response = await axios.delete(`${API_URL}/${id}`);
-    console.log("Product deleted: ", response.data);
-    dispatch(removeProduct(id));
+    console.log("Supplier deleted: ", response.data);
+    dispatch(removeSupplier(id));
     return response.data;
   } catch (err) {
-    console.error("Error deleting product:", err);
+    console.error("Error deleting suplier:", err);
     throw err;
   }
 };
 
-export const restoreProductService = async (id) => {
+export const restoreSupplierService = async (id) => {
   try {
     const response = await axios.put(`${API_URL}/${id}/restore`);
-    console.log("Product restored: ", response.data);
+    console.log("Supplier restored: ", response.data);
     return response.data;
   } catch (err) {
-    console.error("Error restoring product: ", err);
+    console.error("Error restoring supplier: ", err);
     throw err;
   }
 };
 
-export const fetchProductDetail = async (id) => {
+export const fetchSupplierDetail = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching product detail", error);
+    console.error("Error fetching supplier detail", error);
     throw error;
   }
 };
 
-export const updateProduct = async (id, updatedData) => {
+export const updateSupplier = async (id, updatedData) => {
   try {
     await axios.put(`${API_URL}/${id}`, updatedData);
   } catch (error) {
-    console.error("Error updating product", error);
+    console.error("Error updating supplier", error);
     throw error;
   }
 };

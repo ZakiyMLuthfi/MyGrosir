@@ -71,7 +71,9 @@ const PaginationComponent = ({
   return (
     <div className="d-flex justify-content-between align-items-center mt-3">
       <div>
-        <label htmlFor="itemsPerPage">Items per page: </label>
+        <label htmlFor="itemsPerPage" style={{ marginRight: "5px" }}>
+          Items per page{" "}
+        </label>
         <select
           id="itemsPerPage"
           onChange={onItemsPerPageChange}

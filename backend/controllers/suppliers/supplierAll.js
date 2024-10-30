@@ -8,7 +8,6 @@ const supplierAll = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const { count, rows: suppliers } = await Supplier.findAndCountAll({
-      where: { isDeleted: false },
       limit: limit,
       offset: offset,
     });

@@ -10,7 +10,6 @@ const productAll = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const whereCondition = {
-      isDeleted: false,
       ...(search && { product_name: { [Op.iLike]: `%${search}%` } }),
     };
 

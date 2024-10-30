@@ -55,7 +55,6 @@ const ProductDetailModal = ({
               name="product_code"
               value={formData.product_code || ""}
               disabled
-              onChange={handleInputChange}
             />
           </Form.Group>
           <Form.Group>
@@ -64,7 +63,6 @@ const ProductDetailModal = ({
               name="product_name"
               value={formData.product_name || ""}
               disabled
-              onChange={handleInputChange}
             />
           </Form.Group>
           <Form.Group>
@@ -79,25 +77,33 @@ const ProductDetailModal = ({
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Weight per package</Form.Label>
-            <Form.Control
-              name="weight_per_pkg"
-              type="number"
-              disabled={!isEditing}
-              value={displayWeight(formData.weight_per_pkg)}
-              onChange={handleInputChange}
-              readOnly={!isEditing}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Weight</Form.Label>
-            <Form.Control
-              name="weight"
-              type="number"
-              disabled
-              value={displayWeight(formData.weight)}
-              onChange={handleInputChange}
-            />
+            <Form.Label>Weight / Weight per pkg / Weight type</Form.Label>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Form.Control
+                name="weight"
+                type="number"
+                disabled
+                value={displayWeight(formData.weight)}
+                onChange={handleInputChange}
+                placeholder="Weight"
+              />
+              <Form.Control
+                name="weight_per_pkg"
+                type="number"
+                disabled={!isEditing}
+                value={displayWeight(formData.weight_per_pkg)}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+                placeholder="Weight per pkg"
+              />
+              <Form.Control
+                name="weight_type"
+                disabled
+                value={formData.weight_type}
+                onChange={handleInputChange}
+                placeholder="Weight type"
+              />
+            </div>
           </Form.Group>
           <Form.Group>
             <Form.Label>Description</Form.Label>
@@ -117,7 +123,6 @@ const ProductDetailModal = ({
               name="created_by"
               value={formData.created_by || ""}
               disabled
-              onChange={handleInputChange}
             />
           </Form.Group>
           <Form.Group>
@@ -126,7 +131,6 @@ const ProductDetailModal = ({
               name="createdAt"
               value={formatDate(formData.createdAt || "")}
               disabled
-              onChange={handleInputChange}
             />
           </Form.Group>
         </Form>

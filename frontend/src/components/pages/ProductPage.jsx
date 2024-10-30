@@ -6,16 +6,17 @@ import {
   updateProduct,
   addProductService,
   deleteProductService,
+  restoreProductService,
 } from "../../services/productService";
 import debounce from "lodash.debounce";
 import ProductDetailModal from "../modals/productDetailModal";
-import ProductTable from "../products/ProductTable";
+import ProductTable from "../tables/ProductTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
 
 const ProductPage = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.products);
+  const products = useSelector((state) => state.inventory.products);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -110,6 +111,15 @@ const ProductPage = () => {
     }
   };
 
+  const handleToggleDelete = async (product) => {
+    if (product.isDeleted) {
+      await restoreProductService(product.id, dispatch);
+    } else {
+      await deleteProductService(product.id, dispatch);
+    }
+    fetchAndSetProducts();
+  };
+
   const handleDetailClick = async (product) => {
     const productDetail = await fetchProductDetail(product.id);
     setSelectedProduct(productDetail);
@@ -162,6 +172,7 @@ const ProductPage = () => {
         <div className="container mt-4">
           <h1 className="mb-4">Product List</h1>
           <TableAction
+            type="product"
             onAddProduct={handleAddProduct}
             onSearch={handleSearch}
             searchTerm={searchTerm}
@@ -172,9 +183,9 @@ const ProductPage = () => {
             onDetailClick={handleDetailClick}
             onDeleteClick={handleDeleteClick}
             onSort={handleSort}
+            onToggleClick={handleToggleDelete}
             sortConfig={sortConfig}
           />
-
           <PaginationComponent
             currentPage={currentPage}
             totalPages={totalPages}

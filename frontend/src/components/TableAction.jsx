@@ -1,10 +1,11 @@
 // TableAction.jsx
-import React, { useState } from "react";
+import React from "react";
 import AddProduct from "./action_bar/AddProduct";
+import AddSupplier from "./action_bar/AddSupplier";
 import { Form, InputGroup } from "react-bootstrap";
 import { SearchOutlined } from "@mui/icons-material";
 
-const TableAction = ({ onAddProduct, onSearch, searchTerm, setSearchTerm }) => {
+const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
   const handleSearchChange = (event) => {
     const keyword = event.target.value;
     setSearchTerm(keyword);
@@ -14,7 +15,12 @@ const TableAction = ({ onAddProduct, onSearch, searchTerm, setSearchTerm }) => {
     <div
       style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
     >
-      <AddProduct onSubmit={onAddProduct} style={{ marginRight: "1rem" }} />
+      {type === "product" ? (
+        <AddProduct onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+      ) : (
+        <AddSupplier onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+      )}
+
       {/* Search component */}
       <InputGroup style={{ width: "300px", marginLeft: "0.5rem" }}>
         <InputGroup.Text style={{ padding: "5px 10px" }}>
@@ -22,10 +28,12 @@ const TableAction = ({ onAddProduct, onSearch, searchTerm, setSearchTerm }) => {
         </InputGroup.Text>
         <Form.Control
           type="text"
-          placeholder="Search products..."
+          placeholder={
+            type === "product" ? "Search products..." : "Search suppliers..."
+          }
           value={searchTerm}
           onChange={handleSearchChange}
-          aria-label="Search products"
+          aria-label={`Search ${type === "product" ? "products" : "suppliers"}`}
           aria-describedby="search-addon"
         />
       </InputGroup>

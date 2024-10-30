@@ -1,9 +1,9 @@
 // index.js
 import { createStore, combineReducers } from "redux";
-import productReducer from "./reducers/productReducer"; // Import reducer
+import inventoryReducer from "./inventoryReducer"; // Import reducer
 
 const rootReducer = combineReducers({
-  products: productReducer,
+  inventory: inventoryReducer,
 });
 
 const store = createStore(rootReducer);

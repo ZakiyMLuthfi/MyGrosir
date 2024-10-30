@@ -1,4 +1,4 @@
-// ProductTable.jsx
+// SupplierTable.jsx
 import React from "react";
 import moment from "moment-timezone";
 import {
@@ -8,8 +8,8 @@ import {
   Delete,
 } from "@mui/icons-material";
 
-const ProductTable = ({
-  products,
+const StockInTable = ({
+  stockIns,
   onDetailClick,
   onDeleteClick,
   onSort,
@@ -25,18 +25,32 @@ const ProductTable = ({
       <thead className="thead-light">
         <tr>
           <th
-            onClick={() => onSort("product_code")}
+            onClick={() => onSort("stock_code")}
             style={{ cursor: "pointer" }}
           >
-            {sortConfig.key === "product_code" &&
+            {sortConfig.key === "stock_code" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "product_code" &&
+            {sortConfig.key === "stock_code" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Product Code
+            Supplier Code
+          </th>
+          <th
+            onClick={() => onSort("supplier_name")}
+            style={{ cursor: "pointer" }}
+          >
+            {sortConfig.key === "supplier_name" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "supplier_name" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Supplier Name
           </th>
           <th
             onClick={() => onSort("product_name")}
@@ -81,17 +95,17 @@ const ProductTable = ({
         </tr>
       </thead>
       <tbody>
-        {products && products.length > 0 ? (
-          products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.product_code}</td>
-              <td>{product.product_name}</td>
-              <td>{formatDate(product.updatedAt)}</td>
-              <td>{product.updated_by}</td>
+        {stockIns && stockIns.length > 0 ? (
+          stockIns.map((stockIn) => (
+            <tr key={stockIn.id}>
+              <td>{stockIn.supplier_code}</td>
+              <td>{stockIn.supplier_name}</td>
+              <td>{formatDate(stockIn.updatedAt)}</td>
+              <td>{stockIn.updated_by}</td>
               <td>
                 {/* Icon for Detail */}
                 <span
-                  onClick={() => onDetailClick(product)}
+                  onClick={() => onDetailClick(stockIn)}
                   style={{
                     cursor: "pointer",
                     color: "blue",
@@ -102,7 +116,7 @@ const ProductTable = ({
                 </span>
                 {/* Icon for Delete */}
                 <span
-                  onClick={() => onDeleteClick(product)}
+                  onClick={() => onDeleteClick(stockIn)}
                   style={{ cursor: "pointer", color: "red" }}
                 >
                   <Delete />
@@ -112,7 +126,7 @@ const ProductTable = ({
           ))
         ) : (
           <tr>
-            <td colSpan="5">No products available</td>
+            <td colSpan="5">No Stock-in available</td>
           </tr>
         )}
       </tbody>
@@ -120,4 +134,4 @@ const ProductTable = ({
   );
 };
 
-export default ProductTable;
+export default StockInTable;

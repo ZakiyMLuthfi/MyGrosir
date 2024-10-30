@@ -29,7 +29,7 @@ const supplierAdd = async (req, res) => {
     }
 
     const newSupplierData = {
-      supplier_code: "Sp0000", // Nilai default code supplier yang akan tergantikan
+      supplier_code: "Sp000", // Nilai default code supplier yang akan tergantikan
       supplier_name,
       supplier_address,
       supplier_contact_name,

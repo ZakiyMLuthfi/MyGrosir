@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       supplier_code: {
         allowNull: false,
-        type: DataTypes.STRING(6),
+        type: DataTypes.STRING(5),
         unique: true,
       },
       supplier_name: {
@@ -71,13 +71,13 @@ module.exports = (sequelize, DataTypes) => {
           });
 
           if (!lastSupplier) {
-            supplier.supplier_code = "Sp0001";
+            supplier.supplier_code = "Sp001";
           } else {
             const lastCode = lastSupplier.supplier_code;
             const numberPart = parseInt(lastCode.substring(2), 10);
             supplier.supplier_code = `Sp${(numberPart + 1)
               .toString()
-              .padStart(4, "0")}`;
+              .padStart(3, "0")}`;
             console.log(`setting supplier_code to ${supplier.supplier_code}`);
           }
         },
