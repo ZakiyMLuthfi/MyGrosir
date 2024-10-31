@@ -48,7 +48,6 @@ export const fetchStockIns = async (
         search: searchTerm,
       },
     });
-    console.log("dari stock service:", response.data);
     dispatch(setStockIns(response.data.stockIns));
     return response.data.totalPages;
   } catch (err) {
@@ -127,18 +126,6 @@ export const addStockInService = async (formData, dispatch) => {
     throw error;
   }
 };
-
-// export const deleteStockInService = async (id, dispatch) => {
-//   try {
-//     const response = await axios.delete(`${API_URL}/${id}`);
-//     console.log("Product deleted: ", response.data);
-//     dispatch(removeProduct(id));
-//     return response.data;
-//   } catch (err) {
-//     console.error("Error deleting product:", err);
-//     throw err;
-//   }
-// };
 
 export const fetchStockInDetail = async (id) => {
   try {

@@ -156,6 +156,7 @@ const StockInPage = () => {
             show={showModal}
             onClose={handleCloseModal}
             stockData={selectedStockIn}
+            type="stock-in"
           />
         </div>
       )}

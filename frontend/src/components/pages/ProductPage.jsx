@@ -35,6 +35,7 @@ const ProductPage = () => {
   );
 
   const sortedProducts = React.useMemo(() => {
+    if (!products || !Array.isArray(products)) return [];
     let sortableProducts = [...products];
     if (sortConfig !== null) {
       sortableProducts.sort((a, b) => {
@@ -79,20 +80,6 @@ const ProductPage = () => {
       setLoading(false);
     }
   }, [dispatch, currentPage, itemsPerPage]);
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      const totalPagesCount = await fetchProducts(
-        currentPage,
-        itemsPerPage,
-        dispatch
-      );
-      setTotalPages(totalPagesCount);
-      setLoading(false);
-    };
-
-    loadProducts();
-  }, [currentPage, itemsPerPage, dispatch]);
 
   useEffect(() => {
     fetchAndSetProducts();

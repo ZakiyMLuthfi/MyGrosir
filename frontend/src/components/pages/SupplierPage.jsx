@@ -35,6 +35,7 @@ const SupplierPage = () => {
   );
 
   const sortedSuppliers = React.useMemo(() => {
+    if (!suppliers || !Array.isArray(suppliers)) return [];
     let sortableSuppliers = [...suppliers];
     if (sortConfig !== null) {
       sortableSuppliers.sort((a, b) => {
@@ -79,20 +80,6 @@ const SupplierPage = () => {
       setLoading(false);
     }
   }, [dispatch, currentPage, itemsPerPage]);
-
-  useEffect(() => {
-    const loadSuppliers = async () => {
-      const totalPagesCount = await fetchSuppliers(
-        currentPage,
-        itemsPerPage,
-        dispatch
-      );
-      setTotalPages(totalPagesCount);
-      setLoading(false);
-    };
-
-    loadSuppliers();
-  }, [currentPage, itemsPerPage, dispatch]);
 
   useEffect(() => {
     fetchAndSetSuppliers();

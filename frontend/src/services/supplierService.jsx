@@ -26,7 +26,7 @@ export const fetchSuppliers = async (
     dispatch(setSuppliers(response.data.suppliers));
     return response.data.totalPages;
   } catch (err) {
-    console.error("Error fetching products", err);
+    console.error("Error fetching suppliers", err);
     throw err;
   }
 };

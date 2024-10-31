@@ -9,12 +9,12 @@ const stockInDetail = async (req, res) => {
         {
           model: Supplier,
           as: "supplier",
-          attributes: ["supplierId", "supplier_code", "supplier_name"],
+          attributes: ["supplier_code", "supplier_name"],
         },
         {
           model: Product,
           as: "product",
-          attributes: ["productId", "product_code", "product_name"],
+          attributes: ["product_code", "product_name"],
         },
       ],
     });

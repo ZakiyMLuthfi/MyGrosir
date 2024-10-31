@@ -1,12 +1,7 @@
-// SupplierTable.jsx
+// StockInTable.jsx
 import React from "react";
 import moment from "moment-timezone";
-import {
-  ArrowDropUp,
-  ArrowDropDown,
-  Article,
-  Delete,
-} from "@mui/icons-material";
+import { ArrowDropUp, ArrowDropDown, Article } from "@mui/icons-material";
 
 const StockInTable = ({
   stockIns,
@@ -17,6 +12,18 @@ const StockInTable = ({
   // format waktu untuk ditampilkan pada FE
   const formatDate = (dateString) => {
     return moment(dateString).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss");
+  };
+
+  const getStatusStyle = (quantity_remaining) => {
+    return {
+      backgroundColor: quantity_remaining === 0 ? "grey" : "green",
+      color: "white",
+      padding: "2px 4px",
+      borderRadius: "6px",
+      display: "inline-block",
+      textAlign: "center",
+      minWidth: "60px",
+    };
   };
 
   return (
@@ -65,6 +72,31 @@ const StockInTable = ({
             ) : null}
             Product Name
           </th>
+          <th onClick={() => onSort("quantity")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "quantity" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "quantity" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Quantity
+          </th>
+          <th
+            onClick={() => onSort("quantity_remaining")}
+            style={{ cursor: "pointer", textAlign: "center" }}
+          >
+            {sortConfig.key === "quantity_remaining" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "quantity_remaining" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Status
+          </th>
           <th onClick={() => onSort("updatedAt")} style={{ cursor: "pointer" }}>
             {sortConfig.key === "updatedAt" &&
             sortConfig.direction === "ascending" ? (
@@ -100,20 +132,28 @@ const StockInTable = ({
               <td>{stockIn.stock_code}</td>
               <td>{stockIn.supplier ? stockIn.supplier.supplier_name : "-"}</td>
               <td>{stockIn.product ? stockIn.product.product_name : "-"}</td>
+              <td>{stockIn.quantity} pkg</td>
+              <td>
+                <span style={getStatusStyle(stockIn.quantity_remaining)}>
+                  {stockIn.quantity_remaining === 0 ? "Empty" : "Ready"}
+                </span>
+              </td>
               <td>{formatDate(stockIn.updatedAt)}</td>
               <td>{stockIn.created_by}</td>
               <td>
                 {/* Icon for Detail */}
-                <span
+                <div
                   onClick={() => onDetailClick(stockIn)}
                   style={{
                     cursor: "pointer",
                     color: "blue",
-                    marginRight: "4px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <Article />
-                </span>
+                  <Article style={{ fontSize: "2rem" }} />
+                </div>
               </td>
             </tr>
           ))

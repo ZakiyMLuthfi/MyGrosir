@@ -11,16 +11,14 @@ const StockDetailModal = ({
   onUpdate,
   onToggleEdit,
 }) => {
-  const [formData, setFormData] = useState({
-    // productName: "",
-    // supplierName: ""
-  });
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     if (stockData) {
       setFormData(stockData); // Mengatur formData sesuai data yang diterima
     }
   }, [stockData]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -63,41 +61,38 @@ const StockDetailModal = ({
           </Form.Group>
 
           <Form.Group>
-            <Form.Label>Supplier Code</Form.Label>
-            <Form.Control
-              name="supplierCode"
-              value={formData.supplier?.supplier_code || ""}
-              disabled
-            />
+            <Form.Label>Supplier</Form.Label>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Form.Control
+                name="supplierCode"
+                disabled
+                value={formData.supplier?.supplier_code || ""}
+                style={{ flex: "2" }}
+              />
+              <Form.Control
+                name="supplierName"
+                disabled
+                value={formData.supplier?.supplier_name || ""}
+                style={{ flex: "12" }}
+              />
+            </div>
           </Form.Group>
-
           <Form.Group>
-            <Form.Label>Supplier Name</Form.Label>
-            <Form.Control
-              name="supplierName"
-              value={formData.supplier?.supplier_name || ""}
-              disabled={!isEditing}
-              onChange={isEditing ? handleInputChange : undefined}
-            />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Product Code</Form.Label>
-            <Form.Control
-              name="productCode"
-              value={formData.product?.product_code || ""}
-              disabled
-            />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Product Name</Form.Label>
-            <Form.Control
-              name="productName"
-              value={formData.product?.product_name || ""}
-              disabled={!isEditing}
-              onChange={isEditing ? handleInputChange : undefined}
-            />
+            <Form.Label>Product</Form.Label>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <Form.Control
+                name="productCode"
+                disabled
+                value={formData.product?.product_code || ""}
+                style={{ flex: "2" }}
+              />
+              <Form.Control
+                name="productName"
+                disabled
+                value={formData.product?.product_name || ""}
+                style={{ flex: "12" }}
+              />
+            </div>
           </Form.Group>
 
           {/* Conditional Fields Based on Type */}
@@ -106,7 +101,6 @@ const StockDetailModal = ({
               <Form.Group>
                 <Form.Label>Quantity / Quantity Remaining</Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Form.Label>Quantity</Form.Label>
                   <Form.Control
                     name="quantity"
                     disabled
@@ -119,23 +113,21 @@ const StockDetailModal = ({
                   />
                 </div>
               </Form.Group>
+
               <Form.Group>
-                <Form.Label>Purchase Price</Form.Label>
-                <Form.Control
-                  name="purchase_price"
-                  type="number"
-                  disabled
-                  value={formData.purchase_price || ""}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Total Purchase Price</Form.Label>
-                <Form.Control
-                  name="total_purchase_price"
-                  type="number"
-                  disabled
-                  value={formData.total_purchase_price || ""}
-                />
+                <Form.Label>Purchase Price / Total Purchase Price</Form.Label>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Form.Control
+                    name="purchase_price"
+                    disabled
+                    value={formData.purchase_price || ""}
+                  />
+                  <Form.Control
+                    name="total_purchase_price"
+                    disabled
+                    value={formData.total_purchase_price || ""}
+                  />
+                </div>
               </Form.Group>
               <Form.Group>
                 <Form.Label>Created by:</Form.Label>
@@ -168,7 +160,6 @@ const StockDetailModal = ({
               <Form.Group>
                 <Form.Label>Quantity / Quantity Remaining</Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <Form.Label>Quantity</Form.Label>
                   <Form.Control
                     name="quantity"
                     disabled
@@ -184,30 +175,20 @@ const StockDetailModal = ({
               </Form.Group>
               <Form.Group>
                 <Form.Label>Send to</Form.Label>
-                <div>
-                  <Form.Control
-                    name="grosir_choice"
-                    disabled={!isEditing}
-                    value={formData.grosir_choice || ""}
-                    onChange={handleInputChange}
-                  >
-                    <Form.Select aria-label="Destination">
-                      <option>-Which Grosir-</option>
-                      <option value="Grosir A">Grosir A</option>
-                      <option value="Grosir B">Grosir B</option>
-                      <option value="Grosir C">Grosir C</option>
-                    </Form.Select>
-                  </Form.Control>
-                </div>
-              </Form.Group>
-
-              {/* <Form.Control
+                <Form.Control
                   name="grosir_choice"
                   disabled={!isEditing}
                   value={formData.grosir_choice || ""}
                   onChange={handleInputChange}
-                /> */}
-
+                >
+                  <Form.Select aria-label="Destination">
+                    <option>-Select Grosir-</option>
+                    <option value="Grosir A">Grosir A</option>
+                    <option value="Grosir B">Grosir B</option>
+                    <option value="Grosir C">Grosir C</option>
+                  </Form.Select>
+                </Form.Control>
+              </Form.Group>
               <Form.Group>
                 <Form.Label>Updated at / Updated by: </Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -275,15 +256,16 @@ const StockDetailModal = ({
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        {!isEditing && type !== "stock-history" ? (
-          <Button variant="primary" onClick={onToggleEdit}>
-            Update
-          </Button>
-        ) : (
-          <Button variant="success" onClick={handleSaveChanges}>
-            Save Changes
-          </Button>
-        )}
+        {type === "stock-out" &&
+          (!isEditing ? (
+            <Button variant="primary" onClick={onToggleEdit}>
+              Update
+            </Button>
+          ) : (
+            <Button variant="success" onClick={handleSaveChanges}>
+              Save Changes
+            </Button>
+          ))}
       </Modal.Footer>
     </Modal>
   );

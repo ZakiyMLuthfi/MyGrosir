@@ -10,7 +10,12 @@ const stockAll = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const whereCondition = {
-      ...(search && { product_name: { [Op.iLike]: `%${search}%` } }),
+      ...(search && {
+        [Op.or]: [
+          { "$supplier.supplier_name$": { [Op.iLike]: `%${search}%` } },
+          { "$product.product_name$": { [Op.iLike]: `%${search}%` } },
+        ],
+      }),
     };
 
     const { count, rows: stockIns } = await StockIn.findAndCountAll({

@@ -20,7 +20,6 @@ const productAll = async (req, res) => {
       order: [["updatedAt", "DESC"]],
     });
 
-    console.log("Query Conditions:", whereCondition);
     const totalPages = Math.ceil(count / limit);
 
     res.status(200).json({
