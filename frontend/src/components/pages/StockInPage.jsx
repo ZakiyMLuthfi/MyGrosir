@@ -133,7 +133,7 @@ const StockInPage = () => {
           <h1 className="mb-4">Stock-in List</h1>
           <TableAction
             type="stockIn"
-            onAddStockIn={handleAddStockIn}
+            onAdd={handleAddStockIn}
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}

@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("StockOut", {
+    await queryInterface.createTable("StockOuts", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,7 +16,7 @@ module.exports = {
       stockInId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "StockIn",
+          model: "StockIns",
           key: "id",
         },
         allowNull: false,
@@ -75,6 +75,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("StockOut");
+    await queryInterface.dropTable("StockOuts");
   },
 };

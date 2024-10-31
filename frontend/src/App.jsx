@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LayoutTemp from "./components/LayoutTemp";
 import ProductPage from "./components/pages/ProductPage";

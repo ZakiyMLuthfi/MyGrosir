@@ -173,8 +173,9 @@ const ProductPage = () => {
           <h1 className="mb-4">Product List</h1>
           <TableAction
             type="product"
-            onAddProduct={handleAddProduct}
+            onAdd={handleAddProduct}
             onSearch={handleSearch}
+            onToggleClick={handleToggleDelete}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />

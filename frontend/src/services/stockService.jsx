@@ -1,4 +1,4 @@
-// src/services/productService.js
+// src/services/stockService.js
 import axios from "axios";
 import {
   setStockIns,
@@ -6,8 +6,32 @@ import {
   addStockIn,
   setStockHistory,
 } from "../reducers/stockActions";
+import { setProducts } from "../reducers/productActions";
+import { setSuppliers } from "../reducers/supplierActions";
 
 const API_URL = "http://localhost:5000/api/stocks";
+const DEFAULT_URL = "http://localhost:5000/api/";
+
+export const fetchProducts = async (dispatch) => {
+  try {
+    const response = await axios.get(`${DEFAULT_URL}products`);
+    dispatch(setProducts(response.data)); // Dispatch produk ke Redux
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching products", error);
+    throw error;
+  }
+};
+
+export const fetchSuppliers = async (dispatch) => {
+  try {
+    const response = await axios.get(`${DEFAULT_URL}suppliers`);
+    dispatch(setSuppliers(response.data)); // Dispatch produk ke Redux
+  } catch (error) {
+    console.error("Error fetching suppliers", error);
+    throw error;
+  }
+};
 
 export const fetchStockIns = async (
   currentPage,
@@ -24,6 +48,7 @@ export const fetchStockIns = async (
         search: searchTerm,
       },
     });
+    console.log("dari stock service:", response.data);
     dispatch(setStockIns(response.data.stockIns));
     return response.data.totalPages;
   } catch (err) {

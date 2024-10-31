@@ -38,8 +38,7 @@ export const addSupplierService = async (formData, dispatch) => {
       created_by: "ultraadmin",
       updated_by: "ultraadmin",
     };
-
-    const response = await axios.post(`${API_URL}`, formDataWithUserId);
+    console.log(formDataWithUserId);
 
     if (response.data.supplier) {
       dispatch(addSupplier(response.data.supplier));

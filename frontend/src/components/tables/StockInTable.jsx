@@ -11,7 +11,6 @@ import {
 const StockInTable = ({
   stockIns,
   onDetailClick,
-  onDeleteClick,
   onSort,
   sortConfig = { key: "", direction: "ascending" },
 }) => {
@@ -36,7 +35,7 @@ const StockInTable = ({
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Supplier Code
+            Stock Code
           </th>
           <th
             onClick={() => onSort("supplier_name")}
@@ -78,18 +77,18 @@ const StockInTable = ({
             Updated at
           </th>
           <th
-            onClick={() => onSort("updated_by")}
+            onClick={() => onSort("created_by")}
             style={{ cursor: "pointer" }}
           >
-            {sortConfig.key === "updated_by" &&
+            {sortConfig.key === "created_by" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "updated_by" &&
+            {sortConfig.key === "created_by" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Updated by
+            Created by
           </th>
           <th>Action</th>
         </tr>
@@ -98,10 +97,11 @@ const StockInTable = ({
         {stockIns && stockIns.length > 0 ? (
           stockIns.map((stockIn) => (
             <tr key={stockIn.id}>
-              <td>{stockIn.supplier_code}</td>
-              <td>{stockIn.supplier_name}</td>
+              <td>{stockIn.stock_code}</td>
+              <td>{stockIn.supplier ? stockIn.supplier.supplier_name : "-"}</td>
+              <td>{stockIn.product ? stockIn.product.product_name : "-"}</td>
               <td>{formatDate(stockIn.updatedAt)}</td>
-              <td>{stockIn.updated_by}</td>
+              <td>{stockIn.created_by}</td>
               <td>
                 {/* Icon for Detail */}
                 <span
@@ -113,13 +113,6 @@ const StockInTable = ({
                   }}
                 >
                   <Article />
-                </span>
-                {/* Icon for Delete */}
-                <span
-                  onClick={() => onDeleteClick(stockIn)}
-                  style={{ cursor: "pointer", color: "red" }}
-                >
-                  <Delete />
                 </span>
               </td>
             </tr>

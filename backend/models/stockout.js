@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       StockOut.belongsTo(models.StockIn, {
         foreignKey: "stockInId",
-        as: "stockIn",
+        as: "stockIns",
       });
       StockOut.belongsTo(models.Supplier, {
         foreignKey: "supplierId",
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       stockInId: {
         type: DataTypes.INTEGER,
         references: {
-          model: "StockIn",
+          model: "StockIns",
           key: "id",
         },
         allowNull: false,

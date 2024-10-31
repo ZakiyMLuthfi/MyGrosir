@@ -1,13 +1,12 @@
 "use strict";
 const { Model } = require("sequelize");
-const { Sequelize } = require(".");
 
 module.exports = (sequelize, DataTypes) => {
   class StockHistory extends Model {
     static associate(models) {
       StockHistory.belongsTo(models.StockOut, {
         foreignKey: "stockOutId",
-        as: "stockOut",
+        as: "stockOuts",
       });
     }
   }

@@ -1,10 +1,9 @@
-// AddProduct.jsx
+// AddStockIn.jsx
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import AddIcon from "@mui/icons-material/Add";
-import { addStockInService } from "../../services/stockService";
-import { fetchProducts } from "../../services/productService";
-import { fetchSuppliers } from "../../services/supplierService";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, fetchSuppliers } from "../../services/stockService";
 
 const AddStockIn = ({ onSubmit }) => {
   const [showModal, setShowModal] = useState(false);
@@ -14,18 +13,31 @@ const AddStockIn = ({ onSubmit }) => {
     quantity: "",
     purchase_price: "",
   });
-  const [products, setProducts] = useState([]);
-  const [suppliers, setSuppliers] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const products = useSelector((state) => {
+    console.log("State products:", state.inventory.products);
+    return state.inventory.products.products || [];
+  });
+
+  const suppliers = useSelector((state) => {
+    console.log("State suppliers:", state.inventory.suppliers);
+    return state.inventory.suppliers.suppliers || [];
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      const productData = await fetchProducts();
-      const supplierData = await fetchSuppliers();
-      setProducts(productData);
-      setSuppliers(supplierData);
+      try {
+        await fetchProducts(dispatch);
+        await fetchSuppliers(dispatch);
+      } catch (err) {
+        console.error("Error fetching products or supplier", err);
+      }
     };
     fetchData();
-  }, []);
+  }, [dispatch]);
+  console.log(products, suppliers);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,19 +50,16 @@ const AddStockIn = ({ onSubmit }) => {
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    const response = await addStockInService(formData);
-    if (response) {
-      onSubmit();
-      handleClose();
-      setFormData({
-        supplierId: "",
-        productId: "",
-        quantity: "",
-        purchase_price: "",
-      });
-    }
+    onSubmit(formData);
+    handleClose();
+    setFormData({
+      supplierId: "",
+      productId: "",
+      quantity: "",
+      purchase_price: "",
+    });
   };
 
   return (
@@ -79,11 +88,15 @@ const AddStockIn = ({ onSubmit }) => {
                 required
               >
                 <option value="">Select Supplier</option>
-                {suppliers.map((supplier) => (
-                  <option key={supplier.id} value={supplier.id}>
-                    {supplier.supplier_name}
-                  </option>
-                ))}
+                {suppliers && suppliers.length > 0 ? (
+                  suppliers.map((supplier) => (
+                    <option key={supplier.id} value={supplier.id}>
+                      {supplier.supplier_name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No Suppliers Available</option>
+                )}
               </Form.Control>
             </Form.Group>
 
@@ -97,11 +110,15 @@ const AddStockIn = ({ onSubmit }) => {
                 required
               >
                 <option value="">Select Product</option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.product_name}
-                  </option>
-                ))}
+                {products && products.length > 0 ? (
+                  products.map((product) => (
+                    <option key={product.id} value={product.id}>
+                      {product.product_name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No Products Available</option>
+                )}
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formQuantity">
@@ -117,7 +134,7 @@ const AddStockIn = ({ onSubmit }) => {
             </Form.Group>
 
             <Form.Group controlId="formPurchasePrice">
-              <Form.Label>Purchase Price</Form.Label>
+              <Form.Label>Purchase Price (1 pkg)</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter purchase price"
