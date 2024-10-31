@@ -1,10 +1,10 @@
-// StockInTable.jsx
+// StockOutTable.jsx
 import React from "react";
 import moment from "moment-timezone";
 import { ArrowDropUp, ArrowDropDown, Article } from "@mui/icons-material";
 
-const StockInTable = ({
-  stockIns,
+const StockOutTable = ({
+  stockOuts,
   onDetailClick,
   onSort,
   sortConfig = { key: "", direction: "ascending" },
@@ -45,20 +45,6 @@ const StockInTable = ({
             Stock Code
           </th>
           <th
-            onClick={() => onSort("supplier_name")}
-            style={{ cursor: "pointer" }}
-          >
-            {sortConfig.key === "supplier_name" &&
-            sortConfig.direction === "ascending" ? (
-              <ArrowDropUp />
-            ) : null}
-            {sortConfig.key === "supplier_name" &&
-            sortConfig.direction === "descending" ? (
-              <ArrowDropDown />
-            ) : null}
-            Supplier Name
-          </th>
-          <th
             onClick={() => onSort("product_name")}
             style={{ cursor: "pointer" }}
           >
@@ -85,6 +71,20 @@ const StockInTable = ({
           </th>
           <th
             onClick={() => onSort("quantity_remaining")}
+            style={{ cursor: "pointer" }}
+          >
+            {sortConfig.key === "quantity_remaining" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "quantity_remaining" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Remaining
+          </th>
+          <th
+            onClick={() => onSort("quantity_remaining")}
             style={{ cursor: "pointer", textAlign: "center" }}
           >
             {sortConfig.key === "quantity_remaining" &&
@@ -96,6 +96,17 @@ const StockInTable = ({
               <ArrowDropDown />
             ) : null}
             Status
+          </th>
+          <th onClick={() => onSort("createdAt")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "createdAt" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "createdAt" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Entry date
           </th>
           <th onClick={() => onSort("updatedAt")} style={{ cursor: "pointer" }}>
             {sortConfig.key === "updatedAt" &&
@@ -135,7 +146,7 @@ const StockInTable = ({
               <td>{stockIn.quantity} pkg</td>
               <td>
                 <span style={getStatusStyle(stockIn.quantity_remaining)}>
-                  {stockIn.quantity_remaining === 0 ? "Empty" : "Stored"}
+                  {stockIn.quantity_remaining === 0 ? "Empty" : "Ready"}
                 </span>
               </td>
               <td>{formatDate(stockIn.updatedAt)}</td>
@@ -167,4 +178,4 @@ const StockInTable = ({
   );
 };
 
-export default StockInTable;
+export default StockOutTable;

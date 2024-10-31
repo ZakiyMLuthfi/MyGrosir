@@ -64,7 +64,7 @@ const ProductTable = ({
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Updated at
+            Last Update
           </th>
           <th
             onClick={() => onSort("updated_by")}

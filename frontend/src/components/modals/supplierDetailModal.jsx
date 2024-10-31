@@ -90,7 +90,7 @@ const SupplierDetailModal = ({
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Supplier Contact Name / Mobile Phone</Form.Label>
+            <Form.Label>Contact Name / Mobile Phone</Form.Label>
             <div style={{ display: "flex", gap: "10px" }}>
               <Form.Control
                 name="supplier_contact_name"
@@ -153,7 +153,7 @@ const SupplierDetailModal = ({
             </div>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Created by:</Form.Label>
+            <Form.Label>Author</Form.Label>
             <Form.Control
               name="created_by"
               value={formData.created_by || ""}
@@ -162,7 +162,7 @@ const SupplierDetailModal = ({
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Created at:</Form.Label>
+            <Form.Label>Create date</Form.Label>
             <Form.Control
               name="createdAt"
               value={formatDate(formData.createdAt || "")}

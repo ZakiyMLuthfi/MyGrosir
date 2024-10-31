@@ -118,7 +118,7 @@ const ProductDetailModal = ({
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Created by:</Form.Label>
+            <Form.Label>Author</Form.Label>
             <Form.Control
               name="created_by"
               value={formData.created_by || ""}
@@ -126,7 +126,7 @@ const ProductDetailModal = ({
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Created at:</Form.Label>
+            <Form.Label>Create date</Form.Label>
             <Form.Control
               name="createdAt"
               value={formatDate(formData.createdAt || "")}

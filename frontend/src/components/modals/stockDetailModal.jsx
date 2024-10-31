@@ -99,7 +99,7 @@ const StockDetailModal = ({
           {type === "stock-in" && (
             <>
               <Form.Group>
-                <Form.Label>Quantity / Quantity Remaining</Form.Label>
+                <Form.Label>Quantity (pkg) / Quantity Remaining</Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="quantity"
@@ -115,7 +115,7 @@ const StockDetailModal = ({
               </Form.Group>
 
               <Form.Group>
-                <Form.Label>Purchase Price / Total Purchase Price</Form.Label>
+                <Form.Label>Purchase Price / Total Purchase Price </Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="purchase_price"
@@ -130,7 +130,7 @@ const StockDetailModal = ({
                 </div>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Created by:</Form.Label>
+                <Form.Label>Author</Form.Label>
                 <Form.Control
                   name="created_by"
                   value={formData.created_by || ""}
@@ -138,7 +138,7 @@ const StockDetailModal = ({
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Created at / Updated at: </Form.Label>
+                <Form.Label>Create Date / Last Update </Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="createdAt"
@@ -158,7 +158,7 @@ const StockDetailModal = ({
           {type === "stock-out" && (
             <>
               <Form.Group>
-                <Form.Label>Quantity / Quantity Remaining</Form.Label>
+                <Form.Label>Quantity (pkg) / Quantity Remaining</Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="quantity"
@@ -234,7 +234,7 @@ const StockDetailModal = ({
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Created at / Created by: </Form.Label>
+                <Form.Label>Create date / Author: </Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="createdAt"

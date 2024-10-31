@@ -31,6 +31,7 @@ const StockInPage = () => {
   );
 
   const sortedStockIns = React.useMemo(() => {
+    if (!stockIns || !Array.isArray(stockIns)) return [];
     let sortableStockIns = [...stockIns];
     if (sortConfig !== null) {
       sortableStockIns.sort((a, b) => {
@@ -70,25 +71,11 @@ const StockInPage = () => {
       );
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
-      console.error("Error fetching products", err);
+      console.error("Error fetching stock-in", err);
     } finally {
       setLoading(false);
     }
   }, [dispatch, currentPage, itemsPerPage]);
-
-  useEffect(() => {
-    const loadStockIns = async () => {
-      const totalPagesCount = await fetchStockIns(
-        currentPage,
-        itemsPerPage,
-        dispatch
-      );
-      setTotalPages(totalPagesCount);
-      setLoading(false);
-    };
-
-    loadStockIns();
-  }, [currentPage, itemsPerPage, dispatch]);
 
   useEffect(() => {
     fetchAndSetStockIns();
