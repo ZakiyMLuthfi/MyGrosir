@@ -1,0 +1,15 @@
+/* Style.css */
+
+.sidebar-item {
+  background-color: #343a40 !important; /* Warna latar belakang sidebar */
+  color: white !important; /* Warna teks */
+  transition: background-color 0.3s ease; /* Transisi halus saat hover */
+}
+
+.sidebar-item:hover {
+  background-color: #495057; /* Warna saat hover */
+}
+
+.sidebar-title {
+  color: white; /* Warna teks putih */
+}

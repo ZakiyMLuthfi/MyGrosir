@@ -1,27 +1,32 @@
-// Sidebar.jsx
-import React from "react";
-import { ListGroup } from "react-bootstrap";
+import React, { useState } from "react";
+import { ListGroup, Accordion } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "./Style.css"; // Pastikan ini terhubung
 
 const Sidebar = ({ isOpen }) => {
+  const [openStocks, setOpenStocks] = useState(false);
+
+  const toggleStocks = () => {
+    setOpenStocks((prev) => !prev);
+  };
+
   return (
     <div
       style={{
         height: "100vh",
         backgroundColor: "#343a40",
-        color: "white",
         overflow: "hidden",
         width: isOpen ? "250px" : "0px",
         transition: "width 0.3s ease",
       }}
     >
-      <div className="p-3 text-lg font-bold">MyGrosir</div>
+      <div className="p-3 text-lg font-bold sidebar-title">MyGrosir</div>
       <ListGroup variant="flush">
         <ListGroup.Item
           as={Link}
           to="/dashboard"
           action
-          className="list-group-item"
+          className="sidebar-item"
         >
           {isOpen ? "Dashboard" : ""}
         </ListGroup.Item>
@@ -29,7 +34,7 @@ const Sidebar = ({ isOpen }) => {
           as={Link}
           to="/products"
           action
-          className="list-group-item"
+          className="sidebar-item"
         >
           {isOpen ? "Products" : ""}
         </ListGroup.Item>
@@ -37,34 +42,44 @@ const Sidebar = ({ isOpen }) => {
           as={Link}
           to="/suppliers"
           action
-          className="list-group-item"
+          className="sidebar-item"
         >
           {isOpen ? "Suppliers" : ""}
         </ListGroup.Item>
-        <ListGroup.Item
-          as={Link}
-          to="/stocks"
-          action
-          className="list-group-item"
-        >
-          {isOpen ? "Stocks" : ""}
-        </ListGroup.Item>
-        <ListGroup.Item
-          as={Link}
-          to="/stocks/stock-in"
-          action
-          className="list-group-item"
-        >
-          {isOpen ? "Stock-in" : ""}
-        </ListGroup.Item>
-        <ListGroup.Item
-          as={Link}
-          to="/stocks/stock-out"
-          action
-          className="list-group-item"
-        >
-          {isOpen ? "Stock-out" : ""}
-        </ListGroup.Item>
+        <Accordion>
+          <ListGroup.Item
+            action
+            className="sidebar-item"
+            onClick={toggleStocks}
+          >
+            {isOpen ? "Stocks" : ""}
+          </ListGroup.Item>
+          <Accordion.Collapse in={openStocks}>
+            <ListGroup variant="flush">
+              <ListGroup.Item
+                as={Link}
+                to="/stocks/stock-in"
+                className="sidebar-item"
+              >
+                {isOpen ? "Stock-in" : ""}
+              </ListGroup.Item>
+              <ListGroup.Item
+                as={Link}
+                to="/stocks/stock-out"
+                className="sidebar-item"
+              >
+                {isOpen ? "Stock-out" : ""}
+              </ListGroup.Item>
+              <ListGroup.Item
+                as={Link}
+                to="/stocks/stock-history"
+                className="sidebar-item"
+              >
+                {isOpen ? "Stock History" : ""}
+              </ListGroup.Item>
+            </ListGroup>
+          </Accordion.Collapse>
+        </Accordion>
       </ListGroup>
     </div>
   );

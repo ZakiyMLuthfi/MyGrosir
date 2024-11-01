@@ -1,10 +1,23 @@
-const { StockHistory } = require("../../models");
+const { StockHistory, Supplier, Product } = require("../../models");
 
 const stockHistoryDetail = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const stockHistory = await StockHistory.findByPk(req.params.id);
+    const stockHistory = await StockHistory.findByPk(id, {
+      include: [
+        {
+          model: Supplier,
+          as: "supplier",
+          attributes: ["supplier_code", "supplier_name"],
+        },
+        {
+          model: Product,
+          as: "product",
+          attributes: ["product_code", "product_name"],
+        },
+      ],
+    });
 
     if (!stockHistory) {
       return res.status(400).json({ error: "Stock history not found" });

@@ -10,9 +10,9 @@ export const setStockOuts = (stockOuts) => ({
   payload: stockOuts,
 });
 
-export const setStockHistory = (stockHistory) => ({
-  type: "SET_STOCK_HISTORY",
-  payload: stockHistory,
+export const setStockHistories = (stockHistories) => ({
+  type: "SET_STOCK_HISTORIES",
+  payload: stockHistories,
 });
 
 export const addStockIn = (stockIn) => ({
@@ -20,7 +20,7 @@ export const addStockIn = (stockIn) => ({
   payload: stockIn,
 });
 
-export const addStockHistory = (stockHistory) => ({
-  type: "ADD_STOCK_HISTORY",
-  payload: stockHistory,
-});
+// export const addStockHistory = (stockHistory) => ({
+//   type: "ADD_STOCK_HISTORY",
+//   payload: stockHistory,
+// });

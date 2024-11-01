@@ -4,7 +4,7 @@ import {
   setStockIns,
   setStockOuts,
   addStockIn,
-  setStockHistory,
+  setStockHistories,
 } from "../reducers/stockActions";
 import { setProducts } from "../reducers/productActions";
 import { setSuppliers } from "../reducers/supplierActions";
@@ -79,7 +79,7 @@ export const fetchStockOuts = async (
   }
 };
 
-export const fetchStockHistory = async (
+export const fetchStockHistories = async (
   currentPage,
   itemsPerPage,
   dispatch,
@@ -94,10 +94,10 @@ export const fetchStockHistory = async (
         search: searchTerm,
       },
     });
-    dispatch(setStockHistory(response.data.stockHistory));
+    dispatch(setStockHistories(response.data.stockHistories));
     return response.data.totalPages;
   } catch (err) {
-    console.error("Error fetching stock-history", err);
+    console.error("Error fetching stock histories", err);
     throw err;
   }
 };

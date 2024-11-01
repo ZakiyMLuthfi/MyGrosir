@@ -4,6 +4,7 @@ const initialState = {
   suppliers: [],
   stockIns: [],
   stockOuts: [],
+  stockHistories: [],
 };
 
 const inventoryReducer = (state = initialState, action) => {
@@ -40,8 +41,8 @@ const inventoryReducer = (state = initialState, action) => {
     case "SET_STOCK_OUTS":
       return { ...state, stockOuts: action.payload };
 
-    case "SET_STOCK_HISTORY":
-      return { ...state, stockHistory: action.payload };
+    case "SET_STOCK_HISTORIES":
+      return { ...state, stockHistories: action.payload };
 
     default:
       return state;
