@@ -1,4 +1,4 @@
-const { StockHistory, Supplier, Product } = require("../../models");
+const { StockHistory, Product } = require("../../models");
 const { Op } = require("sequelize");
 
 const stockHistoryAll = async (req, res) => {
@@ -11,7 +11,11 @@ const stockHistoryAll = async (req, res) => {
 
     const whereCondition = {
       ...(search && {
-        [Op.or]: [{ "$product.product_name$": { [Op.iLike]: `%${search}%` } }],
+        [Op.or]: [
+          { "$product.product_name$": { [Op.iLike]: `%${search}%` } },
+          { stock_code: { [Op.iLike]: `%${search}%` } },
+          { grosir_choice: { [Op.iLike]: `%${search}%` } },
+        ],
       }),
     };
 
