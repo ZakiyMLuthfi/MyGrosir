@@ -3,6 +3,7 @@ const initialState = {
   products: [],
   suppliers: [],
   stockIns: [],
+  stockOuts: [],
 };
 
 const inventoryReducer = (state = initialState, action) => {

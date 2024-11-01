@@ -104,12 +104,15 @@ const StockDetailModal = ({
                   <Form.Control
                     name="quantity"
                     disabled
+                    type="number"
                     value={formData.quantity || ""}
                   />
                   <Form.Control
                     name="quantity_remaining"
-                    disabled
+                    type="number"
+                    disabled={!isEditing}
                     value={formData.quantity_remaining || ""}
+                    onChange={handleInputChange}
                   />
                 </div>
               </Form.Group>
@@ -167,27 +170,36 @@ const StockDetailModal = ({
                   />
                   <Form.Control
                     name="quantity_remaining"
-                    disabled={!isEditing}
+                    disabled
                     value={formData.quantity_remaining || ""}
-                    onChange={handleInputChange}
                   />
                 </div>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Send to</Form.Label>
-                <Form.Control
-                  name="grosir_choice"
-                  disabled={!isEditing}
-                  value={formData.grosir_choice || ""}
-                  onChange={handleInputChange}
-                >
-                  <Form.Select aria-label="Destination">
+                <Form.Label>
+                  Enter amount of stocks & Grosir destination
+                </Form.Label>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <Form.Control
+                    name="quantity_reduction"
+                    type="number"
+                    value={formData.quantity_reduction || ""}
+                    disabled={!isEditing}
+                    onChange={handleInputChange}
+                  />
+                  <Form.Select
+                    name="grosir_choice"
+                    disabled={!isEditing}
+                    value={formData.grosir_choice || ""}
+                    onChange={handleInputChange}
+                    aria-label="Destination"
+                  >
                     <option>-Select Grosir-</option>
                     <option value="Grosir A">Grosir A</option>
                     <option value="Grosir B">Grosir B</option>
                     <option value="Grosir C">Grosir C</option>
                   </Form.Select>
-                </Form.Control>
+                </div>
               </Form.Group>
               <Form.Group>
                 <Form.Label>Updated at / Updated by: </Form.Label>

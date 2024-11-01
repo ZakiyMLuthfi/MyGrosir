@@ -36,7 +36,9 @@ const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
               ? "Search products..."
               : type === "supplier"
               ? "Search suppliers..."
-              : "Search stock in..."
+              : type === "stockIn"
+              ? "Search stock in..."
+              : "Search stock out..."
           }
           value={searchTerm}
           onChange={handleSearchChange}
@@ -45,7 +47,9 @@ const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
               ? "products"
               : type === "supplier"
               ? "suppliers"
-              : "stock in"
+              : type === "stockIn"
+              ? "stock in"
+              : "stock out"
           }`}
           aria-describedby="search-addon"
         />

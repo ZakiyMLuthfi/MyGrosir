@@ -97,16 +97,16 @@ const StockInTable = ({
             ) : null}
             Status
           </th>
-          <th onClick={() => onSort("updatedAt")} style={{ cursor: "pointer" }}>
-            {sortConfig.key === "updatedAt" &&
+          <th onClick={() => onSort("createdAt")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "createdAt" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "updatedAt" &&
+            {sortConfig.key === "createdAt" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Last Update
+            Entry Date
           </th>
           <th
             onClick={() => onSort("created_by")}
@@ -138,7 +138,7 @@ const StockInTable = ({
                   {stockIn.quantity_remaining === 0 ? "Empty" : "Stored"}
                 </span>
               </td>
-              <td>{formatDate(stockIn.updatedAt)}</td>
+              <td>{formatDate(stockIn.createdAt)}</td>
               <td>{stockIn.created_by}</td>
               <td>
                 {/* Icon for Detail */}

@@ -127,6 +127,23 @@ export const addStockInService = async (formData, dispatch) => {
   }
 };
 
+export const updateStockOut = async (id, formData) => {
+  try {
+    const updatedData = {
+      ...formData,
+      updated_by: "ultraadmin",
+    };
+
+    await axios.put(`${API_URL}/stock-out/${id}`, updatedData);
+  } catch (error) {
+    if (error.response) {
+      console.error("Error data:", error.response.data); // Menampilkan detail error dari server
+    }
+    console.error("Error updating stock-out with remaining quantity", error);
+    throw error;
+  }
+};
+
 export const fetchStockInDetail = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/stock-in/${id}`);
@@ -153,14 +170,6 @@ export const fetchStockHistoryDetail = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching stock-history detail", error);
-    throw error;
-  }
-};
-export const updateStockOut = async (id, updatedData) => {
-  try {
-    await axios.put(`${API_URL}/stock-out/${id}`, updatedData);
-  } catch (error) {
-    console.error("Error reducing remaining quantity in stock-out", error);
     throw error;
   }
 };

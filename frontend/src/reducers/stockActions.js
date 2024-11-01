@@ -6,7 +6,7 @@ export const setStockIns = (stockIns) => ({
 });
 
 export const setStockOuts = (stockOuts) => ({
-  type: "SET_STOCK_OUT",
+  type: "SET_STOCK_OUTS",
   payload: stockOuts,
 });
 

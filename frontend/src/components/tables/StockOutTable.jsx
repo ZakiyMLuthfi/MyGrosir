@@ -84,14 +84,14 @@ const StockOutTable = ({
             Remaining
           </th>
           <th
-            onClick={() => onSort("quantity_remaining")}
+            onClick={() => onSort("status")}
             style={{ cursor: "pointer", textAlign: "center" }}
           >
-            {sortConfig.key === "quantity_remaining" &&
+            {sortConfig.key === "status" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "quantity_remaining" &&
+            {sortConfig.key === "status" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
@@ -120,41 +120,42 @@ const StockOutTable = ({
             Last Update
           </th>
           <th
-            onClick={() => onSort("created_by")}
+            onClick={() => onSort("updated_by")}
             style={{ cursor: "pointer" }}
           >
-            {sortConfig.key === "created_by" &&
+            {sortConfig.key === "updated_by" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "created_by" &&
+            {sortConfig.key === "updated_by" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Author
+            Updated by
           </th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {stockIns && stockIns.length > 0 ? (
-          stockIns.map((stockIn) => (
-            <tr key={stockIn.id}>
-              <td>{stockIn.stock_code}</td>
-              <td>{stockIn.supplier ? stockIn.supplier.supplier_name : "-"}</td>
-              <td>{stockIn.product ? stockIn.product.product_name : "-"}</td>
-              <td>{stockIn.quantity} pkg</td>
+        {stockOuts && stockOuts.length > 0 ? (
+          stockOuts.map((stockOut) => (
+            <tr key={stockOut.id}>
+              <td>{stockOut.stock_code}</td>
+              <td>{stockOut.product ? stockOut.product.product_name : "-"}</td>
+              <td>{stockOut.quantity} pkg</td>
+              <td>{stockOut.quantity_remaining} pkg left</td>
               <td>
-                <span style={getStatusStyle(stockIn.quantity_remaining)}>
-                  {stockIn.quantity_remaining === 0 ? "Empty" : "Ready"}
+                <span style={getStatusStyle(stockOut.quantity_remaining)}>
+                  {stockOut.quantity_remaining === 0 ? "Empty" : "Ready"}
                 </span>
               </td>
-              <td>{formatDate(stockIn.updatedAt)}</td>
-              <td>{stockIn.created_by}</td>
+              <td>{formatDate(stockOut.createdAt)}</td>
+              <td>{formatDate(stockOut.updatedAt)}</td>
+              <td>{stockOut.updated_by}</td>
               <td>
                 {/* Icon for Detail */}
                 <div
-                  onClick={() => onDetailClick(stockIn)}
+                  onClick={() => onDetailClick(stockOut)}
                   style={{
                     cursor: "pointer",
                     color: "blue",
@@ -170,7 +171,7 @@ const StockOutTable = ({
           ))
         ) : (
           <tr>
-            <td colSpan="5">No Stock-in available</td>
+            <td colSpan="9">No Stock-out available</td>
           </tr>
         )}
       </tbody>
