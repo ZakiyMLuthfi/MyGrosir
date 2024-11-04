@@ -80,7 +80,7 @@ const SupplierTable = ({
             ) : null}
             Updated by
           </th>
-          <th>isDeleted?</th>
+          <th>Active Status</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -91,7 +91,7 @@ const SupplierTable = ({
               <td>{supplier.supplier_code}</td>
               <td>{supplier.supplier_name}</td>
               <td>{formatDate(supplier.updatedAt)}</td>
-              <td>{supplier.updated_by}</td>
+              <td>{supplier.Updater ? supplier.Updater.username : "-"}</td>
               <td
                 onClick={() => onToggleClick(supplier)}
                 style={{
@@ -148,7 +148,7 @@ const SupplierTable = ({
           ))
         ) : (
           <tr>
-            <td colSpan="5">No suppliers available</td>
+            <td colSpan="6">No suppliers available</td>
           </tr>
         )}
       </tbody>

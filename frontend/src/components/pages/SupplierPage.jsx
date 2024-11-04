@@ -8,6 +8,7 @@ import {
   deleteSupplierService,
   restoreSupplierService,
 } from "../../services/supplierService";
+import { fetchUsers } from "../../services/userServices";
 import debounce from "lodash.debounce";
 import SupplierDetailModal from "../modals/supplierDetailModal";
 import SupplierTable from "../tables/SupplierTable";
@@ -17,6 +18,7 @@ import PaginationComponent from "../PaginationComponent";
 const SupplierPage = () => {
   const dispatch = useDispatch();
   const suppliers = useSelector((state) => state.inventory.suppliers || []);
+  const users = useSelector((state) => state.inventory.users || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
@@ -70,14 +72,24 @@ const SupplierPage = () => {
       const totalPagesFromApi = await fetchSuppliers(
         currentPage,
         itemsPerPage,
-        dispatch,
-        searchTerm
+        dispatch
       );
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching suppliers", err);
     } finally {
       setLoading(false);
+    }
+  }, [dispatch, currentPage, itemsPerPage]);
+
+  const fetchAndSetUsers = useCallback(async () => {
+    try {
+      const response = await fetchUsers(currentPage, itemsPerPage, dispatch);
+      if (response.users) {
+        dispatch(setUsers(response.users));
+      }
+    } catch (err) {
+      console.error("Error fetching users", err);
     }
   }, [dispatch, currentPage, itemsPerPage]);
 
@@ -99,7 +111,7 @@ const SupplierPage = () => {
   };
 
   const handleToggleDelete = async (supplier) => {
-    if (product.isDeleted) {
+    if (supplier.isDeleted) {
       await restoreSupplierService(supplier.id, dispatch);
     } else {
       await deleteSupplierService(supplier.id, dispatch);
@@ -108,9 +120,15 @@ const SupplierPage = () => {
   };
 
   const handleDetailClick = async (supplier) => {
-    const supplierDetail = await fetchSupplierDetail(supplier.id);
-    setSelectedSupplier(supplierDetail);
-    setShowModal(true);
+    try {
+      const supplierDetail = await fetchSupplierDetail(supplier.id);
+      setSelectedSupplier(supplierDetail);
+      setShowModal(true);
+      await fetchAndSetUsers();
+    } catch (error) {
+      console.error("Error fetching product detail:", error);
+      alert("Failed to load product details. Please try again later.");
+    }
   };
 
   const handlePageChange = (pageNumber) => {
@@ -162,7 +180,6 @@ const SupplierPage = () => {
             type="supplier"
             onAdd={handleAddSupplier}
             onSearch={handleSearch}
-            onToggleClick={handleToggleDelete}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
@@ -171,6 +188,7 @@ const SupplierPage = () => {
             onDetailClick={handleDetailClick}
             onDeleteClick={handleDeleteClick}
             onSort={handleSort}
+            onToggleClick={handleToggleDelete}
             sortConfig={sortConfig}
           />
 
@@ -189,6 +207,7 @@ const SupplierPage = () => {
             isEditing={isEditing}
             onUpdate={handleSaveChanges}
             onToggleEdit={handleUpdateClick}
+            users={users}
           />
         </div>
       )}

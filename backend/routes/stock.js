@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { verifyToken, checkActiveStatus } = require("../middlewares/userVerify");
 
 const stockInAll = require("../controllers/stocks/stockInAll");
 const stockInAdd = require("../controllers/stocks/stockAdd");
@@ -10,13 +11,13 @@ const stockOutUpdate = require("../controllers/stocks/stockOutUpdate");
 const stockHistoryAll = require("../controllers/stocks/stockHistoryAll");
 const stockHistoryDetail = require("../controllers/stocks/stockHistoryDetail");
 
-router.get("/stock-in", stockInAll);
-router.post("/stock-in", stockInAdd);
-router.get("/stock-in/:id", stockInDetail);
-router.get("/stock-out", stockOutAll);
-router.get("/stock-out/:id", stockOutDetail);
-router.put("/stock-out/:id", stockOutUpdate);
-router.get("/stock-history", stockHistoryAll);
-router.get("/stock-history/:id", stockHistoryDetail);
+router.get("/stock-in", verifyToken, stockInAll);
+router.post("/stock-in", verifyToken, checkActiveStatus, stockInAdd);
+router.get("/stock-in/:id", verifyToken, stockInDetail);
+router.get("/stock-out", verifyToken, stockOutAll);
+router.get("/stock-out/:id", verifyToken, stockOutDetail);
+router.put("/stock-out/:id", verifyToken, checkActiveStatus, stockOutUpdate);
+router.get("/stock-history", verifyToken, stockHistoryAll);
+router.get("/stock-history/:id", verifyToken, stockHistoryDetail);
 
 module.exports = router;

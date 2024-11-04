@@ -10,8 +10,14 @@ const StockDetailModal = ({
   isEditing,
   onUpdate,
   onToggleEdit,
+  users,
 }) => {
   const [formData, setFormData] = useState({});
+  const creator =
+    (stockData && users.find((user) => user.id === stockData.created_by)) || {};
+
+  const updater =
+    (stockData && users.find((user) => user.id === stockData.updated_by)) || {};
 
   useEffect(() => {
     if (stockData) {
@@ -36,6 +42,10 @@ const StockDetailModal = ({
   };
 
   const handleSaveChanges = () => {
+    if (formData.quantity_reduction > formData.quantity_remaining) {
+      alert("Reduction quantity cannot be greater than remaining quantity.");
+      return;
+    }
     onUpdate(formData);
   };
 
@@ -99,7 +109,7 @@ const StockDetailModal = ({
           {type === "stock-in" && (
             <>
               <Form.Group>
-                <Form.Label>Quantity (pkg) / Quantity Remaining</Form.Label>
+                <Form.Label>Quantity (pack) / Quantity Remaining</Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="quantity"
@@ -136,7 +146,7 @@ const StockDetailModal = ({
                 <Form.Label>Author</Form.Label>
                 <Form.Control
                   name="created_by"
-                  value={formData.created_by || ""}
+                  value={creator.username || ""}
                   disabled
                 />
               </Form.Group>
@@ -161,7 +171,7 @@ const StockDetailModal = ({
           {type === "stock-out" && (
             <>
               <Form.Group>
-                <Form.Label>Quantity (pkg) / Quantity Remaining</Form.Label>
+                <Form.Label>Quantity (pack) / Quantity Remaining</Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Form.Control
                     name="quantity"
@@ -212,7 +222,7 @@ const StockDetailModal = ({
                   <Form.Control
                     name="updated_by"
                     disabled
-                    value={formData.updated_by || ""}
+                    value={updater ? updater.username : ""}
                   />
                 </div>
               </Form.Group>
@@ -255,7 +265,7 @@ const StockDetailModal = ({
                   />
                   <Form.Control
                     name="created_by"
-                    value={formData.created_by || ""}
+                    value={creator ? creator.username : "" || ""}
                     disabled
                   />
                 </div>

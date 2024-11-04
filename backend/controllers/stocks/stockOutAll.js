@@ -1,4 +1,4 @@
-const { StockOut, Product } = require("../../models");
+const { StockOut, Product, User } = require("../../models");
 const { Op } = require("sequelize");
 
 const stockOutAll = async (req, res) => {
@@ -19,7 +19,20 @@ const stockOutAll = async (req, res) => {
       where: whereCondition,
       limit: limit,
       offset: offset,
-      include: [{ model: Product, as: "product" }],
+      include: [
+        { model: Product, as: "product" },
+        {
+          model: User,
+          as: "Creator",
+          attributes: ["username"],
+        },
+        {
+          model: User,
+          as: "Updater",
+          attributes: ["username"],
+        },
+      ],
+      order: [["updatedAt", "DESC"]],
     });
 
     const totalPages = Math.ceil(count / limit);

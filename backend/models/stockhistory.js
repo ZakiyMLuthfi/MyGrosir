@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "productId",
         as: "product",
       });
+      StockHistory.belongsTo(models.User, {
+        foreignKey: "created_by",
+        as: "Creator",
+      });
     }
   }
   StockHistory.init(
@@ -42,6 +46,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         allowNull: false,
       },
+      stockOutId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "StockOuts",
+          key: "id",
+        },
+        allowNull: false,
+      },
       quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -56,7 +68,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "Grosir A",
       },
       created_by: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
         allowNull: false,
       },
       createdAt: {
@@ -69,6 +85,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "StockHistory",
       tableName: "StockHistory",
+      timestamps: false,
     }
   );
   return StockHistory;

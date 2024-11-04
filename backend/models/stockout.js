@@ -12,10 +12,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "supplierId",
         as: "supplier",
       });
-
       StockOut.belongsTo(models.Product, {
         foreignKey: "productId",
         as: "product",
+      });
+      StockOut.belongsTo(models.User, {
+        foreignKey: "created_by",
+        as: "Creator",
+      });
+      StockOut.belongsTo(models.User, {
+        foreignKey: "updated_by",
+        as: "Updater",
       });
     }
   }
@@ -66,7 +73,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       created_by: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
         allowNull: false,
       },
       createdAt: {
@@ -75,8 +86,12 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.NOW,
       },
       updated_by: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Users", // Nama tabel yang dirujuk
+          key: "id",
+        },
+        allowNull: false, // Biarkan bisa null jika diperlukan
       },
       updatedAt: {
         type: DataTypes.DATE,

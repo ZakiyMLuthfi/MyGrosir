@@ -52,12 +52,20 @@ module.exports = {
         defaultValue: false,
       },
       created_by: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users", // Mengacu pada tabel Users
+          key: "id",
+        },
         allowNull: false,
       },
       updated_by: {
-        type: Sequelize.STRING(20),
-        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users", // Mengacu pada tabel Users
+          key: "id",
+        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

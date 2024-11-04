@@ -3,14 +3,37 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // Association to track creator (superadmin)
-      this.belongsTo(models.User, {
+      User.hasMany(models.Product, {
         foreignKey: "created_by",
-        as: "creator",
+        as: "CreatedProducts",
       });
-      this.belongsTo(models.User, {
+      User.hasMany(models.Product, {
         foreignKey: "updated_by",
-        as: "updater",
+        as: "UpdatedProducts",
+      });
+      User.hasMany(models.Supplier, {
+        foreignKey: "created_by",
+        as: "CreatedSuppliers",
+      });
+      User.hasMany(models.Supplier, {
+        foreignKey: "updated_by",
+        as: "UpdatedSuppliers",
+      });
+      User.hasMany(models.StockIn, {
+        foreignKey: "created_by",
+        as: "CreatedStockIns",
+      });
+      User.hasMany(models.StockOut, {
+        foreignKey: "created_by",
+        as: "CreatedStockOuts",
+      });
+      User.hasMany(models.StockOut, {
+        foreignKey: "updated_by",
+        as: "UpdatedStockOuts",
+      });
+      User.hasMany(models.StockHistory, {
+        foreignKey: "created_by",
+        as: "CreatedStockHistory",
       });
     }
   }
@@ -22,44 +45,38 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      email: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: {
+            msg: "Email format is invalid",
+          },
+          len: {
+            args: [1, 50],
+            msg: "Email length must be under 50 characters",
+          },
+        },
+      },
       username: {
         type: DataTypes.STRING(25),
         allowNull: false,
         unique: true,
         validate: {
           len: {
-            args: [1, 20],
-            msg: "Username cannot more than 20 character",
-          },
-          is: {
-            args: /^[a-zA-Z0-9._%+-]+@mygrosir\.com$/,
-            msg: "Username must in company email format (name@mygrosir.com)",
+            args: [1, 25],
+            msg: "Username cannot exceed 25 character before '@mygrosir.com'",
           },
         },
       },
       password: {
-        type: DataTypes.STRING(12),
+        type: DataTypes.STRING(100),
         allowNull: false,
-        validate: {
-          len: {
-            args: [8, 12], // Minimal 8, maksimal 12 karakter
-            msg: "Password must 8 to 12 character",
-          },
-          is: {
-            args: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$/,
-            msg: "Password must include a capital word, small, and number",
-          },
-        },
       },
       reset_password_token: {
-        type: DataTypes.STRING(12),
+        type: DataTypes.STRING(100),
         allowNull: true,
-        validate: {
-          len: {
-            args: [12, 12],
-            msg: "Token reset password harus 12 karakter",
-          },
-        },
       },
       reset_password_expires: {
         type: DataTypes.DATE,
@@ -76,6 +93,14 @@ module.exports = (sequelize, DataTypes) => {
       is_deleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      created_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      updated_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       createdAt: {
         type: DataTypes.DATE,

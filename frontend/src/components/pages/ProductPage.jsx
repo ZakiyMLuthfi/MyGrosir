@@ -8,6 +8,7 @@ import {
   deleteProductService,
   restoreProductService,
 } from "../../services/productService";
+import { fetchUsers } from "../../services/userServices";
 import debounce from "lodash.debounce";
 import ProductDetailModal from "../modals/productDetailModal";
 import ProductTable from "../tables/ProductTable";
@@ -17,6 +18,7 @@ import PaginationComponent from "../PaginationComponent";
 const ProductPage = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.inventory.products || []);
+  const users = useSelector((state) => state.inventory.users || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -70,14 +72,24 @@ const ProductPage = () => {
       const totalPagesFromApi = await fetchProducts(
         currentPage,
         itemsPerPage,
-        dispatch,
-        searchTerm
+        dispatch
       );
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching products", err);
     } finally {
       setLoading(false);
+    }
+  }, [dispatch, currentPage, itemsPerPage]);
+
+  const fetchAndSetUsers = useCallback(async () => {
+    try {
+      const response = await fetchUsers(currentPage, itemsPerPage, dispatch);
+      if (response.users) {
+        dispatch(setUsers(response.users));
+      }
+    } catch (err) {
+      console.error("Error fetching users", err);
     }
   }, [dispatch, currentPage, itemsPerPage]);
 
@@ -108,9 +120,15 @@ const ProductPage = () => {
   };
 
   const handleDetailClick = async (product) => {
-    const productDetail = await fetchProductDetail(product.id);
-    setSelectedProduct(productDetail);
-    setShowModal(true);
+    try {
+      const productDetail = await fetchProductDetail(product.id);
+      setSelectedProduct(productDetail);
+      setShowModal(true);
+      await fetchAndSetUsers();
+    } catch (error) {
+      console.error("Error fetching product detail:", error);
+      alert("Failed to load product details. Please try again later.");
+    }
   };
 
   const handlePageChange = (pageNumber) => {
@@ -162,7 +180,6 @@ const ProductPage = () => {
             type="product"
             onAdd={handleAddProduct}
             onSearch={handleSearch}
-            onToggleClick={handleToggleDelete}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
@@ -181,7 +198,6 @@ const ProductPage = () => {
             onItemsPerPageChange={handleItemsPerPageChange}
             itemsPerPage={itemsPerPage}
           />
-
           <ProductDetailModal
             show={showModal}
             onClose={handleCloseModal}
@@ -189,6 +205,7 @@ const ProductPage = () => {
             isEditing={isEditing}
             onUpdate={handleSaveChanges}
             onToggleEdit={handleUpdateClick}
+            users={users}
           />
         </div>
       )}

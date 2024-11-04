@@ -29,9 +29,20 @@ module.exports = {
         },
         allowNull: false,
       },
-      // setelah submit data pada tabel stockIn, maka data takkan bisa diubah lagi selain quantity_remaining yang berkurang lewat stockOut
+      stockOutId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "StockOuts",
+          key: "id",
+        },
+        allowNull: false,
+      },
       quantity: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      stock_price: {
+        type: Sequelize.DECIMAL(15, 2),
         allowNull: false,
       },
       grosir_choice: {
@@ -40,7 +51,11 @@ module.exports = {
         defaultValue: "Grosir A",
       },
       created_by: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users", // Mengacu pada tabel Users
+          key: "id",
+        },
         allowNull: false,
       },
       createdAt: {

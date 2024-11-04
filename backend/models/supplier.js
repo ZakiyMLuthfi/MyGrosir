@@ -12,6 +12,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "supplierId",
         as: "stockOuts",
       });
+      Supplier.belongsTo(models.User, {
+        foreignKey: "created_by",
+        as: "Creator",
+      });
+      Supplier.belongsTo(models.User, {
+        foreignKey: "updated_by",
+        as: "Updater",
+      });
     }
   }
   Supplier.init(
@@ -51,12 +59,20 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       created_by: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Users", // Nama tabel yang dirujuk
+          key: "id",
+        },
         allowNull: false,
       },
       updated_by: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Users", // Nama tabel yang dirujuk
+          key: "id",
+        },
+        allowNull: false, // Biarkan bisa null jika diperlukan
       },
     },
     {

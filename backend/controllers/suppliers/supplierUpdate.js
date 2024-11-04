@@ -9,8 +9,8 @@ const supplierUpdate = async (req, res) => {
     supplier_contact_name,
     supplier_contact,
     goods_type,
-    updated_by,
   } = req.body;
+  const userId = req.user.id;
 
   const { isValid, errors } = validateSupplier(req.body);
 
@@ -28,7 +28,7 @@ const supplierUpdate = async (req, res) => {
     supplier.supplier_contact_name = supplier_contact_name;
     supplier.supplier_contact = supplier_contact;
     supplier.goods_type = Array.isArray(goods_type) ? goods_type : [goods_type];
-    supplier.updated_by = updated_by;
+    supplier.updated_by = userId;
     supplier.updateAt = new Date();
 
     await supplier.save();

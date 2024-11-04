@@ -1,0 +1,25 @@
+/* ProfileIcon.css */
+.profile-icon {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 40px; /* Sesuaikan dengan ukuran ikon */
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000; /* Pastikan dropdown berada di atas elemen lain */
+  min-width: 120px; /* Opsional: Menentukan lebar minimum dropdown */
+}
+
+.logout-dropdown {
+  padding: 10px;
+  cursor: pointer; /* Menambahkan pointer untuk efek hover */
+}
+
+.profile-dropdown {
+  padding: 10px;
+  border-bottom: 1px solid #ccc; /* Jika ingin memisahkan profil dari logout */
+}

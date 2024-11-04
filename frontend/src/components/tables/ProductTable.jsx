@@ -80,7 +80,7 @@ const ProductTable = ({
             ) : null}
             Updated by
           </th>
-          <th>isDeleted?</th>
+          <th>Active Status</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -91,7 +91,7 @@ const ProductTable = ({
               <td>{product.product_code}</td>
               <td>{product.product_name}</td>
               <td>{formatDate(product.updatedAt)}</td>
-              <td>{product.updated_by}</td>
+              <td>{product.Updater ? product.Updater.username : "-"}</td>
               <td
                 onClick={() => onToggleClick(product)}
                 style={{
@@ -148,7 +148,7 @@ const ProductTable = ({
           ))
         ) : (
           <tr>
-            <td colSpan="5">No products available</td>
+            <td colSpan="6">No products available</td>
           </tr>
         )}
       </tbody>

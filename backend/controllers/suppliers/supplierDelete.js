@@ -2,9 +2,9 @@ const { Supplier } = require("../../models");
 
 const supplierDelete = async (req, res) => {
   const { id } = req.params;
-
+  const userId = req.user.id;
   try {
-    const supplier = await Supplier.findByPk(req.params.id, {
+    const supplier = await Supplier.findByPk(id, {
       where: {
         isDeleted: false,
       },
@@ -13,7 +13,7 @@ const supplierDelete = async (req, res) => {
     if (!supplier) {
       return res.status(400).json({ error: "Supplier not found" });
     }
-    await supplier.update({ isDeleted: true }),
+    await supplier.update({ isDeleted: true, updated_by: userId }),
       res.status(200).json({ message: "Supplier deleted successfully" });
   } catch (err) {
     console.error("Error deleting supplier", err);

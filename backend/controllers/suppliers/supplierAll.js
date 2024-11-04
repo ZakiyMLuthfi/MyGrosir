@@ -1,9 +1,9 @@
-const { Supplier } = require("../../models");
+const { Supplier, User } = require("../../models");
 const { Op } = require("sequelize");
 
 const supplierAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.itemsPerPage) || 5;
     const page = parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 
@@ -18,8 +18,21 @@ const supplierAll = async (req, res) => {
       limit: limit,
       offset: offset,
       order: [["updatedAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "Creator", // Alias untuk pengguna yang membuat
+          attributes: ["username"], // Hanya ambil username
+        },
+        {
+          model: User,
+          as: "Updater", // Alias untuk pengguna yang mengupdate
+          attributes: ["username"], // Hanya ambil username
+        },
+      ],
     });
 
+    console.log("Suppliers with Creator and Updater:", suppliers);
     const totalPages = Math.ceil(count / limit);
 
     res.status(200).json({

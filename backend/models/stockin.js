@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "supplierId",
         as: "supplier",
       });
-
       StockIn.belongsTo(models.Product, {
         foreignKey: "productId",
         as: "product",
@@ -16,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       StockIn.hasMany(models.StockOut, {
         foreignKey: "stockInId",
         as: "stockOuts",
+      });
+      StockIn.belongsTo(models.User, {
+        foreignKey: "created_by",
+        as: "Creator",
       });
     }
   }
@@ -58,7 +61,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       created_by: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
         allowNull: false,
       },
       createdAt: {

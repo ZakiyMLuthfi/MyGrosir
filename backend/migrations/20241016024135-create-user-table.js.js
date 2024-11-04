@@ -18,8 +18,16 @@ module.exports = {
         unique: true,
       },
       password: {
-        type: Sequelize.STRING(12),
+        type: Sequelize.STRING(100),
         allowNull: false,
+      },
+      reset_password_token: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      },
+      reset_password_expires: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
       role: {
         type: Sequelize.ENUM("admin", "supervisor", "superadmin"),
@@ -35,18 +43,11 @@ module.exports = {
       },
       created_by: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Users", // Referensi ke tabel 'Users'
-          key: "id",
-        },
         allowNull: false,
       },
       updated_by: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Users", // Referensi ke tabel 'Users'
-          key: "id",
-        },
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

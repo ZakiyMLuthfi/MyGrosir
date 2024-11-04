@@ -14,18 +14,6 @@ const StockHistoryTable = ({
     return moment(dateString).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss");
   };
 
-  //   const getStatusStyle = (quantity_remaining) => {
-  //     return {
-  //       backgroundColor: quantity_remaining === 0 ? "grey" : "green",
-  //       color: "white",
-  //       padding: "2px 4px",
-  //       borderRadius: "6px",
-  //       display: "inline-block",
-  //       textAlign: "center",
-  //       minWidth: "60px",
-  //     };
-  //   };
-
   return (
     <table className="table table-bordered">
       <thead className="thead-light">
@@ -121,7 +109,9 @@ const StockHistoryTable = ({
               </td>
               <td>{stockHistory.quantity} pkg</td>
               <td>{stockHistory.grosir_choice}</td>
-              <td>{stockHistory.created_by}</td>
+              <td>
+                {stockHistory.Creator ? stockHistory.Creator.username : "-"}
+              </td>
               <td>{formatDate(stockHistory.createdAt)}</td>
               <td>
                 {/* Icon for Detail */}

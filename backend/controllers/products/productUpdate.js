@@ -3,8 +3,7 @@ const validateProduct = require("../../validators/productValidator");
 
 const productUpdate = async (req, res) => {
   const { id } = req.params;
-  const { package_quantity, weight_per_pkg, description, updated_by } =
-    req.body;
+  const { package_quantity, weight_per_pkg, description } = req.body;
 
   const { isValid, errors } = validateProduct(req.body);
 
@@ -17,6 +16,7 @@ const productUpdate = async (req, res) => {
     if (!product) {
       return res.status(400).json({ error: "Product not found" });
     }
+
     console.log("Received data:", {
       package_quantity,
       weight_per_pkg,
@@ -40,7 +40,7 @@ const productUpdate = async (req, res) => {
     product.weight_per_pkg = Number(weight_per_pkg) || 0;
     product.weight = weight;
     product.description = description;
-    product.updated_by = updated_by;
+    product.updated_by = req.user.id;
     product.updatedAt = new Date();
 
     await product.save();

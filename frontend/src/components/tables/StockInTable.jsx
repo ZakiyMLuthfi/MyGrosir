@@ -122,7 +122,7 @@ const StockInTable = ({
             ) : null}
             Author
           </th>
-          <th>Action</th>
+          <th>Detail</th>
         </tr>
       </thead>
       <tbody>
@@ -132,14 +132,14 @@ const StockInTable = ({
               <td>{stockIn.stock_code}</td>
               <td>{stockIn.supplier ? stockIn.supplier.supplier_name : "-"}</td>
               <td>{stockIn.product ? stockIn.product.product_name : "-"}</td>
-              <td>{stockIn.quantity} pkg</td>
+              <td>{stockIn.quantity} pack</td>
               <td>
                 <span style={getStatusStyle(stockIn.quantity_remaining)}>
                   {stockIn.quantity_remaining === 0 ? "Empty" : "Stored"}
                 </span>
               </td>
               <td>{formatDate(stockIn.createdAt)}</td>
-              <td>{stockIn.created_by}</td>
+              <td>{stockIn.Creator ? stockIn.Creator.username : "-"}</td>
               <td>
                 {/* Icon for Detail */}
                 <div
@@ -159,7 +159,7 @@ const StockInTable = ({
           ))
         ) : (
           <tr>
-            <td colSpan="5">No Stock-in available</td>
+            <td colSpan="8">No Stock-in available</td>
           </tr>
         )}
       </tbody>

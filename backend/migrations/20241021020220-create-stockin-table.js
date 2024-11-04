@@ -44,8 +44,16 @@ module.exports = {
         type: Sequelize.DECIMAL(15, 2),
         allowNull: false,
       },
+      total_purchase_price: {
+        type: Sequelize.DECIMAL(15, 2),
+        allowNull: false,
+      },
       created_by: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
         allowNull: false,
       },
       createdAt: {
@@ -53,7 +61,6 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn("now"),
       },
-      // Rencananya updatedAt di stockIn juga akan mengambil data updatedAt pada tabel stockOut, agar saat pengurangan quantity remaining terjadi maka updatedAt suatu stok pada tabel stockIn juga akan berganti
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,

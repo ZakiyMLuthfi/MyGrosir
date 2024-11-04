@@ -9,9 +9,13 @@ const SupplierDetailModal = ({
   isEditing,
   onUpdate,
   onToggleEdit,
+  users,
 }) => {
   const [formData, setFormData] = useState({});
-
+  const creator =
+    (supplierData &&
+      users.find((user) => user.id === supplierData.created_by)) ||
+    {};
   const selectedGoodsType = formData.goods_type || [];
 
   useEffect(() => {
@@ -36,8 +40,7 @@ const SupplierDetailModal = ({
       if (name === "goods_type") {
         const updatedGoodsType = checked
           ? [...prevData.goods_type, value]
-          : prevData.goods_type.filter((type) => type !== value); // Hapus nilai jika tidak dicentang
-
+          : prevData.goods_type.filter((type) => type !== value);
         return { ...prevData, goods_type: updatedGoodsType };
       } else {
         return {
@@ -156,9 +159,8 @@ const SupplierDetailModal = ({
             <Form.Label>Author</Form.Label>
             <Form.Control
               name="created_by"
-              value={formData.created_by || ""}
+              value={creator.username || "-"}
               disabled
-              onChange={handleInputChange}
             />
           </Form.Group>
           <Form.Group>

@@ -4,6 +4,7 @@ const validateStockIn = require("../../validators/stockInValidator");
 const stockInAdd = async (req, res) => {
   const { supplierId, productId, quantity, purchase_price, created_by } =
     req.body;
+  const userId = req.user.id;
 
   const { isValid, errors } = validateStockIn(req.body);
   if (!isValid) {
@@ -32,7 +33,7 @@ const stockInAdd = async (req, res) => {
       quantity_remaining: quantity,
       purchase_price,
       total_purchase_price,
-      created_by,
+      created_by: userId,
     };
 
     // Buat entry baru di StockIn
@@ -49,8 +50,8 @@ const stockInAdd = async (req, res) => {
       quantity_remaining: Number(quantity),
       purchase_price,
       total_purchase_price,
-      created_by,
-      updated_by: created_by,
+      created_by: userId,
+      updated_by: userId,
     };
 
     console.log("StockOut Data:", stockOutData);

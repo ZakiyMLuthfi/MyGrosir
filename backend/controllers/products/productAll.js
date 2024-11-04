@@ -1,4 +1,4 @@
-const { Product } = require("../../models");
+const { Product, User } = require("../../models");
 const { Op } = require("sequelize");
 
 const productAll = async (req, res) => {
@@ -18,7 +18,21 @@ const productAll = async (req, res) => {
       limit: limit,
       offset: offset,
       order: [["updatedAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "Creator", // Alias untuk pengguna yang membuat
+          attributes: ["username"], // Hanya ambil username
+        },
+        {
+          model: User,
+          as: "Updater", // Alias untuk pengguna yang mengupdate
+          attributes: ["username"], // Hanya ambil username
+        },
+      ],
     });
+
+    console.log("Products with Creator and Updater:", products);
 
     const totalPages = Math.ceil(count / limit);
 

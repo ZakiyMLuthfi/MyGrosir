@@ -5,6 +5,8 @@ const initialState = {
   stockIns: [],
   stockOuts: [],
   stockHistories: [],
+  users: [],
+  token: null,
 };
 
 const inventoryReducer = (state = initialState, action) => {
@@ -43,6 +45,21 @@ const inventoryReducer = (state = initialState, action) => {
 
     case "SET_STOCK_HISTORIES":
       return { ...state, stockHistories: action.payload };
+
+    case "SET_USERS":
+      return { ...state, users: action.payload };
+    case "ADD_USER":
+      return { ...state, users: [...state.users, action.payload] };
+    case "REMOVE_USER":
+      return {
+        ...state,
+        users: state.users.filter((user) => user.id !== action.payload),
+      };
+
+    case "SET_TOKEN":
+      return { ...state, token: action.payload };
+    case "CLEAR_TOKEN":
+      return { ...state, token: null };
 
     default:
       return state;

@@ -17,12 +17,10 @@ const AddStockIn = ({ onSubmit }) => {
   const dispatch = useDispatch();
 
   const products = useSelector((state) => {
-    console.log("State products:", state.inventory.products);
     return state.inventory.products.products || [];
   });
 
   const suppliers = useSelector((state) => {
-    console.log("State suppliers:", state.inventory.suppliers);
     return state.inventory.suppliers.suppliers || [];
   });
 
@@ -37,7 +35,6 @@ const AddStockIn = ({ onSubmit }) => {
     };
     fetchData();
   }, [dispatch]);
-  console.log(products, suppliers);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

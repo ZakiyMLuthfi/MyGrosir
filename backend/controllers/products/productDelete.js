@@ -2,9 +2,10 @@ const { Product } = require("../../models");
 
 const productDelete = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user.id;
 
   try {
-    const product = await Product.findByPk(req.params.id, {
+    const product = await Product.findByPk(id, {
       where: {
         isDeleted: false,
       },
@@ -13,7 +14,11 @@ const productDelete = async (req, res) => {
     if (!product) {
       return res.status(400).json({ error: "Product not found" });
     }
-    await product.update({ isDeleted: true }),
+    await product.update({
+      isDeleted: true,
+      updated_by: userId,
+      updatedAt: new Date(),
+    }),
       res.status(200).json({ message: "Product deleted successfuly" });
   } catch (err) {
     console.error("Error deleting product", err);
@@ -25,7 +30,7 @@ const productRestore = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const product = await Product.findByPk(req.params.id, {
+    const product = await Product.findByPk(id, {
       where: {
         isDeleted: true,
       },

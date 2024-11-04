@@ -15,6 +15,7 @@ const StockHistoryPage = () => {
   const stockHistories = useSelector(
     (state) => state.inventory.stockHistories || []
   );
+  const users = useSelector((state) => state.inventory.users || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedStockHistory, setSelectedStockHistory] = useState(null);
@@ -85,14 +86,24 @@ const StockHistoryPage = () => {
       const totalPagesFromApi = await fetchStockHistories(
         currentPage,
         itemsPerPage,
-        dispatch,
-        searchTerm
+        dispatch
       );
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching stock histories", err);
     } finally {
       setLoading(false);
+    }
+  }, [dispatch, currentPage, itemsPerPage]);
+
+  const fetchAndSetUsers = useCallback(async () => {
+    try {
+      const response = await fetchUsers(currentPage, itemsPerPage, dispatch);
+      if (response.users) {
+        dispatch(setUsers(response.users));
+      }
+    } catch (err) {
+      console.error("Error fetching users", err);
     }
   }, [dispatch, currentPage, itemsPerPage]);
 
@@ -104,6 +115,7 @@ const StockHistoryPage = () => {
     const stockHistoryDetail = await fetchStockHistoryDetail(stockHistory.id);
     setSelectedStockHistory(stockHistoryDetail);
     setShowModal(true);
+    await fetchAndSetUsers();
   };
 
   const handlePageChange = (pageNumber) => {
@@ -165,6 +177,7 @@ const StockHistoryPage = () => {
             onClose={handleCloseModal}
             stockData={selectedStockHistory}
             type="stock-history"
+            users={users}
           />
         </div>
       )}

@@ -1,4 +1,4 @@
-const { StockHistory, Product } = require("../../models");
+const { StockHistory, Product, User } = require("../../models");
 const { Op } = require("sequelize");
 
 const stockHistoryAll = async (req, res) => {
@@ -24,8 +24,15 @@ const stockHistoryAll = async (req, res) => {
       where: whereCondition,
       limit: limit,
       offset: offset,
-      include: [{ model: Product, as: "product" }],
-      order: [["updatedAt", "DESC"]],
+      include: [
+        { model: Product, as: "product" },
+        {
+          model: User,
+          as: "Creator",
+          attributes: ["username"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
     });
 
     const totalPages = Math.ceil(count / limit);

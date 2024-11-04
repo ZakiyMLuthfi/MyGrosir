@@ -4,7 +4,7 @@ const supplierDetail = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const supplier = await Supplier.findByPk(req.params.id, {
+    const supplier = await Supplier.findByPk(id, {
       where: {
         isDeleted: false,
       },

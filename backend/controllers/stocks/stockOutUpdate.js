@@ -8,7 +8,9 @@ const {
 
 const stockOutUpdate = async (req, res) => {
   const { id } = req.params;
-  const { quantity_reduction, updated_by, grosir_choice } = req.body;
+  const { quantity_reduction, grosir_choice } = req.body;
+
+  const userId = req.user.id;
 
   const validGrosirChoices = ["Grosir A", "Grosir B", "Grosir C"];
   if (!validGrosirChoices.includes(grosir_choice)) {
@@ -48,7 +50,8 @@ const stockOutUpdate = async (req, res) => {
     await StockOut.update(
       {
         quantity_remaining: newQuantityRemaining,
-        updated_by: updated_by,
+        updated_by: userId,
+        updatedAt: new Date(),
       },
       {
         where: { id: stockOut.id },
@@ -58,7 +61,6 @@ const stockOutUpdate = async (req, res) => {
     const stockIn = await StockIn.findByPk(stockOut.stockInId);
     await stockIn.update({
       quantity_remaining: newQuantityRemaining,
-      updated_by,
     });
 
     const stock_price = stockIn.purchase_price * quantity_reduction;
@@ -66,14 +68,17 @@ const stockOutUpdate = async (req, res) => {
       stock_code: stockOut.stock_code,
       supplierId: stockOut.supplierId,
       productId: stockOut.supplierId,
+      stockOutId: stockOut.id,
       supplier_name: stockOut.supplier.name, // relasi diambil dari Supplier
       product_name: stockOut.product.name, // relasi diambil dari Product
       quantity: quantity_reduction,
       stock_price,
       grosir_choice,
-      created_by: updated_by,
+      created_by: userId,
       createdAt: new Date(),
     };
+
+    console.log("StockHistoryData adalaH:", stockHistoryData);
 
     await StockHistory.create(stockHistoryData);
 

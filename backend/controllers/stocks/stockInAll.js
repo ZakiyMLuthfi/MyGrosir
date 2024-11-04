@@ -1,9 +1,9 @@
-const { StockIn, Supplier, Product } = require("../../models");
+const { StockIn, Supplier, Product, User } = require("../../models");
 const { Op } = require("sequelize");
 
-const stockAll = async (req, res) => {
+const stockInAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.itemsPerPage) || 5;
     const page = parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 
@@ -22,11 +22,16 @@ const stockAll = async (req, res) => {
       where: whereCondition,
       limit: limit,
       offset: offset,
+      order: [["updatedAt", "DESC"]],
       include: [
         { model: Supplier, as: "supplier", attributes: ["supplier_name"] },
         { model: Product, as: "product", attributes: ["product_name"] },
+        {
+          model: User,
+          as: "Creator",
+          attributes: ["username"],
+        },
       ],
-      order: [["updatedAt", "DESC"]],
     });
 
     const totalPages = Math.ceil(count / limit);
@@ -39,8 +44,10 @@ const stockAll = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error fetching stock list", err });
+    res
+      .status(500)
+      .json({ error: "Error fetching stock-in list", message: err.message });
   }
 };
 
-module.exports = stockAll;
+module.exports = stockInAll;

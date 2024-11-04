@@ -47,18 +47,26 @@ module.exports = {
       },
       quantity_reduction: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       purchase_price: {
         type: Sequelize.DECIMAL(15, 2),
         allowNull: false,
       },
       created_by: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users", // Mengacu pada tabel Users
+          key: "id",
+        },
         allowNull: false,
       },
       updated_by: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users", // Mengacu pada tabel Users
+          key: "id",
+        },
         allowNull: false,
       },
       createdAt: {

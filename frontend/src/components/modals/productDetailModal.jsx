@@ -9,12 +9,18 @@ const ProductDetailModal = ({
   isEditing,
   onUpdate,
   onToggleEdit,
+  users,
 }) => {
   const [formData, setFormData] = useState({});
+  const creator =
+    (productData && users.find((user) => user.id === productData.created_by)) ||
+    {};
 
   useEffect(() => {
     if (productData) {
       setFormData(productData); // Mengatur formData saat productData berubah
+    } else {
+      setFormData({});
     }
   }, [productData]);
 
@@ -121,7 +127,7 @@ const ProductDetailModal = ({
             <Form.Label>Author</Form.Label>
             <Form.Control
               name="created_by"
-              value={formData.created_by || ""}
+              value={creator.username || "-"}
               disabled
             />
           </Form.Group>

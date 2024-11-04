@@ -133,7 +133,7 @@ const StockOutTable = ({
             ) : null}
             Updated by
           </th>
-          <th>Action</th>
+          <th>Detail</th>
         </tr>
       </thead>
       <tbody>
@@ -142,8 +142,8 @@ const StockOutTable = ({
             <tr key={stockOut.id}>
               <td>{stockOut.stock_code}</td>
               <td>{stockOut.product ? stockOut.product.product_name : "-"}</td>
-              <td>{stockOut.quantity} pkg</td>
-              <td>{stockOut.quantity_remaining} pkg left</td>
+              <td>{stockOut.quantity} pack</td>
+              <td>{stockOut.quantity_remaining} pack left</td>
               <td>
                 <span style={getStatusStyle(stockOut.quantity_remaining)}>
                   {stockOut.quantity_remaining === 0 ? "Empty" : "Ready"}
@@ -151,7 +151,7 @@ const StockOutTable = ({
               </td>
               <td>{formatDate(stockOut.createdAt)}</td>
               <td>{formatDate(stockOut.updatedAt)}</td>
-              <td>{stockOut.updated_by}</td>
+              <td>{stockOut.Creator ? stockOut.Creator.username : "-"}</td>
               <td>
                 {/* Icon for Detail */}
                 <div

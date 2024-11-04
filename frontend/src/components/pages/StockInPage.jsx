@@ -5,6 +5,8 @@ import {
   addStockInService,
   fetchStockInDetail,
 } from "../../services/stockService";
+import { fetchUsers } from "../../services/userServices";
+import { setUsers } from "../../reducers/userActions";
 import debounce from "lodash.debounce";
 import StockDetailModal from "../modals/stockDetailModal";
 import StockInTable from "../tables/StockInTable";
@@ -14,6 +16,7 @@ import PaginationComponent from "../PaginationComponent";
 const StockInPage = () => {
   const dispatch = useDispatch();
   const stockIns = useSelector((state) => state.inventory.stockIns || []);
+  const users = useSelector((state) => state.inventory.users || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedStockIn, setSelectedStockIn] = useState(null);
@@ -66,14 +69,24 @@ const StockInPage = () => {
       const totalPagesFromApi = await fetchStockIns(
         currentPage,
         itemsPerPage,
-        dispatch,
-        searchTerm
+        dispatch
       );
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching stock-in", err);
     } finally {
       setLoading(false);
+    }
+  }, [dispatch, currentPage, itemsPerPage]);
+
+  const fetchAndSetUsers = useCallback(async () => {
+    try {
+      const response = await fetchUsers(currentPage, itemsPerPage, dispatch);
+      if (response.users) {
+        dispatch(setUsers(response.users));
+      }
+    } catch (err) {
+      console.error("Error fetching users", err);
     }
   }, [dispatch, currentPage, itemsPerPage]);
 
@@ -85,6 +98,7 @@ const StockInPage = () => {
     const stockInDetail = await fetchStockInDetail(stockIn.id);
     setSelectedStockIn(stockInDetail);
     setShowModal(true);
+    await fetchAndSetUsers();
   };
 
   const handlePageChange = (pageNumber) => {
@@ -144,6 +158,7 @@ const StockInPage = () => {
             onClose={handleCloseModal}
             stockData={selectedStockIn}
             type="stock-in"
+            users={users}
           />
         </div>
       )}

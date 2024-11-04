@@ -8,9 +8,8 @@ const supplierAdd = async (req, res) => {
     supplier_contact_name,
     supplier_contact,
     goods_type,
-    created_by,
-    updated_by,
   } = req.body;
+  const userId = req.user.id;
 
   const { isValid, errors } = validateSupplier(req.body);
 
@@ -19,7 +18,6 @@ const supplierAdd = async (req, res) => {
   }
 
   try {
-    // Cek apakah supplier dengan nama yang sama sudah ada
     const existingSupplier = await Supplier.findOne({
       where: { supplier_name },
     });
@@ -35,11 +33,9 @@ const supplierAdd = async (req, res) => {
       supplier_contact_name,
       supplier_contact,
       goods_type,
-      created_by,
-      updated_by,
+      created_by: userId,
+      updated_by: userId,
     };
-
-    console.log("Supplier data akan mulai diproses: ", newSupplierData);
 
     const newSupplier = await Supplier.create(newSupplierData);
 

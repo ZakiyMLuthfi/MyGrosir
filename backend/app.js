@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -7,17 +9,20 @@ const PORT = process.env.PORT || 5000;
 const productRoutes = require("./routes/product");
 const supplierRoutes = require("./routes/supplier");
 const stockRoutes = require("./routes/stock");
+const userRoutes = require("./routes/user");
 const db = require("./models");
-
-const userOptions = [
-  { id: 1, title: "Profil", url: "/profil" },
-  { id: 2, title: "Logout", url: "/logout" },
-];
 
 // Menggunakan Middleware
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+
+const userOptions = [
+  { id: 1, title: "Profil", url: "/profil" },
+  { id: 2, title: "Logout", url: "/logout" },
+];
+// Route untuk user & login
+app.use("/api/users", userRoutes);
 
 // Route untuk produk
 app.use("/api/products", productRoutes);
@@ -38,20 +43,8 @@ app.get("/api/dashboard", (req, res) => {
   res.send("Ini dashboard");
 });
 
-// Endpoint API untuk CRUD supplier
-
-// Endpoint API untuk orang
-app.get("/api/user", (req, res) => {
-  res.send("Ini halaman orang");
-});
-
-// Endpoint API untuk laporan
-app.get("/api/reports", (req, res) => {
-  res.send("Ini halaman laporan data");
-});
-
 // Endpoint API untuk melapor error
-app.get("/api/error-report", (req, res) => {
+app.get("/api/errors-report", (req, res) => {
   res.send("Ini halaman melapor error");
 });
 

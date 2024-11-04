@@ -5,6 +5,8 @@ import {
   fetchStockOutDetail,
   updateStockOut,
 } from "../../services/stockService";
+import { fetchUsers } from "../../services/userServices";
+import { setUsers } from "../../reducers/userActions";
 import debounce from "lodash.debounce";
 import StockDetailModal from "../modals/stockDetailModal";
 import StockOutTable from "../tables/StockOutTable";
@@ -14,6 +16,7 @@ import PaginationComponent from "../PaginationComponent";
 const StockOutPage = () => {
   const dispatch = useDispatch();
   const stockOuts = useSelector((state) => state.inventory.stockOuts || []);
+  const users = useSelector((state) => state.inventory.users || []);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedStockOut, setSelectedStockOut] = useState(null);
@@ -85,14 +88,24 @@ const StockOutPage = () => {
       const totalPagesFromApi = await fetchStockOuts(
         currentPage,
         itemsPerPage,
-        dispatch,
-        searchTerm
+        dispatch
       );
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching stock-out", err);
     } finally {
       setLoading(false);
+    }
+  }, [dispatch, currentPage, itemsPerPage]);
+
+  const fetchAndSetUsers = useCallback(async () => {
+    try {
+      const response = await fetchUsers(currentPage, itemsPerPage, dispatch);
+      if (response.users) {
+        dispatch(setUsers(response.users));
+      }
+    } catch (err) {
+      console.error("Error fetching users", err);
     }
   }, [dispatch, currentPage, itemsPerPage]);
 
@@ -104,6 +117,7 @@ const StockOutPage = () => {
     const stockOutDetail = await fetchStockOutDetail(stockOut.id);
     setSelectedStockOut(stockOutDetail);
     setShowModal(true);
+    await fetchAndSetUsers();
   };
 
   const handlePageChange = (pageNumber) => {
@@ -168,6 +182,7 @@ const StockOutPage = () => {
             onUpdate={handleSaveChanges}
             onToggleEdit={handleUpdateClick}
             type="stock-out"
+            users={users}
           />
         </div>
       )}
