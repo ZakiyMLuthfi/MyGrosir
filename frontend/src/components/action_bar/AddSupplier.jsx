@@ -66,7 +66,7 @@ const AddSupplier = ({ onSubmit }) => {
               <Form.Label>Supplier Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter supplier name"
+                placeholder="Required"
                 name="supplier_name"
                 value={formData.product_name}
                 onChange={handleInputChange}
@@ -77,7 +77,7 @@ const AddSupplier = ({ onSubmit }) => {
               <Form.Label>Supplier Address</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter supplier address"
+                placeholder="Required"
                 name="supplier_address"
                 value={formData.supplier_address}
                 onChange={handleInputChange}
@@ -88,6 +88,7 @@ const AddSupplier = ({ onSubmit }) => {
               <Form.Label>Supplier Contact Name</Form.Label>
               <Form.Control
                 type="name"
+                placeholder="Required"
                 name="supplier_contact_name"
                 value={formData.supplier_contact_name}
                 onChange={handleInputChange}
@@ -98,7 +99,7 @@ const AddSupplier = ({ onSubmit }) => {
               <Form.Label>Supplier Mobile Contact</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter supplier contact's mobile number"
+                placeholder="Required"
                 name="supplier_contact"
                 value={formData.supplier_contact}
                 onChange={handleInputChange}

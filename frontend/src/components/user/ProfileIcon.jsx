@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import { AccountCircle, Notifications } from "@mui/icons-material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch } from "react-redux";
@@ -56,10 +56,12 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
 
   return (
     <div>
+      <Notifications style={{ fontSize: "42px", marginRight: "8px" }} />
       <AccountCircle
         style={{ cursor: "pointer", fontSize: 40 }}
         onClick={handleProfileMenuOpen}
       />
+
       <Menu
         anchorEl={anchorEl}
         open={open}

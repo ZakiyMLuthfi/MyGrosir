@@ -30,7 +30,7 @@ const StockHistoryTable = ({
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Stock Code
+            Code
           </th>
           <th
             onClick={() => onSort("product_name")}

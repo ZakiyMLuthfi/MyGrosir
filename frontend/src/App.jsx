@@ -5,25 +5,32 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "./reducers/userActions";
+import ProtectedRoute from "./utils/protectedRoute";
 import LayoutTemp from "./components/LayoutTemp";
 import ProductPage from "./components/pages/ProductPage";
 import SupplierPage from "./components/pages/SupplierPage";
 import StockInPage from "./components/pages/StockInPage";
 import StockOutPage from "./components/pages/StockOutPage";
 import StockHistoryPage from "./components/pages/StockHistoryPage";
+import DashboardPage from "./components/pages/DashboardPage";
 import LoginForm from "./components/pages/LoginForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = useSelector((state) => state.inventory.token);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      dispatch(setToken(token)); // Set token di Redux state
+    const savedToken = localStorage.getItem("accessToken");
+    if (savedToken) {
+      dispatch(setToken(savedToken)); // Set token di Redux state
+      console.log(
+        "Token dari localStorage berhasil di-set ke Redux:",
+        savedToken
+      );
     }
   }, [dispatch]);
 
@@ -34,15 +41,58 @@ function App() {
 
   return (
     <Routes>
+      <Route
+        path="/login"
+        element={<LoginForm onLoginSuccess={handleLoginSuccess} />}
+      />
       <Route path="/" element={<LayoutTemp />}>
-        <Route path="/products" element={<ProductPage />} />
-        <Route path="/suppliers" element={<SupplierPage />} />
-        <Route path="/stocks/stock-in" element={<StockInPage />} />
-        <Route path="/stocks/stock-out" element={<StockOutPage />} />
-        <Route path="/stocks/stock-history" element={<StockHistoryPage />} />
         <Route
-          path="/login"
-          element={<LoginForm onLoginSuccess={handleLoginSuccess} />}
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <ProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/suppliers"
+          element={
+            <ProtectedRoute>
+              <SupplierPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/stocks/stock-in"
+          element={
+            <ProtectedRoute>
+              <StockInPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/stocks/stock-out"
+          element={
+            <ProtectedRoute>
+              <StockOutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/stocks/stock-history"
+          element={
+            <ProtectedRoute>
+              <StockHistoryPage />
+            </ProtectedRoute>
+          }
         />
       </Route>
     </Routes>

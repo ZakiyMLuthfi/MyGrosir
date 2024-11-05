@@ -42,7 +42,7 @@ const StockInTable = ({
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Stock Code
+            Code
           </th>
           <th
             onClick={() => onSort("supplier_name")}

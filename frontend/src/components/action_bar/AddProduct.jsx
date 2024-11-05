@@ -8,7 +8,7 @@ const AddProduct = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     product_name: "",
     package_quantity: "",
-    weight_type: "kilogram",
+    weight_type: "",
     weight_per_pkg: "",
     description: "",
   });
@@ -57,7 +57,7 @@ const AddProduct = ({ onSubmit }) => {
               <Form.Label>Product Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter product name"
+                placeholder="Enter product name (required)"
                 name="product_name"
                 value={formData.product_name}
                 onChange={handleInputChange}
@@ -68,7 +68,7 @@ const AddProduct = ({ onSubmit }) => {
               <Form.Label>Package Quantity</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter package quantity"
+                placeholder="Enter package quantity (required)"
                 name="package_quantity"
                 value={formData.package_quantity}
                 onChange={handleInputChange}
@@ -82,7 +82,9 @@ const AddProduct = ({ onSubmit }) => {
                 name="weight_type"
                 value={formData.weight_type}
                 onChange={handleInputChange}
+                style={{ cursor: "pointer" }}
               >
+                <option>Select Weight type</option>
                 <option value="kilogram">Kilogram</option>
                 <option value="gram">Gram</option>
                 <option value="liter">Liter</option>
@@ -93,7 +95,7 @@ const AddProduct = ({ onSubmit }) => {
               <Form.Label>Weight Per Package</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter weight per package"
+                placeholder="Enter weight per package (required)"
                 name="weight_per_pkg"
                 value={formData.weight_per_pkg}
                 onChange={handleInputChange}

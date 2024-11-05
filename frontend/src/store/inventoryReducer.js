@@ -7,6 +7,10 @@ const initialState = {
   stockHistories: [],
   users: [],
   token: null,
+  totalAssets: null,
+  totalItems: null,
+  totalOutgoing: null,
+  stockFlowData: [],
 };
 
 const inventoryReducer = (state = initialState, action) => {
@@ -57,9 +61,23 @@ const inventoryReducer = (state = initialState, action) => {
       };
 
     case "SET_TOKEN":
+      console.log("Token berhasil di-set: ", action.payload);
+
       return { ...state, token: action.payload };
     case "CLEAR_TOKEN":
       return { ...state, token: null };
+
+    case "SET_TOTAL_ASSETS":
+      return { ...state, totalAssets: action.payload };
+
+    case "SET_TOTAL_ITEMS":
+      return { ...state, totalItems: action.payload };
+
+    case "SET_TOTAL_OUTGOING":
+      return { ...state, totalOutgoing: action.payload };
+
+    case "SET_STOCK_FLOW_DATA":
+      return { ...state, stockFlowData: action.payload };
 
     default:
       return state;

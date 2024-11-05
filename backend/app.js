@@ -10,6 +10,7 @@ const productRoutes = require("./routes/product");
 const supplierRoutes = require("./routes/supplier");
 const stockRoutes = require("./routes/stock");
 const userRoutes = require("./routes/user");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const db = require("./models");
 
 // Menggunakan Middleware
@@ -23,6 +24,9 @@ const userOptions = [
 ];
 // Route untuk user & login
 app.use("/api/users", userRoutes);
+
+// Route untuk dashboard
+app.use("/api/dashboard", dashboardRoutes);
 
 // Route untuk produk
 app.use("/api/products", productRoutes);
