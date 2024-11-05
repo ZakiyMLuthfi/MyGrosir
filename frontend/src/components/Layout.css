@@ -1,17 +1,40 @@
+/* Layout.css */
+
+/* Pastikan seluruh halaman penuh memiliki background */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: #343a40;
+  overflow: hidden; /* Mencegah scroll pada elemen root */
+}
+
 .d-flex {
   display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: #495057; /* Warna latar utama */
+  overflow: hidden;
 }
 
 .sidebar-open {
-  width: 250px;
+  width: 187px; /* 3/4 dari ukuran aslinya */
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
   transition: width 0.3s ease;
-  position: relative;
+  background-color: #343a40;
 }
 
 .sidebar-closed {
   width: 50px;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
   transition: width 0.3s ease;
-  position: relative;
+  background-color: #343a40;
 }
 
 .drawer-toggle {
@@ -20,7 +43,6 @@
   right: -10px;
   background-color: #343a40;
   color: white;
-
   padding: 3px;
   cursor: pointer;
   border-radius: 50%;
@@ -33,23 +55,33 @@
 .main-content {
   flex-grow: 1;
   padding: 20px;
+  background-color: #495057; /* Warna latar belakang konten */
+  overflow-y: auto; /* Scroll hanya pada konten */
+  overflow-x: hidden;
+  height: 100vh;
   transition: margin-left 0.3s ease;
 }
 
 .sidebar-open ~ .main-content {
-  margin-left: 250px;
+  margin-left: 187px; /* Sesuaikan dengan lebar sidebar terbuka */
 }
 
 .sidebar-closed ~ .main-content {
   margin-left: 50px;
 }
 
-/* Tambahkan di Layout.css */
+.profile-nav {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  z-index: 1000;
+}
+
 .list-group-item {
-  background-color: #495057; /* Warna gelap untuk item */
-  color: white; /* Teks berwarna putih */
+  background-color: #495057;
+  color: white;
 }
 
 .list-group-item:hover {
-  background-color: #6c757d; /* Warna saat hover */
+  background-color: #6c757d;
 }

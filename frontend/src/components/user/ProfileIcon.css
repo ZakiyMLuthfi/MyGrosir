@@ -1,6 +1,6 @@
 /* ProfileIcon.css */
 .profile-icon {
-  position: relative;
+  position: fixed;
 }
 
 .dropdown-menu {

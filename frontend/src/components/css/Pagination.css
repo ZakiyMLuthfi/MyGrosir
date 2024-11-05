@@ -1,0 +1,26 @@
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px; /* Sesuaikan jarak atas */
+}
+
+.items-per-page {
+  display: flex;
+  align-items: center;
+}
+
+.items-per-page label {
+  margin-right: 5px; /* Jarak antara label dan dropdown */
+}
+
+@media (max-width: 576px) {
+  .pagination-container {
+    flex-direction: column; /* Ubah arah untuk perangkat kecil */
+    align-items: flex-start; /* Rata kiri untuk elemen di bawah */
+  }
+
+  .pagination {
+    margin-top: 10px; /* Jarak atas pada perangkat kecil */
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import {
   LineChart,
@@ -62,8 +62,6 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      <h1>Dashboard</h1>
-
       {/* Section for total stats */}
       <div className="stat-boxes">
         <div className="stat-box total-assets">

@@ -1,5 +1,6 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
+import "./css/Pagination.css";
 
 const PaginationComponent = ({
   currentPage,
@@ -69,11 +70,9 @@ const PaginationComponent = ({
   }
 
   return (
-    <div className="d-flex justify-content-between align-items-center mt-3">
-      <div>
-        <label htmlFor="itemsPerPage" style={{ marginRight: "5px" }}>
-          Items per page{" "}
-        </label>
+    <div className="pagination-container">
+      <div className="items-per-page">
+        <label htmlFor="itemsPerPage">Items per page</label>
         <select
           id="itemsPerPage"
           onChange={onItemsPerPageChange}

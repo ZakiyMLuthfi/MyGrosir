@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ListGroup, Accordion } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import "./Style.css"; // Pastikan ini terhubung
+import "./Sidebar.css"; // Pastikan ini terhubung
 
 const Sidebar = ({ isOpen }) => {
   const [openStocks, setOpenStocks] = useState(false);
@@ -11,15 +11,7 @@ const Sidebar = ({ isOpen }) => {
   };
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        backgroundColor: "#343a40",
-        overflow: "hidden",
-        width: isOpen ? "250px" : "0px",
-        transition: "width 0.3s ease",
-      }}
-    >
+    <div>
       <div className="p-3 text-lg font-bold sidebar-title">MyGrosir</div>
       <ListGroup variant="flush">
         <ListGroup.Item

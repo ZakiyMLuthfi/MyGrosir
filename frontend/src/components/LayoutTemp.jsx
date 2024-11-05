@@ -23,7 +23,7 @@ const LayoutTemp = () => {
   };
 
   return (
-    <div className="d-flex">
+    <div className="d-flex layout-container">
       <div className={isOpen ? "sidebar-open" : "sidebar-closed"}>
         <Sidebar isOpen={isOpen} />
         <button className="drawer-toggle" onClick={toggleSidebar}>
@@ -35,20 +35,12 @@ const LayoutTemp = () => {
         </button>
       </div>
 
-      <div
-        className="main-content"
-        style={{ marginLeft: isOpen ? "25px" : "60px" }}
-      >
-        <Container fluid>
-          <Row>
-            <Col>
-              <div className="d-flex justify-content-end">
-                <ProfileIcon onLogoutSuccess={handleLogoutSuccess} />
-              </div>
-              <Outlet />
-            </Col>
-          </Row>
-        </Container>
+      <div className={`main-content ${isOpen ? "shifted" : ""}`}>
+        <Outlet />
+      </div>
+
+      <div className="profile-nav">
+        <ProfileIcon onLogoutSuccess={handleLogoutSuccess} />
       </div>
     </div>
   );

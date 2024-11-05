@@ -14,6 +14,7 @@ import ProductDetailModal from "../modals/productDetailModal";
 import ProductTable from "../tables/ProductTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
+import "../css/Table.css";
 
 const ProductPage = () => {
   const dispatch = useDispatch();
@@ -183,14 +184,18 @@ const ProductPage = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
-          <ProductTable
-            products={sortedProducts}
-            onDetailClick={handleDetailClick}
-            onDeleteClick={handleDeleteClick}
-            onSort={handleSort}
-            onToggleClick={handleToggleDelete}
-            sortConfig={sortConfig}
-          />
+          <div className="product-table mb-4">
+            {" "}
+            {/* Tambahkan margin bottom */}
+            <ProductTable
+              products={sortedProducts}
+              onDetailClick={handleDetailClick}
+              onDeleteClick={handleDeleteClick}
+              onSort={handleSort}
+              onToggleClick={handleToggleDelete}
+              sortConfig={sortConfig}
+            />
+          </div>
           <PaginationComponent
             currentPage={currentPage}
             totalPages={totalPages}

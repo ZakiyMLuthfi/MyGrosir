@@ -1,0 +1,9 @@
+.container {
+  padding: 20px; /* Pastikan ada padding yang cukup di dalam container */
+}
+
+.table-action,
+.product-table,
+.pagination {
+  margin-bottom: 20px; /* Beri jarak antara tabel dan pagination */
+}
