@@ -17,6 +17,7 @@ import "../css/Table.css";
 const UserPage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.inventory.users || []);
+  const role = useSelector((state) => state.inventory.role);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -140,6 +141,7 @@ const UserPage = () => {
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            role={role}
           />
           <div className="mb-4">
             {" "}

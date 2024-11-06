@@ -197,15 +197,17 @@ const ProductPage = () => {
       ) : (
         <div className="container mt-4">
           <h1 className="mb-4">Product List</h1>
-          {role === "admin" && (
-            <TableAction
-              type="product"
-              onAdd={handleAddProduct}
-              onSearch={handleSearch}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-            />
-          )}
+
+          {/* Hanya admin yang bisa menambah dan mencari produk */}
+
+          <TableAction
+            type="product"
+            onAdd={handleAddProduct}
+            onSearch={handleSearch}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            role={role}
+          />
 
           <div className="product-table mb-4">
             <ProductTable
@@ -215,22 +217,9 @@ const ProductPage = () => {
               onSort={handleSort}
               onToggleClick={handleToggleDelete}
               sortConfig={sortConfig}
+              role={role}
             />
           </div>
-
-          {/* Tombol Active Status hanya untuk Superadmin */}
-          {role === "superadmin" && (
-            <button onClick={() => handleToggleDelete(products)}>
-              Active Status
-            </button>
-          )}
-
-          {/* Tombol Delete hanya untuk Admin */}
-          {role === "admin" && (
-            <button onClick={() => handleDeleteClick(products)}>
-              Delete Product
-            </button>
-          )}
 
           <PaginationComponent
             currentPage={currentPage}
@@ -240,6 +229,7 @@ const ProductPage = () => {
             itemsPerPage={itemsPerPage}
           />
 
+          {/* Modal detail produk */}
           <ProductDetailModal
             show={showModal}
             onClose={handleCloseModal}
@@ -248,6 +238,7 @@ const ProductPage = () => {
             onUpdate={handleSaveChanges}
             onToggleEdit={handleUpdateClick}
             users={users}
+            role={role}
           />
         </div>
       )}

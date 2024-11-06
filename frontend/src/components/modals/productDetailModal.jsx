@@ -10,6 +10,7 @@ const ProductDetailModal = ({
   onUpdate,
   onToggleEdit,
   users,
+  role,
 }) => {
   const [formData, setFormData] = useState({});
   const creator =
@@ -145,15 +146,18 @@ const ProductDetailModal = ({
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        {!isEditing ? (
-          <Button variant="primary" onClick={onToggleEdit}>
-            Update
-          </Button>
-        ) : (
-          <Button variant="success" onClick={handleSaveChanges}>
-            Save Changes
-          </Button>
-        )}
+
+        {/* Hanya tampilkan tombol Update dan Save Changes jika role adalah admin */}
+        {role === "admin" &&
+          (!isEditing ? (
+            <Button variant="primary" onClick={onToggleEdit}>
+              Update
+            </Button>
+          ) : (
+            <Button variant="success" onClick={handleSaveChanges}>
+              Save Changes
+            </Button>
+          ))}
       </Modal.Footer>
     </Modal>
   );

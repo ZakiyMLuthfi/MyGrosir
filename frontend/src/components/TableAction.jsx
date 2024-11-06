@@ -7,7 +7,14 @@ import AddUser from "./action_bar/AddUser";
 import { Form, InputGroup } from "react-bootstrap";
 import { SearchOutlined } from "@mui/icons-material";
 
-const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
+const TableAction = ({
+  onAdd,
+  onSearch,
+  searchTerm,
+  setSearchTerm,
+  type,
+  role,
+}) => {
   const handleSearchChange = (event) => {
     const keyword = event.target.value;
     setSearchTerm(keyword);
@@ -17,15 +24,23 @@ const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
     <div
       style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
     >
-      {type === "product" ? (
-        <AddProduct onSubmit={onAdd} style={{ marginRight: "1rem" }} />
-      ) : type === "supplier" ? (
-        <AddSupplier onSubmit={onAdd} style={{ marginRight: "1rem" }} />
-      ) : type === "stockIn" ? (
-        <AddStockIn onSubmit={onAdd} style={{ marginRight: "1rem" }} />
-      ) : type === "user" ? (
-        <AddUser onSubmit={onAdd} style={{ marginRight: "1rem" }} />
-      ) : null}
+      {(role === "admin" || (role === "superadmin" && type === "user")) && (
+        <>
+          {type === "product" && role === "admin" && (
+            <AddProduct onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+          )}
+          {type === "supplier" && role === "admin" && (
+            <AddSupplier onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+          )}
+          {type === "stockIn" && role === "admin" && (
+            <AddStockIn onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+          )}
+          {type === "user" && role === "superadmin" && (
+            <AddUser onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+          )}
+          {/* Tambahkan tipe lain jika diperlukan */}
+        </>
+      )}
 
       {/* Search component */}
       <InputGroup style={{ width: "300px", marginLeft: "0.5rem" }}>

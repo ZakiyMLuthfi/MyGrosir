@@ -1,4 +1,3 @@
-// ProductTable.jsx
 import React from "react";
 import moment from "moment-timezone";
 import {
@@ -16,9 +15,10 @@ const ProductTable = ({
   onDeleteClick,
   onSort,
   onToggleClick,
+  role,
   sortConfig = { key: "", direction: "ascending" },
 }) => {
-  // format waktu untuk ditampilkan pada FE
+  // Format waktu untuk ditampilkan pada FE
   const formatDate = (dateString) => {
     return moment(dateString).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss");
   };
@@ -56,7 +56,10 @@ const ProductTable = ({
             Product Name
           </th>
           <th>Action</th>
-          <th>Active Status</th>
+
+          {/* Header untuk Active Status hanya muncul untuk Superadmin */}
+          {role === "superadmin" && <th>Active Status</th>}
+
           <th
             onClick={() => onSort("updated_by")}
             style={{ cursor: "pointer" }}
@@ -91,7 +94,7 @@ const ProductTable = ({
               <td>{product.product_code}</td>
               <td>{product.product_name}</td>
               <td>
-                {/* Icon for Detail */}
+                {/* Icon for Detail - Available to all roles */}
                 <span
                   onClick={() => onDetailClick(product)}
                   style={{
@@ -102,53 +105,62 @@ const ProductTable = ({
                 >
                   <Article />
                 </span>
-                {/* Icon for Delete */}
-                <span
-                  onClick={() => onDeleteClick(product)}
-                  style={{ cursor: "pointer", color: "red" }}
-                >
-                  <Delete />
-                </span>
-              </td>
-              <td
-                onClick={() => onToggleClick(product)}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {product.isDeleted ? (
-                  <ToggleOn
-                    className="toggle-icon"
-                    style={{
-                      color: "red",
-                      cursor: "pointer",
-                      fontSize: "2.2rem",
-                      transform: "scale(1.5, 1.5)",
-                      transition: "transform 0.3s ease, color 0.3s ease",
-                    }}
-                  />
-                ) : (
-                  <ToggleOff
-                    className="toggle-icon"
-                    style={{
-                      color: "green",
-                      cursor: "pointer",
-                      fontSize: "2.2rem",
-                      transform: "scale(1.5, 1.5)",
-                      transition: "transform 0.3s ease, color 0.3s ease",
-                    }}
-                  />
+
+                {/* Icon for Delete - Only for Admin */}
+                {role === "admin" && (
+                  <span
+                    onClick={() => onDeleteClick(product)}
+                    style={{ cursor: "pointer", color: "red" }}
+                  >
+                    <Delete />
+                  </span>
                 )}
               </td>
+
+              {/* Toggle Active Status - Only for Superadmin */}
+              {role === "superadmin" && (
+                <td
+                  onClick={() => onToggleClick(product)}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {product.isDeleted ? (
+                    <ToggleOn
+                      className="toggle-icon"
+                      style={{
+                        color: "red",
+                        cursor: "pointer",
+                        fontSize: "2.2rem",
+                        transform: "scale(1.5, 1.5)",
+                        transition: "transform 0.3s ease, color 0.3s ease",
+                      }}
+                    />
+                  ) : (
+                    <ToggleOff
+                      className="toggle-icon"
+                      style={{
+                        color: "green",
+                        cursor: "pointer",
+                        fontSize: "2.2rem",
+                        transform: "scale(1.5, 1.5)",
+                        transition: "transform 0.3s ease, color 0.3s ease",
+                      }}
+                    />
+                  )}
+                </td>
+              )}
               <td>{product.Updater ? product.Updater.username : "-"}</td>
               <td>{formatDate(product.updatedAt)}</td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan="6">No products available</td>
+            <td colSpan={role === "superadmin" ? 6 : 5}>
+              No products available
+            </td>
           </tr>
         )}
       </tbody>
