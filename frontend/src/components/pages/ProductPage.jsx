@@ -9,6 +9,7 @@ import {
   restoreProductService,
 } from "../../services/productService";
 import { fetchUsers } from "../../services/userServices";
+import { setToken } from "../../reducers/userActions";
 import debounce from "lodash.debounce";
 import ProductDetailModal from "../modals/productDetailModal";
 import ProductTable from "../tables/ProductTable";
@@ -19,7 +20,11 @@ import "../css/Table.css";
 const ProductPage = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.inventory.products || []);
+  console.log("Fetched products from Redux:", products);
   const users = useSelector((state) => state.inventory.users || []);
+  const role = useSelector((state) => state.inventory.role);
+  console.log("Role right now: ", role);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -69,12 +74,16 @@ const ProductPage = () => {
   // Memanggil all product
   const fetchAndSetProducts = useCallback(async () => {
     setLoading(true);
+    console.log("Fetching products...");
+    console.log("Current Page:", currentPage);
+    console.log("Items Per Page:", itemsPerPage);
     try {
       const totalPagesFromApi = await fetchProducts(
         currentPage,
         itemsPerPage,
         dispatch
       );
+      console.log("Total Pages from API:", totalPagesFromApi);
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching products", err);
@@ -95,8 +104,19 @@ const ProductPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchAndSetProducts();
-  }, [fetchAndSetProducts]);
+    const storedRole = localStorage.getItem("accessRole");
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedRole && !role && storedToken) {
+      dispatch(setToken({ token: storedToken, role: storedRole }));
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
+    if (role) {
+      fetchAndSetProducts();
+    }
+  }, [role, currentPage, itemsPerPage]);
 
   const handleDeleteClick = async (product) => {
     const confirmDelete = window.confirm(
@@ -177,16 +197,17 @@ const ProductPage = () => {
       ) : (
         <div className="container mt-4">
           <h1 className="mb-4">Product List</h1>
-          <TableAction
-            type="product"
-            onAdd={handleAddProduct}
-            onSearch={handleSearch}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-          />
+          {role === "admin" && (
+            <TableAction
+              type="product"
+              onAdd={handleAddProduct}
+              onSearch={handleSearch}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+            />
+          )}
+
           <div className="product-table mb-4">
-            {" "}
-            {/* Tambahkan margin bottom */}
             <ProductTable
               products={sortedProducts}
               onDetailClick={handleDetailClick}
@@ -196,6 +217,21 @@ const ProductPage = () => {
               sortConfig={sortConfig}
             />
           </div>
+
+          {/* Tombol Active Status hanya untuk Superadmin */}
+          {role === "superadmin" && (
+            <button onClick={() => handleToggleDelete(products)}>
+              Active Status
+            </button>
+          )}
+
+          {/* Tombol Delete hanya untuk Admin */}
+          {role === "admin" && (
+            <button onClick={() => handleDeleteClick(products)}>
+              Delete Product
+            </button>
+          )}
+
           <PaginationComponent
             currentPage={currentPage}
             totalPages={totalPages}
@@ -203,6 +239,7 @@ const ProductPage = () => {
             onItemsPerPageChange={handleItemsPerPageChange}
             itemsPerPage={itemsPerPage}
           />
+
           <ProductDetailModal
             show={showModal}
             onClose={handleCloseModal}

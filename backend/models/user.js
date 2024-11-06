@@ -60,13 +60,13 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       username: {
-        type: DataTypes.STRING(25),
+        type: DataTypes.STRING(30),
         allowNull: false,
         unique: true,
         validate: {
           len: {
-            args: [1, 25],
-            msg: "Username cannot exceed 25 character before '@mygrosir.com'",
+            args: [1, 30],
+            msg: "Username cannot exceed 30 character before '@mygrosir.com'",
           },
         },
       },

@@ -15,21 +15,22 @@ import StockInPage from "./components/pages/StockInPage";
 import StockOutPage from "./components/pages/StockOutPage";
 import StockHistoryPage from "./components/pages/StockHistoryPage";
 import DashboardPage from "./components/pages/DashboardPage";
+import UserPage from "./components/pages/UserPage";
 import LoginForm from "./components/pages/LoginForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.inventory.token);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("accessToken");
-    if (savedToken) {
-      dispatch(setToken(savedToken)); // Set token di Redux state
+    const savedRole = localStorage.getItem("accessRole");
+
+    if (savedToken && savedRole) {
+      dispatch(setToken({ token: savedToken, role: savedRole })); // Set token di Redux state
       console.log(
-        "Token dari localStorage berhasil di-set ke Redux:",
-        savedToken
+        `Token dari localStorage berhasil di-set ke Redux: ${savedToken} & ${savedRole}`
       );
     }
   }, [dispatch]);
@@ -91,6 +92,14 @@ function App() {
           element={
             <ProtectedRoute>
               <StockHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <UserPage />
             </ProtectedRoute>
           }
         />

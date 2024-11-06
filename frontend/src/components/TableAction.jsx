@@ -3,6 +3,7 @@ import React from "react";
 import AddProduct from "./action_bar/AddProduct";
 import AddSupplier from "./action_bar/AddSupplier";
 import AddStockIn from "./action_bar/AddStockIn";
+import AddUser from "./action_bar/AddUser";
 import { Form, InputGroup } from "react-bootstrap";
 import { SearchOutlined } from "@mui/icons-material";
 
@@ -22,6 +23,8 @@ const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
         <AddSupplier onSubmit={onAdd} style={{ marginRight: "1rem" }} />
       ) : type === "stockIn" ? (
         <AddStockIn onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+      ) : type === "user" ? (
+        <AddUser onSubmit={onAdd} style={{ marginRight: "1rem" }} />
       ) : null}
 
       {/* Search component */}
@@ -38,6 +41,8 @@ const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
               ? "Search suppliers..."
               : type === "stockIn"
               ? "Search stock in..."
+              : type === "user"
+              ? "Search user..."
               : "Search stock out..."
           }
           value={searchTerm}
@@ -49,6 +54,8 @@ const TableAction = ({ onAdd, onSearch, searchTerm, setSearchTerm, type }) => {
               ? "suppliers"
               : type === "stockIn"
               ? "stock in"
+              : type === "user"
+              ? "user"
               : "stock out"
           }`}
           aria-describedby="search-addon"

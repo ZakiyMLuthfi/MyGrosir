@@ -6,6 +6,7 @@ module.exports = {
     // Enkripsi password sebelum memasukkan ke dalam tabel
     const hashSuper = await bcrypt.hash("Super123", 10);
     const hashAdmin = await bcrypt.hash("Admin123", 10);
+    const hashSpv = await bcrypt.hash("Supervisor123", 10);
     return queryInterface.bulkInsert(
       "Users",
       [
@@ -33,16 +34,24 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          username: "spv@mygrosir.com",
+          email: "spvdummy@gmail.com",
+          password: hashSpv,
+          role: "supervisor",
+          is_active: false,
+          created_by: 1,
+          updated_by: 1,
+          is_deleted: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       {}
     );
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(
-      "Users",
-      { username: "proadmin@mygrosir.com" },
-      {}
-    );
+    return queryInterface.bulkDelete("Users");
   },
 };

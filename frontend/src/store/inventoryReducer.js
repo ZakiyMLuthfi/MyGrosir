@@ -7,6 +7,7 @@ const initialState = {
   stockHistories: [],
   users: [],
   token: null,
+  role: null,
   totalAssets: null,
   totalItems: null,
   totalOutgoing: null,
@@ -61,11 +62,18 @@ const inventoryReducer = (state = initialState, action) => {
       };
 
     case "SET_TOKEN":
-      console.log("Token berhasil di-set: ", action.payload);
+      return {
+        ...state,
+        token: action.payload.token,
+        role: action.payload.role, // Menyimpan role dari payload
+      };
 
-      return { ...state, token: action.payload };
     case "CLEAR_TOKEN":
-      return { ...state, token: null };
+      return {
+        ...state,
+        token: null,
+        role: null, // Menghapus role saat logout
+      };
 
     case "SET_TOTAL_ASSETS":
       return { ...state, totalAssets: action.payload };

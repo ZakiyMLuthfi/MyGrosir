@@ -21,14 +21,15 @@ const LoginForm = ({ onLoginSuccess }) => {
         }
       );
 
-      console.log("Response dari API:", response);
-
-      const { token } = response.data;
-      console.log("accessToken setelah dinyatakan sebagai respon", token);
+      const { token, role } = response.data;
+      console.log(
+        `accessToken setelah dinyatakan sebagai respon token=${token} role=${role}`
+      );
       // Simpan token di localStorage dan Redux
       localStorage.setItem("accessToken", token);
-      console.log("Token setelah login:", localStorage.getItem("accessToken"));
-      dispatch(setToken(token));
+      localStorage.setItem("accessRole", role);
+
+      dispatch(setToken({ token, role }));
 
       // Panggil callback untuk menangani sukses login
       onLoginSuccess();

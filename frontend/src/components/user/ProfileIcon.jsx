@@ -23,10 +23,10 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
 
     try {
       const token = localStorage.getItem("accessToken");
-      console.log("Token yang dikirim untuk logout:", typeof token, token);
+      const role = localStorage.getItem("accessRole");
 
-      if (!token) {
-        console.warn("No token found, already logged out.");
+      if (!token && role) {
+        console.warn("No token & role found, already logged out.");
         onLogoutSuccess();
         return;
       }
@@ -46,6 +46,7 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
       // Hapus token dari Redux state dan localStorage
       dispatch(clearToken());
       localStorage.removeItem("accessToken"); // Hapus token dari localStorage
+      localStorage.removeItem("accessRole");
 
       console.log("User logged out");
       onLogoutSuccess();

@@ -6,9 +6,12 @@ const ProtectedRoute = ({ children }) => {
   const token =
     useSelector((state) => state.inventory.token) ||
     localStorage.getItem("accessToken");
-  console.log("Token di ProtectedRoute:", token);
+  const role =
+    useSelector((state) => state.inventory.role) ||
+    localStorage.getItem("accessRole");
+  console.log("Token di ProtectedRoute:", token, "&", role);
 
-  if (!token) {
+  if (!token || !role) {
     return <Navigate to="/login" replace />;
   }
   return children;

@@ -1,8 +1,8 @@
 // src/reducers/userAction.js
 
-export const setToken = (token) => ({
+export const setToken = ({ token, role }) => ({
   type: "SET_TOKEN",
-  payload: token,
+  payload: { token, role },
 });
 
 export const clearToken = () => ({

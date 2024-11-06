@@ -69,6 +69,14 @@ const Sidebar = ({ isOpen }) => {
               >
                 {isOpen ? "Stock History" : ""}
               </ListGroup.Item>
+              <ListGroup.Item
+                as={Link}
+                to="/users"
+                action
+                className="sidebar-item"
+              >
+                {isOpen ? "Users" : ""}
+              </ListGroup.Item>
             </ListGroup>
           </Accordion.Collapse>
         </Accordion>

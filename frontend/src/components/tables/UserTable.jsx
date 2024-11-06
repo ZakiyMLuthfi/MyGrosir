@@ -1,124 +1,114 @@
-// ProductTable.jsx
+// UserTable.jsx
 import React from "react";
-import moment from "moment-timezone";
+import formatDate from "../../utils/converter";
 import {
   ArrowDropUp,
   ArrowDropDown,
   Article,
-  Delete,
   ToggleOn,
   ToggleOff,
 } from "@mui/icons-material";
 
-const ProductTable = ({
-  products,
+const UserTable = ({
+  users,
   onDetailClick,
-  onDeleteClick,
   onSort,
   onToggleClick,
   sortConfig = { key: "", direction: "ascending" },
 }) => {
-  // format waktu untuk ditampilkan pada FE
-  const formatDate = (dateString) => {
-    return moment(dateString).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss");
+  const getStatusStyle = (is_active) => {
+    return {
+      backgroundColor: is_active === false ? "grey" : "green",
+      color: "white",
+      padding: "2px 4px",
+      borderRadius: "6px",
+      display: "inline-block",
+      textAlign: "center",
+      minWidth: "60px",
+    };
   };
-
   return (
     <table className="table table-bordered">
       <thead className="thead-light">
         <tr>
-          <th
-            onClick={() => onSort("product_code")}
-            style={{ cursor: "pointer" }}
-          >
-            {sortConfig.key === "product_code" &&
-            sortConfig.direction === "ascending" ? (
+          <th onClick={() => onSort("id")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "id" && sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "product_code" &&
+            {sortConfig.key === "id" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Product Code
+            No.
           </th>
-          <th
-            onClick={() => onSort("product_name")}
-            style={{ cursor: "pointer" }}
-          >
-            {sortConfig.key === "product_name" &&
+          <th onClick={() => onSort("username")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "username" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "product_name" &&
+            {sortConfig.key === "username" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Product Name
+            Username
           </th>
-          <th>Action</th>
-          <th>Active Status</th>
-          <th
-            onClick={() => onSort("updated_by")}
-            style={{ cursor: "pointer" }}
-          >
-            {sortConfig.key === "updated_by" &&
+          <th onClick={() => onSort("is_active")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "is_active" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "updated_by" &&
+            {sortConfig.key === "is_active" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Updated by
+            Status
           </th>
-          <th onClick={() => onSort("updatedAt")} style={{ cursor: "pointer" }}>
-            {sortConfig.key === "updatedAt" &&
+          <th>Detail</th>
+          <th>Delete</th>
+          <th onClick={() => onSort("createdAt")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "createdAt" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "updatedAt" &&
+            {sortConfig.key === "createdAt" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Last Update
+            Create date
           </th>
         </tr>
       </thead>
       <tbody>
-        {products && products.length > 0 ? (
-          products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.product_code}</td>
-              <td>{product.product_name}</td>
+        {users && users.length > 0 ? (
+          users.map((user) => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.username}</td>
               <td>
-                {/* Icon for Detail */}
-                <span
-                  onClick={() => onDetailClick(product)}
-                  style={{
-                    cursor: "pointer",
-                    color: "blue",
-                    marginRight: "4px",
-                  }}
-                >
-                  <Article />
-                </span>
-                {/* Icon for Delete */}
-                <span
-                  onClick={() => onDeleteClick(product)}
-                  style={{ cursor: "pointer", color: "red" }}
-                >
-                  <Delete />
+                {" "}
+                <span style={getStatusStyle(user.is_active)}>
+                  {user.is_active === false ? "Nonactive" : "Active"}
                 </span>
               </td>
               <td
-                onClick={() => onToggleClick(product)}
+                onClick={() => onDetailClick(user)}
+                style={{
+                  cursor: "pointer",
+                  color: "blue",
+                  marginRight: "4px",
+                }}
+              >
+                <Article />
+              </td>
+              <td
+                onClick={() => onToggleClick(user)}
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                {product.isDeleted ? (
+                {user.is_deleted ? (
                   <ToggleOn
                     className="toggle-icon"
                     style={{
@@ -142,13 +132,12 @@ const ProductTable = ({
                   />
                 )}
               </td>
-              <td>{product.Updater ? product.Updater.username : "-"}</td>
-              <td>{formatDate(product.updatedAt)}</td>
+              <td>{formatDate(user.createdAt)}</td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan="6">No products available</td>
+            <td colSpan="6">No Users available</td>
           </tr>
         )}
       </tbody>
@@ -156,4 +145,4 @@ const ProductTable = ({
   );
 };
 
-export default ProductTable;
+export default UserTable;
