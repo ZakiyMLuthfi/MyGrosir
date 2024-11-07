@@ -10,6 +10,7 @@ const SupplierDetailModal = ({
   onUpdate,
   onToggleEdit,
   users,
+  role,
 }) => {
   const [formData, setFormData] = useState({});
   const creator =
@@ -178,15 +179,16 @@ const SupplierDetailModal = ({
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        {!isEditing ? (
-          <Button variant="primary" onClick={onToggleEdit}>
-            Update
-          </Button>
-        ) : (
-          <Button variant="success" onClick={handleSaveChanges}>
-            Save Changes
-          </Button>
-        )}
+        {role === "admin" &&
+          (!isEditing ? (
+            <Button variant="primary" onClick={onToggleEdit}>
+              Update
+            </Button>
+          ) : (
+            <Button variant="success" onClick={handleSaveChanges}>
+              Save Changes
+            </Button>
+          ))}
       </Modal.Footer>
     </Modal>
   );

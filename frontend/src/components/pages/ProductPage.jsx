@@ -20,10 +20,8 @@ import "../css/Table.css";
 const ProductPage = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.inventory.products || []);
-  console.log("Fetched products from Redux:", products);
   const users = useSelector((state) => state.inventory.users || []);
   const role = useSelector((state) => state.inventory.role);
-  console.log("Role right now: ", role);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -74,9 +72,6 @@ const ProductPage = () => {
   // Memanggil all product
   const fetchAndSetProducts = useCallback(async () => {
     setLoading(true);
-    console.log("Fetching products...");
-    console.log("Current Page:", currentPage);
-    console.log("Items Per Page:", itemsPerPage);
     try {
       const totalPagesFromApi = await fetchProducts(
         currentPage,

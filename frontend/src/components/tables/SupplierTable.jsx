@@ -16,6 +16,7 @@ const SupplierTable = ({
   onDeleteClick,
   onSort,
   onToggleClick,
+  role,
   sortConfig = { key: "", direction: "ascending" },
 }) => {
   // format waktu untuk ditampilkan pada FE
@@ -80,7 +81,7 @@ const SupplierTable = ({
             ) : null}
             Updated by
           </th>
-          <th>Active Status</th>
+          {role === "superadmin" && <th>Active Status</th>}
           <th>Action</th>
         </tr>
       </thead>
@@ -92,38 +93,40 @@ const SupplierTable = ({
               <td>{supplier.supplier_name}</td>
               <td>{formatDate(supplier.updatedAt)}</td>
               <td>{supplier.Updater ? supplier.Updater.username : "-"}</td>
-              <td
-                onClick={() => onToggleClick(supplier)}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                {supplier.isDeleted ? (
-                  <ToggleOn
-                    className="toggle-icon"
-                    style={{
-                      color: "red",
-                      cursor: "pointer",
-                      fontSize: "2.2rem",
-                      transform: "scale(1.5, 1.5)",
-                      transition: "transform 0.3s ease, color 0.3s ease",
-                    }}
-                  />
-                ) : (
-                  <ToggleOff
-                    className="toggle-icon"
-                    style={{
-                      color: "green",
-                      cursor: "pointer",
-                      fontSize: "2.2rem",
-                      transform: "scale(1.5, 1.5)",
-                      transition: "transform 0.3s ease, color 0.3s ease",
-                    }}
-                  />
-                )}
-              </td>
+              {role === "superadmin" && (
+                <td
+                  onClick={() => onToggleClick(supplier)}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {supplier.isDeleted ? (
+                    <ToggleOn
+                      className="toggle-icon"
+                      style={{
+                        color: "red",
+                        cursor: "pointer",
+                        fontSize: "2.2rem",
+                        transform: "scale(1.5, 1.5)",
+                        transition: "transform 0.3s ease, color 0.3s ease",
+                      }}
+                    />
+                  ) : (
+                    <ToggleOff
+                      className="toggle-icon"
+                      style={{
+                        color: "green",
+                        cursor: "pointer",
+                        fontSize: "2.2rem",
+                        transform: "scale(1.5, 1.5)",
+                        transition: "transform 0.3s ease, color 0.3s ease",
+                      }}
+                    />
+                  )}
+                </td>
+              )}
               <td>
                 {/* Icon for Detail */}
                 <span
@@ -137,18 +140,22 @@ const SupplierTable = ({
                   <Article />
                 </span>
                 {/* Icon for Delete */}
-                <span
-                  onClick={() => onDeleteClick(supplier)}
-                  style={{ cursor: "pointer", color: "red" }}
-                >
-                  <Delete />
-                </span>
+                {role === "admin" && (
+                  <span
+                    onClick={() => onDeleteClick(supplier)}
+                    style={{ cursor: "pointer", color: "red" }}
+                  >
+                    <Delete />
+                  </span>
+                )}
               </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan="6">No suppliers available</td>
+            <td colSpan={role === "superadmin" ? 6 : 5}>
+              No suppliers available
+            </td>
           </tr>
         )}
       </tbody>

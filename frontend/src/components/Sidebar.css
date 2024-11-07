@@ -1,77 +1,90 @@
-/* Sidebar.css */
+/* Sidebar CSS */
+.sidebar-open {
+  width: 220px;
+  background-color: #2a2e3b;
+  color: #fff;
+  padding-top: 20px;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  transition: width 0.3s ease-in-out;
+}
 
 .sidebar-title {
-  color: #ffffff;
-  font-size: 1.25rem;
-  text-align: center;
-  padding: 15px 0;
-  border-bottom: 1px solid #495057; /* Garis bawah judul */
-}
-
-.sidebar-item {
-  color: #ffffff;
-  background-color: #343a40; /* Warna latar belakang untuk item */
-  border: none;
   padding: 10px 20px;
-  transition: padding 0.3s ease, background-color 0.3s ease;
-}
-
-.sidebar-item:hover {
-  background-color: #495057; /* Warna saat hover */
-}
-
-.sidebar-item .nav-link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.sidebar-item.active {
-  background-color: #495057; /* Warna untuk item aktif */
-}
-
-.accordion-button {
-  color: #ffffff;
-  background-color: #343a40;
-  border: none;
+  font-size: 18px;
   font-weight: bold;
 }
 
-.accordion-button:not(.collapsed) {
-  background-color: #495057;
-}
-
-.accordion-button:hover {
-  background-color: #6c757d;
-}
-
-/* Jika sidebar tertutup, padding akan dikurangi */
-.sidebar-open .sidebar-item {
-  padding-left: 20px;
-}
-
-.sidebar-closed .sidebar-item {
-  padding-left: 10px;
-}
-
-/* Atur transisi dan animasi untuk penutupan sidebar */
 .sidebar-item {
+  padding: 12px 20px;
+  border-radius: 5px;
+  margin: 5px 0px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  overflow: hidden;
+  background-color: #2a2e3b;
+  color: #d1d5db;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  border: none;
 }
 
-.sidebar-closed .sidebar-title,
+/* Hover efek untuk semua sidebar-item */
+.sidebar-item:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Efek hover */
+  color: #ffffff;
+}
+
+/* Menambahkan warna hover yang lebih tegas untuk sidebar item */
+.sidebar-item:active,
+.sidebar-item:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Lebih gelap saat dihover atau aktif */
+}
+
+/* Highlight active item */
+.sidebar-item-active {
+  background-color: #1f2230; /* Warna untuk item aktif */
+  color: #fff;
+}
+
+.sidebar-icon {
+  margin-right: 15px;
+}
+
+.sidebar-open .sidebar-item {
+  padding-left: 30px; /* Padding lebih banyak di sebelah kiri saat sidebar terbuka */
+}
+
 .sidebar-closed .sidebar-item {
-  text-align: center;
+  padding: 10px;
+  justify-content: center;
+  margin-left: 10px;
 }
 
-.sidebar-closed .sidebar-item,
 .sidebar-closed .sidebar-title {
-  width: 50px;
+  opacity: 0; /* Membuat teks transparan ketika sidebar ditutup */
 }
 
-.sidebar-open .sidebar-item,
 .sidebar-open .sidebar-title {
-  width: 100%;
+  opacity: 1; /* Teks akan kembali terlihat saat sidebar terbuka */
+}
+
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.accordion-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.no-border {
+  border: none !important; /* Menghapus border */
 }

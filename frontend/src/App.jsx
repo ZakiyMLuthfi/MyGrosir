@@ -5,7 +5,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setToken } from "./reducers/userActions";
 import ProtectedRoute from "./utils/protectedRoute";
 import LayoutTemp from "./components/LayoutTemp";

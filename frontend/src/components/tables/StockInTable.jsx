@@ -8,8 +8,8 @@ const StockInTable = ({
   onDetailClick,
   onSort,
   sortConfig = { key: "", direction: "ascending" },
+  role,
 }) => {
-  // format waktu untuk ditampilkan pada FE
   const formatDate = (dateString) => {
     return moment(dateString).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss");
   };
@@ -108,21 +108,23 @@ const StockInTable = ({
             ) : null}
             Entry Date
           </th>
-          <th
-            onClick={() => onSort("created_by")}
-            style={{ cursor: "pointer" }}
-          >
-            {sortConfig.key === "created_by" &&
-            sortConfig.direction === "ascending" ? (
-              <ArrowDropUp />
-            ) : null}
-            {sortConfig.key === "created_by" &&
-            sortConfig.direction === "descending" ? (
-              <ArrowDropDown />
-            ) : null}
-            Author
-          </th>
-          <th>Detail</th>
+          {role === "superadmin" && (
+            <th
+              onClick={() => onSort("created_by")}
+              style={{ cursor: "pointer" }}
+            >
+              {sortConfig.key === "created_by" &&
+              sortConfig.direction === "ascending" ? (
+                <ArrowDropUp />
+              ) : null}
+              {sortConfig.key === "created_by" &&
+              sortConfig.direction === "descending" ? (
+                <ArrowDropDown />
+              ) : null}
+              Author
+            </th>
+          )}
+          {role === "admin" || role === "superadmin" ? <th>Detail</th> : null}
         </tr>
       </thead>
       <tbody>
@@ -139,27 +141,32 @@ const StockInTable = ({
                 </span>
               </td>
               <td>{formatDate(stockIn.createdAt)}</td>
-              <td>{stockIn.Creator ? stockIn.Creator.username : "-"}</td>
-              <td>
-                {/* Icon for Detail */}
-                <div
-                  onClick={() => onDetailClick(stockIn)}
-                  style={{
-                    cursor: "pointer",
-                    color: "blue",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Article style={{ fontSize: "2rem" }} />
-                </div>
-              </td>
+              {role === "superadmin" && (
+                <td>{stockIn.Creator ? stockIn.Creator.username : "-"}</td>
+              )}
+              {(role === "admin" || role === "superadmin") && (
+                <td>
+                  <div
+                    onClick={() => onDetailClick(stockIn)}
+                    style={{
+                      cursor: "pointer",
+                      color: "blue",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Article style={{ fontSize: "2rem" }} />
+                  </div>
+                </td>
+              )}
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan="8">No Stock-in available</td>
+            <td colSpan={role === "superadmin" ? 8 : 7}>
+              No Stock-in available
+            </td>
           </tr>
         )}
       </tbody>

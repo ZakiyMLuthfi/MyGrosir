@@ -1,3 +1,4 @@
+// ProducTable.jsx
 import React from "react";
 import moment from "moment-timezone";
 import {
@@ -57,7 +58,6 @@ const ProductTable = ({
           </th>
           <th>Action</th>
 
-          {/* Header untuk Active Status hanya muncul untuk Superadmin */}
           {role === "superadmin" && <th>Active Status</th>}
 
           <th

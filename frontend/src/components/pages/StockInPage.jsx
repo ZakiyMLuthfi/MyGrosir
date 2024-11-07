@@ -7,16 +7,21 @@ import {
 } from "../../services/stockService";
 import { fetchUsers } from "../../services/userServices";
 import { setUsers } from "../../reducers/userActions";
+import { setToken } from "../../reducers/userActions";
+
 import debounce from "lodash.debounce";
 import StockDetailModal from "../modals/stockDetailModal";
 import StockInTable from "../tables/StockInTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
+import "../css/Table.css";
 
 const StockInPage = () => {
   const dispatch = useDispatch();
   const stockIns = useSelector((state) => state.inventory.stockIns || []);
   const users = useSelector((state) => state.inventory.users || []);
+  const role = useSelector((state) => state.inventory.role);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedStockIn, setSelectedStockIn] = useState(null);
@@ -91,8 +96,17 @@ const StockInPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
+    const storedRole = localStorage.getItem("accessRole");
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedRole && !role && storedToken) {
+      dispatch(setToken({ token: storedToken, role: storedRole }));
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
     fetchAndSetStockIns();
-  }, [fetchAndSetStockIns]);
+  }, [role, currentPage, itemsPerPage]);
 
   const handleDetailClick = async (stockIn) => {
     const stockInDetail = await fetchStockInDetail(stockIn.id);
@@ -138,13 +152,19 @@ const StockInPage = () => {
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            role={role}
           />
-          <StockInTable
-            stockIns={sortedStockIns}
-            onDetailClick={handleDetailClick}
-            onSort={handleSort}
-            sortConfig={sortConfig}
-          />
+
+          <div className="product-table mb-4">
+            <StockInTable
+              stockIns={sortedStockIns}
+              onDetailClick={handleDetailClick}
+              onSort={handleSort}
+              sortConfig={sortConfig}
+              role={role}
+            />
+          </div>
+
           <PaginationComponent
             currentPage={currentPage}
             totalPages={totalPages}
@@ -159,6 +179,7 @@ const StockInPage = () => {
             stockData={selectedStockIn}
             type="stock-in"
             users={users}
+            role={role}
           />
         </div>
       )}

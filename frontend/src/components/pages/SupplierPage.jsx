@@ -9,16 +9,20 @@ import {
   restoreSupplierService,
 } from "../../services/supplierService";
 import { fetchUsers } from "../../services/userServices";
+import { setToken } from "../../reducers/userActions";
 import debounce from "lodash.debounce";
 import SupplierDetailModal from "../modals/supplierDetailModal";
 import SupplierTable from "../tables/SupplierTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
+import "../css/Table.css";
 
 const SupplierPage = () => {
   const dispatch = useDispatch();
   const suppliers = useSelector((state) => state.inventory.suppliers || []);
   const users = useSelector((state) => state.inventory.users || []);
+  const role = useSelector((state) => state.inventory.role);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
@@ -94,8 +98,19 @@ const SupplierPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchAndSetSuppliers();
-  }, [fetchAndSetSuppliers]);
+    const storedRole = localStorage.getItem("accessRole");
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedRole && !role && storedToken) {
+      dispatch(setToken({ token: storedToken, role: storedRole }));
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
+    if (role) {
+      fetchAndSetSuppliers();
+    }
+  }, [role, currentPage, itemsPerPage]);
 
   const handleDeleteClick = async (supplier) => {
     const confirmDelete = window.confirm(
@@ -182,15 +197,19 @@ const SupplierPage = () => {
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            role={role}
           />
-          <SupplierTable
-            suppliers={sortedSuppliers}
-            onDetailClick={handleDetailClick}
-            onDeleteClick={handleDeleteClick}
-            onSort={handleSort}
-            onToggleClick={handleToggleDelete}
-            sortConfig={sortConfig}
-          />
+          <div className="product-table mb-4">
+            <SupplierTable
+              suppliers={sortedSuppliers}
+              onDetailClick={handleDetailClick}
+              onDeleteClick={handleDeleteClick}
+              onSort={handleSort}
+              onToggleClick={handleToggleDelete}
+              sortConfig={sortConfig}
+              role={role}
+            />
+          </div>
 
           <PaginationComponent
             currentPage={currentPage}
@@ -208,6 +227,7 @@ const SupplierPage = () => {
             onUpdate={handleSaveChanges}
             onToggleEdit={handleUpdateClick}
             users={users}
+            role={role}
           />
         </div>
       )}

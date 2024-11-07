@@ -93,6 +93,7 @@ const DashboardPage = () => {
             <Line
               type="monotone"
               dataKey="totalRemaining"
+              name="Stocks in warehouse"
               stroke="#8884d8"
               activeDot={{ r: 8 }}
             />

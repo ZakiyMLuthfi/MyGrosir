@@ -11,6 +11,7 @@ const StockDetailModal = ({
   onUpdate,
   onToggleEdit,
   users,
+  role,
 }) => {
   const [formData, setFormData] = useState({});
   const creator =
@@ -279,6 +280,7 @@ const StockDetailModal = ({
           Close
         </Button>
         {type === "stock-out" &&
+          role === "admin" &&
           (!isEditing ? (
             <Button variant="primary" onClick={onToggleEdit}>
               Update

@@ -17,6 +17,8 @@ const StockOutPage = () => {
   const dispatch = useDispatch();
   const stockOuts = useSelector((state) => state.inventory.stockOuts || []);
   const users = useSelector((state) => state.inventory.users || []);
+  const role = useSelector((state) => state.inventory.role);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedStockOut, setSelectedStockOut] = useState(null);
@@ -165,6 +167,7 @@ const StockOutPage = () => {
             onDetailClick={handleDetailClick}
             onSort={handleSort}
             sortConfig={sortConfig}
+            role={role}
           />
           <PaginationComponent
             currentPage={currentPage}
@@ -183,6 +186,7 @@ const StockOutPage = () => {
             onToggleEdit={handleUpdateClick}
             type="stock-out"
             users={users}
+            role={role}
           />
         </div>
       )}

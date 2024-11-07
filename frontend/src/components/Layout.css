@@ -1,73 +1,81 @@
 /* Layout.css */
 
-/* Pastikan seluruh halaman penuh memiliki background */
+/* Warna latar belakang halaman */
 html,
 body {
   height: 100%;
   margin: 0;
-  background-color: #343a40;
-  overflow: hidden; /* Mencegah scroll pada elemen root */
+  background-color: #f3f4f6; /* Warna abu-abu terang sebagai latar */
+  overflow: hidden;
+  font-family: "Roboto", sans-serif;
 }
 
 .d-flex {
   display: flex;
   width: 100vw;
   height: 100vh;
-  background-color: #495057; /* Warna latar utama */
+  background-color: #e9ecef; /* Warna netral untuk elemen utama */
   overflow: hidden;
 }
 
 .sidebar-open {
-  width: 187px; /* 3/4 dari ukuran aslinya */
+  width: 220px;
   position: fixed;
   height: 100vh;
   top: 0;
   left: 0;
-  transition: width 0.3s ease;
-  background-color: #343a40;
+  transition: width 0.3s ease-in-out;
+  background-color: #2a2e3b; /* Warna abu-abu gelap untuk sidebar */
+  color: #ffffff;
 }
 
 .sidebar-closed {
-  width: 50px;
+  width: 60px;
   position: fixed;
   height: 100vh;
   top: 0;
   left: 0;
-  transition: width 0.3s ease;
-  background-color: #343a40;
+  transition: width 0.3s ease-in-out;
+  background-color: #2a2e3b; /* Warna konsisten dengan sidebar terbuka */
 }
 
 .drawer-toggle {
   position: absolute;
-  top: 15px;
-  right: -10px;
-  background-color: #343a40;
-  color: white;
-  padding: 3px;
+  top: 18px;
+  right: -15px;
+  background-color: #2a2e3b; /* Warna konsisten dengan sidebar */
+  color: #ffffff;
+  padding: 8px;
   cursor: pointer;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 38px;
   text-align: center;
-  line-height: 1px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.drawer-toggle:hover {
+  background-color: #1f2230; /* Warna lebih gelap saat hover */
 }
 
 .main-content {
   flex-grow: 1;
   padding: 20px;
-  background-color: #495057; /* Warna latar belakang konten */
-  overflow-y: auto; /* Scroll hanya pada konten */
+  background-color: #fefeff;
+  overflow-y: auto;
   overflow-x: hidden;
   height: 100vh;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease-in-out;
+  color: #333;
 }
 
 .sidebar-open ~ .main-content {
-  margin-left: 187px; /* Sesuaikan dengan lebar sidebar terbuka */
+  margin-left: 220px;
 }
 
 .sidebar-closed ~ .main-content {
-  margin-left: 50px;
+  margin-left: 60px;
 }
 
 .profile-nav {
@@ -78,10 +86,52 @@ body {
 }
 
 .list-group-item {
-  background-color: #495057;
-  color: white;
+  background-color: #2a2e3b; /* Warna konsisten dengan sidebar */
+  color: #ffffff;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease;
 }
 
 .list-group-item:hover {
-  background-color: #6c757d;
+  background-color: #1f2230; /* Warna lebih tua untuk hover */
+}
+
+/* Warna aksen hijau turquoise */
+.button-primary {
+  background-color: #29c7ac; /* Hijau turquoise */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-primary:hover {
+  background-color: #1fb49b; /* Hijau turquoise lebih gelap saat hover */
+}
+
+/* Tampilan badge atau indikator */
+.badge {
+  background-color: #29c7ac;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-low {
+  background-color: #e74c3c; /* Merah untuk status rendah */
+  color: #ffffff;
+}
+.status-normal {
+  background-color: #29c7ac; /* Hijau turquoise untuk status normal */
+  color: #ffffff;
+}
+.status-high {
+  background-color: #3498db; /* Biru untuk status tinggi */
+  color: #ffffff;
 }

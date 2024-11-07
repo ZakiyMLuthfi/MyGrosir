@@ -152,6 +152,7 @@ const UserPage = () => {
               onSort={handleSort}
               onToggleClick={handleToggleDelete}
               sortConfig={sortConfig}
+              role={role}
             />
           </div>
           <PaginationComponent
