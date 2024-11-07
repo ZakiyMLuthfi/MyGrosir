@@ -11,7 +11,10 @@ const initialState = {
   totalAssets: null,
   totalItems: null,
   totalOutgoing: null,
+  totalIncoming: null,
   stockFlowData: [],
+  recentStockHistory: [],
+  lowStockNotifications: [],
 };
 
 const inventoryReducer = (state = initialState, action) => {
@@ -84,8 +87,17 @@ const inventoryReducer = (state = initialState, action) => {
     case "SET_TOTAL_OUTGOING":
       return { ...state, totalOutgoing: action.payload };
 
+    case "SET_TOTAL_INCOMING":
+      return { ...state, totalIncoming: action.payload };
+
     case "SET_STOCK_FLOW_DATA":
       return { ...state, stockFlowData: action.payload };
+
+    case "SET_RECENT_STOCK_HISTORY":
+      return { ...state, recentStockHistory: action.payload };
+
+    case "SET_LOW_STOCK_NOTIFICATIONS":
+      return { ...state, lowStockNotifications: action.payload };
 
     default:
       return state;
