@@ -5,7 +5,6 @@ import {
   ArrowDropUp,
   ArrowDropDown,
   Article,
-  Delete,
   ToggleOn,
   ToggleOff,
 } from "@mui/icons-material";
@@ -13,7 +12,6 @@ import {
 const ProductTable = ({
   products,
   onDetailClick,
-  onDeleteClick,
   onSort,
   onToggleClick,
   role,
@@ -58,7 +56,7 @@ const ProductTable = ({
           </th>
           <th>Action</th>
 
-          {role === "superadmin" && <th>Active Status</th>}
+          {role === "supervisor" && <th>Active Status</th>}
 
           <th
             onClick={() => onSort("updated_by")}
@@ -105,20 +103,10 @@ const ProductTable = ({
                 >
                   <Article />
                 </span>
-
-                {/* Icon for Delete - Only for Admin */}
-                {role === "admin" && (
-                  <span
-                    onClick={() => onDeleteClick(product)}
-                    style={{ cursor: "pointer", color: "red" }}
-                  >
-                    <Delete />
-                  </span>
-                )}
               </td>
 
-              {/* Toggle Active Status - Only for Superadmin */}
-              {role === "superadmin" && (
+              {/* Toggle Active Status - Only for Supervisor */}
+              {role === "supervisor" && (
                 <td
                   onClick={() => onToggleClick(product)}
                   style={{
@@ -158,7 +146,7 @@ const ProductTable = ({
           ))
         ) : (
           <tr>
-            <td colSpan={role === "superadmin" ? 6 : 5}>
+            <td colSpan={role === "supervisor" ? 6 : 5}>
               No products available
             </td>
           </tr>

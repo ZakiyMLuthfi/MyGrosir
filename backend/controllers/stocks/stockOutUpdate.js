@@ -1,3 +1,4 @@
+// Menyesuaikan stockOutUpdate untuk menerima parameter langsung, tanpa req.params
 const {
   StockOut,
   StockIn,
@@ -6,16 +7,19 @@ const {
   Product,
 } = require("../../models");
 
-const stockOutUpdate = async (req, res) => {
-  const { id } = req.params;
-  const { quantity_reduction, grosir_choice } = req.body;
-
-  const userId = req.user.id;
-
+const stockOutUpdate = async (
+  id,
+  quantity_reduction,
+  stock_code,
+  receipt_code,
+  grosir_choice,
+  userId
+) => {
   const validGrosirChoices = ["Grosir A", "Grosir B", "Grosir C"];
   if (!validGrosirChoices.includes(grosir_choice)) {
-    return res.status(400).json({ error: "Invalid grosir choice" });
+    throw new Error("Invalid grosir choice");
   }
+
   try {
     const stockOut = await StockOut.findByPk(id, {
       include: [
@@ -31,22 +35,20 @@ const stockOutUpdate = async (req, res) => {
     });
 
     if (!stockOut) {
-      return res(404).json({ error: "StockOut not found" });
+      throw new Error("StockOut not found");
     }
 
     if (quantity_reduction < 1) {
-      return res
-        .status(400)
-        .json({ error: "Quantity reduction cannot negative or zero" });
+      throw new Error("Quantity reduction cannot negative or zero");
     }
+
     const newQuantityRemaining =
       stockOut.quantity_remaining - quantity_reduction;
 
     if (newQuantityRemaining < 0) {
-      return res
-        .status(400)
-        .json({ error: "Quantity reduction exceeds remaining quantity" });
+      throw new Error("Quantity reduction exceeds remaining quantity");
     }
+
     await StockOut.update(
       {
         quantity_remaining: newQuantityRemaining,
@@ -65,12 +67,13 @@ const stockOutUpdate = async (req, res) => {
 
     const stock_price = stockIn.purchase_price * quantity_reduction;
     const stockHistoryData = {
-      stock_code: stockOut.stock_code,
+      stock_code: stock_code || stockOut.stock_code,
+      receipt_code: receipt_code || stockOut.receipt_code,
       supplierId: stockOut.supplierId,
-      productId: stockOut.supplierId,
+      productId: stockOut.productId,
       stockOutId: stockOut.id,
-      supplier_name: stockOut.supplier.name, // relasi diambil dari Supplier
-      product_name: stockOut.product.name, // relasi diambil dari Product
+      supplier_name: stockOut.supplier ? stockOut.supplier.name : "Unknown",
+      product_name: stockOut.product ? stockOut.product.name : "Unknown",
       quantity: quantity_reduction,
       stock_price,
       grosir_choice,
@@ -78,16 +81,14 @@ const stockOutUpdate = async (req, res) => {
       createdAt: new Date(),
     };
 
-    console.log("StockHistoryData adalaH:", stockHistoryData);
+    console.log("StockHistoryData:", stockHistoryData);
 
     await StockHistory.create(stockHistoryData);
 
-    return res.status(200).json({ stockOut, stockIn, stockHistoryData });
+    return { stockOut, stockIn, stockHistoryData };
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: "An error occured while updating stock" });
+    throw new Error("An error occurred while updating stock");
   }
 };
 

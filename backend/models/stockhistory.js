@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(6),
         allowNull: false,
       },
+      receipt_code: {
+        type: DataTypes.STRING(6),
+        allowNull: false,
+      },
       supplierId: {
         type: DataTypes.INTEGER,
         references: {

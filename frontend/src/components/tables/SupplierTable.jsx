@@ -81,7 +81,7 @@ const SupplierTable = ({
             ) : null}
             Updated by
           </th>
-          {role === "superadmin" && <th>Active Status</th>}
+          {role === "supervisor" && <th>Active Status</th>}
           <th>Action</th>
         </tr>
       </thead>
@@ -93,7 +93,7 @@ const SupplierTable = ({
               <td>{supplier.supplier_name}</td>
               <td>{formatDate(supplier.updatedAt)}</td>
               <td>{supplier.Updater ? supplier.Updater.username : "-"}</td>
-              {role === "superadmin" && (
+              {role === "supervisor" && (
                 <td
                   onClick={() => onToggleClick(supplier)}
                   style={{
@@ -139,21 +139,12 @@ const SupplierTable = ({
                 >
                   <Article />
                 </span>
-                {/* Icon for Delete */}
-                {role === "admin" && (
-                  <span
-                    onClick={() => onDeleteClick(supplier)}
-                    style={{ cursor: "pointer", color: "red" }}
-                  >
-                    <Delete />
-                  </span>
-                )}
               </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={role === "superadmin" ? 6 : 5}>
+            <td colSpan={role === "supervisor" ? 6 : 5}>
               No suppliers available
             </td>
           </tr>

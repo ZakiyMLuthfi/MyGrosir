@@ -1,8 +1,8 @@
-// TableAction.jsx
 import React from "react";
 import AddProduct from "./action_bar/AddProduct";
 import AddSupplier from "./action_bar/AddSupplier";
 import AddStockIn from "./action_bar/AddStockIn";
+import AddStockOut from "./action_bar/AddStockOut";
 import AddUser from "./action_bar/AddUser";
 import { Form, InputGroup } from "react-bootstrap";
 import { SearchOutlined } from "@mui/icons-material";
@@ -20,6 +20,7 @@ const TableAction = ({
     setSearchTerm(keyword);
     onSearch(keyword);
   };
+
   return (
     <div
       style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
@@ -34,6 +35,9 @@ const TableAction = ({
           )}
           {type === "stockIn" && role === "admin" && (
             <AddStockIn onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+          )}
+          {type === "stockOut" && role === "admin" && (
+            <AddStockOut onSubmit={onAdd} style={{ marginRight: "1rem" }} />
           )}
           {type === "user" && role === "superadmin" && (
             <AddUser onSubmit={onAdd} style={{ marginRight: "1rem" }} />
@@ -56,9 +60,11 @@ const TableAction = ({
               ? "Search suppliers..."
               : type === "stockIn"
               ? "Search stock in..."
+              : type === "stockOut"
+              ? "Search stock out..."
               : type === "user"
               ? "Search user..."
-              : "Search stock out..."
+              : "Search..."
           }
           value={searchTerm}
           onChange={handleSearchChange}
@@ -69,9 +75,11 @@ const TableAction = ({
               ? "suppliers"
               : type === "stockIn"
               ? "stock in"
+              : type === "stockOut"
+              ? "stock out"
               : type === "user"
               ? "user"
-              : "stock out"
+              : ""
           }`}
           aria-describedby="search-addon"
         />

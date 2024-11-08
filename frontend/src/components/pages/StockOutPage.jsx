@@ -43,7 +43,6 @@ const StockOutPage = () => {
     if (sortConfig !== null) {
       sortableStockOuts.sort((a, b) => {
         if (sortConfig.key === "status") {
-          // Sorting by status and quantity_remaining
           const statusA = a.quantity_remaining === 0 ? "Empty" : "Ready";
           const statusB = b.quantity_remaining === 0 ? "Empty" : "Ready";
 
@@ -52,12 +51,10 @@ const StockOutPage = () => {
               ? statusA.localeCompare(statusB)
               : statusB.localeCompare(statusA);
           }
-          // If status is the same, sort by quantity_remaining
           return sortConfig.direction === "ascending"
             ? b.quantity_remaining - a.quantity_remaining
             : a.quantity_remaining - b.quantity_remaining;
         } else {
-          // Default sorting for other keys
           if (a[sortConfig.key] < b[sortConfig.key]) {
             return sortConfig.direction === "ascending" ? -1 : 1;
           }
@@ -83,7 +80,6 @@ const StockOutPage = () => {
     setSortConfig({ key, direction });
   };
 
-  // Memanggil all stock-out
   const fetchAndSetStockOuts = useCallback(async () => {
     setLoading(true);
     try {
@@ -92,7 +88,7 @@ const StockOutPage = () => {
         itemsPerPage,
         dispatch
       );
-      setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
+      setTotalPages(totalPagesFromApi);
     } catch (err) {
       console.error("Error fetching stock-out", err);
     } finally {
@@ -112,8 +108,10 @@ const StockOutPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchAndSetStockOuts();
-  }, [fetchAndSetStockOuts]);
+    if (role) {
+      fetchAndSetStockOuts();
+    }
+  }, [role, currentPage, itemsPerPage]);
 
   const handleDetailClick = async (stockOut) => {
     const stockOutDetail = await fetchStockOutDetail(stockOut.id);
@@ -131,6 +129,16 @@ const StockOutPage = () => {
     setCurrentPage(1);
   };
 
+  const handleAddStockOut = async (formData) => {
+    try {
+      await updateStockOut(formData);
+      setShowModal(false);
+      await fetchAndSetStockOuts();
+    } catch (err) {
+      console.error("Error adding stock-out", err);
+    }
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedStockOut(null);
@@ -144,7 +152,7 @@ const StockOutPage = () => {
     try {
       await updateStockOut(selectedStockOut.id, updatedStockData);
       await fetchAndSetStockOuts();
-      handleCloseModal(); // Menutup modal dan reset state
+      handleCloseModal();
     } catch (error) {
       console.error("Error updating stock-out", error);
     }
@@ -158,9 +166,12 @@ const StockOutPage = () => {
         <div className="container mt-4">
           <h1 className="mb-4">Stock-out List</h1>
           <TableAction
+            type="stockOut"
+            onAdd={handleAddStockOut}
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            role={role}
           />
           <StockOutTable
             stockOuts={sortedStockOuts}

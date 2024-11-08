@@ -113,19 +113,6 @@ const ProductPage = () => {
     }
   }, [role, currentPage, itemsPerPage]);
 
-  const handleDeleteClick = async (product) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${product.product_name}?`
-    );
-    if (confirmDelete) {
-      try {
-        await deleteProductService(product.id, dispatch);
-      } catch (err) {
-        console.error("Failed to delete product:", err);
-      }
-    }
-  };
-
   const handleToggleDelete = async (product) => {
     if (product.isDeleted) {
       await restoreProductService(product.id, dispatch);
@@ -208,7 +195,6 @@ const ProductPage = () => {
             <ProductTable
               products={sortedProducts}
               onDetailClick={handleDetailClick}
-              onDeleteClick={handleDeleteClick}
               onSort={handleSort}
               onToggleClick={handleToggleDelete}
               sortConfig={sortConfig}

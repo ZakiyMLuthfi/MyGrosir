@@ -50,6 +50,8 @@ const inventoryReducer = (state = initialState, action) => {
 
     case "SET_STOCK_OUTS":
       return { ...state, stockOuts: action.payload };
+    case "ADD_STOCK_OUT":
+      return { ...state, stockOuts: [...state.stockOuts, action.payload] };
 
     case "SET_STOCK_HISTORIES":
       return { ...state, stockHistories: action.payload };

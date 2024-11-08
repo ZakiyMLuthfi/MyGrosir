@@ -20,7 +20,7 @@ export const addStockIn = (stockIn) => ({
   payload: stockIn,
 });
 
-// export const addStockHistory = (stockHistory) => ({
-//   type: "ADD_STOCK_HISTORY",
-//   payload: stockHistory,
-// });
+export const addStockOut = (stockOut) => ({
+  type: "ADD_STOCK_OUT",
+  payload: stockOut,
+});

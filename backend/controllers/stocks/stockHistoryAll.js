@@ -13,6 +13,7 @@ const stockHistoryAll = async (req, res) => {
       ...(search && {
         [Op.or]: [
           { "$product.product_name$": { [Op.iLike]: `%${search}%` } },
+          { receipt_code: { [Op.iLike]: `%${search}%` } },
           { stock_code: { [Op.iLike]: `%${search}%` } },
           { grosir_choice: { [Op.iLike]: `%${search}%` } },
         ],

@@ -9,6 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      receipt_code: {
+        type: Sequelize.STRING(6),
+        allowNull: false,
+      },
       stock_code: {
         type: Sequelize.STRING(6),
         allowNull: false,
