@@ -25,7 +25,9 @@ const TableAction = ({
     <div
       style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
     >
-      {(role === "admin" || (role === "superadmin" && type === "user")) && (
+      {(role === "admin" ||
+        ((role === "superadmin" || role === "supervisor") &&
+          type === "user")) && (
         <>
           {type === "product" && role === "admin" && (
             <AddProduct onSubmit={onAdd} style={{ marginRight: "1rem" }} />
@@ -39,10 +41,14 @@ const TableAction = ({
           {type === "stockOut" && role === "admin" && (
             <AddStockOut onSubmit={onAdd} style={{ marginRight: "1rem" }} />
           )}
-          {type === "user" && role === "superadmin" && (
-            <AddUser onSubmit={onAdd} style={{ marginRight: "1rem" }} />
-          )}
-          {/* Tambahkan tipe lain jika diperlukan */}
+          {type === "user" &&
+            (role === "superadmin" || role === "supervisor") && (
+              <AddUser
+                onSubmit={onAdd}
+                style={{ marginRight: "1rem" }}
+                role={role}
+              />
+            )}
         </>
       )}
 

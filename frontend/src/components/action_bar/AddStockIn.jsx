@@ -1,9 +1,9 @@
-// AddStockIn.jsx
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, fetchSuppliers } from "../../services/stockService";
+import Select from "react-select";
 
 const AddStockIn = ({ onSubmit }) => {
   const [showModal, setShowModal] = useState(false);
@@ -16,21 +16,20 @@ const AddStockIn = ({ onSubmit }) => {
 
   const dispatch = useDispatch();
 
-  const products = useSelector((state) => {
-    return state.inventory.products.products || [];
-  });
-
-  const suppliers = useSelector((state) => {
-    return state.inventory.suppliers.suppliers || [];
-  });
+  const products = useSelector(
+    (state) => state.inventory.products.products || []
+  );
+  const suppliers = useSelector(
+    (state) => state.inventory.suppliers.suppliers || []
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetchProducts(dispatch);
-        await fetchSuppliers(dispatch);
+        await fetchProducts(null, null, dispatch, "", true);
+        await fetchSuppliers(null, null, dispatch, "", true);
       } catch (err) {
-        console.error("Error fetching products or supplier", err);
+        console.error("Error fetching products or suppliers", err);
       }
     };
     fetchData();
@@ -41,6 +40,13 @@ const AddStockIn = ({ onSubmit }) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleSelectChange = (selectedOption, field) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: selectedOption ? selectedOption.value : "",
     }));
   };
 
@@ -59,6 +65,17 @@ const AddStockIn = ({ onSubmit }) => {
     });
   };
 
+  // Convert products and suppliers to the format expected by react-select
+  const supplierOptions = suppliers.map((supplier) => ({
+    value: supplier.id,
+    label: supplier.supplier_name,
+  }));
+
+  const productOptions = products.map((product) => ({
+    value: product.id,
+    label: product.product_name,
+  }));
+
   return (
     <>
       <Button
@@ -75,54 +92,44 @@ const AddStockIn = ({ onSubmit }) => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleFormSubmit}>
+            {/* Supplier Dropdown with search */}
             <Form.Group controlId="formSupplier">
               <Form.Label>Supplier</Form.Label>
-              <Form.Control
-                as="select"
-                name="supplierId"
-                value={formData.supplierId}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Supplier</option>
-                {suppliers && suppliers.length > 0 ? (
-                  suppliers.map((supplier) => (
-                    <option key={supplier.id} value={supplier.id}>
-                      {supplier.supplier_name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>No Suppliers Available</option>
+              <Select
+                options={supplierOptions}
+                value={supplierOptions.find(
+                  (option) => option.value === formData.supplierId
                 )}
-              </Form.Control>
+                onChange={(selectedOption) =>
+                  handleSelectChange(selectedOption, "supplierId")
+                }
+                placeholder="Search Supplier"
+                isClearable
+              />
             </Form.Group>
 
+            {/* Product Dropdown with search */}
             <Form.Group controlId="formProduct">
               <Form.Label>Product</Form.Label>
-              <Form.Control
-                as="select"
-                name="productId"
-                value={formData.productId}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Product</option>
-                {products && products.length > 0 ? (
-                  products.map((product) => (
-                    <option key={product.id} value={product.id}>
-                      {product.product_name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>No Products Available</option>
+              <Select
+                options={productOptions}
+                value={productOptions.find(
+                  (option) => option.value === formData.productId
                 )}
-              </Form.Control>
+                onChange={(selectedOption) =>
+                  handleSelectChange(selectedOption, "productId")
+                }
+                placeholder="Search Product"
+                isClearable
+              />
             </Form.Group>
+
+            {/* Quantity Input */}
             <Form.Group controlId="formQuantity">
               <Form.Label>Quantity</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter quantity (required)"
+                placeholder="Enter quantity"
                 name="quantity"
                 value={formData.quantity}
                 onChange={handleInputChange}
@@ -130,11 +137,12 @@ const AddStockIn = ({ onSubmit }) => {
               />
             </Form.Group>
 
+            {/* Purchase Price Input */}
             <Form.Group controlId="formPurchasePrice">
               <Form.Label>Purchase Price (1 pkg)</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter purchase price (required)"
+                placeholder="Enter purchase price"
                 name="purchase_price"
                 value={formData.purchase_price}
                 onChange={handleInputChange}

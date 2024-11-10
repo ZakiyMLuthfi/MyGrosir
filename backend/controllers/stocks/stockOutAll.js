@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 const stockOutAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 
@@ -11,7 +11,10 @@ const stockOutAll = async (req, res) => {
 
     const whereCondition = {
       ...(search && {
-        [Op.or]: [{ "$product.product_name$": { [Op.iLike]: `%${search}%` } }],
+        [Op.or]: [
+          { "$product.product_name$": { [Op.iLike]: `%${search}%` } },
+          { stock_code: { [Op.iLike]: `%${search}%` } },
+        ],
       }),
     };
 

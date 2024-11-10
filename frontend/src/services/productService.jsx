@@ -14,24 +14,32 @@ export const fetchProducts = async (
   currentPage,
   itemsPerPage,
   dispatch,
-  searchTerm
+  searchTerm,
+  allData = false
 ) => {
   try {
     const response = await axios.get(API_URL, {
-      params: {
-        page: currentPage,
-        itemsPerPage,
-        sort: "updatedAt",
-        search: searchTerm,
-      },
+      params: allData
+        ? { allData: true, sort: "updatedAt", search: searchTerm }
+        : {
+            page: currentPage,
+            itemsPerPage,
+            sort: "updatedAt",
+            search: searchTerm,
+          },
       headers: getAuthHeader(),
     });
+
+    console.log("Fetched products in fetchProducts:", response.data.products); // Log untuk debugging
+
+    // Menyimpan produk ke Redux
     dispatch(setProducts(response.data.products));
+
     return response.data.totalPages;
   } catch (err) {
     if (err.response && err.response.status === 401) {
       console.error("Unauthorized - Redirecting to login");
-      window.location.href = "/login"; // Arahkan ke halaman login
+      window.location.href = "/login";
     } else {
       console.error("Error fetching products", err);
     }

@@ -1,18 +1,37 @@
-// AddProduct.jsx
-import React, { useState } from "react";
+// AddUser.jsx
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import AddIcon from "@mui/icons-material/Add";
 
-const AddUser = ({ onSubmit }) => {
+const AddUser = ({ onSubmit, role }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    role: "",
+    role: role === "supervisor" ? "admin" : "supervisor",
   });
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+
+  useEffect(() => {
+    if (role === "superadmin") {
+      setFormData((prevData) => ({
+        ...prevData,
+        role: "supervisor", // Set default role untuk superadmin
+      }));
+    } else if (role === "supervisor") {
+      setFormData((prevData) => ({
+        ...prevData,
+        role: "admin", // Set default role untuk supervisor
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        role: "", // Set role menjadi kosong untuk user biasa
+      }));
+    }
+  }, [role]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,12 +43,18 @@ const AddUser = ({ onSubmit }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    console.log("Selected role:", formData.role);
+
+    if (!["admin", "supervisor"].includes(formData.role)) {
+      alert("Invalid role selected");
+      return;
+    }
     onSubmit(formData);
     handleClose();
     setFormData({
       username: "",
       email: "",
-      role: "",
+      role: role === "supervisor" ? "admin" : "supervisor",
     });
   };
 
@@ -45,7 +70,13 @@ const AddUser = ({ onSubmit }) => {
 
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add User</Modal.Title>
+          <Modal.Title>
+            {role === "superadmin"
+              ? "Add Supervisor"
+              : role === "supervisor"
+              ? "Add Admin"
+              : "Add User"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleFormSubmit}>
@@ -72,17 +103,26 @@ const AddUser = ({ onSubmit }) => {
               />
             </Form.Group>
             <Form.Group controlId="formRole">
-              <Form.Label>Weight Type</Form.Label>
+              <Form.Label>Role</Form.Label>
               <Form.Control
                 as="select"
                 name="role"
                 value={formData.role}
                 onChange={handleInputChange}
-                style={{ cursor: "pointer" }}
+                disabled // Disable jika role adalah supervisor atau superadmin
               >
-                <option>Select role</option>
-                <option value="admin">Admin</option>
-                <option value="supervisor">Supervisor</option>
+                {/* Hanya tampilkan opsi jika role adalah admin atau superadmin */}
+                {role !== "supervisor" && role !== "superadmin" && (
+                  <>
+                    <option value="admin">Admin</option>
+                    <option value="supervisor">Supervisor</option>
+                  </>
+                )}
+                {/* Set role otomatis berdasarkan siapa yang membuka modal */}
+                {role === "supervisor" && <option value="admin">Admin</option>}
+                {role === "superadmin" && (
+                  <option value="supervisor">Supervisor</option>
+                )}
               </Form.Control>
             </Form.Group>
             <Button variant="primary" type="submit">

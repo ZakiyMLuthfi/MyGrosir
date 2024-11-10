@@ -7,7 +7,6 @@ const StockOutTable = ({
   stockOuts,
   onDetailClick,
   onSort,
-  role,
   sortConfig = { key: "", direction: "ascending" },
 }) => {
   // format waktu untuk ditampilkan pada FE
@@ -134,7 +133,7 @@ const StockOutTable = ({
             ) : null}
             Updated by
           </th>
-          <th>{role === "admin" ? "Send Out" : "Detail"}</th>
+          <th>Detail</th>
         </tr>
       </thead>
       <tbody>

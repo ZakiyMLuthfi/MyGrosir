@@ -31,7 +31,7 @@ const login = async (req, res) => {
       { expiresIn: "12h" }
     );
 
-    res.status(200).json({ token: token, role: user.role });
+    res.status(200).json({ token: token, role: user.role, userId: user.id });
   } catch (error) {
     console.error("Error during login", error);
     res.status(500).json({ error: "An error occurred during login" });

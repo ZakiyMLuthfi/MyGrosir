@@ -19,7 +19,9 @@ import "../css/Table.css";
 
 const SupplierPage = () => {
   const dispatch = useDispatch();
-  const suppliers = useSelector((state) => state.inventory.suppliers || []);
+  const suppliers = useSelector(
+    (state) => state.inventory.suppliers.suppliers || []
+  );
   const users = useSelector((state) => state.inventory.users || []);
   const role = useSelector((state) => state.inventory.role);
 
@@ -29,7 +31,7 @@ const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -100,9 +102,12 @@ const SupplierPage = () => {
   useEffect(() => {
     const storedRole = localStorage.getItem("accessRole");
     const storedToken = localStorage.getItem("accessToken");
+    const storedId = localStorage.getItem("loggedInUserId");
 
-    if (storedRole && !role && storedToken) {
-      dispatch(setToken({ token: storedToken, role: storedRole }));
+    if (storedRole && storedToken && !role) {
+      dispatch(
+        setToken({ token: storedToken, role: storedRole, userId: storedId })
+      );
     }
   }, [dispatch, role]);
 
@@ -112,18 +117,18 @@ const SupplierPage = () => {
     }
   }, [role, currentPage, itemsPerPage]);
 
-  const handleDeleteClick = async (supplier) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${supplier.supplier_name}?`
-    );
-    if (confirmDelete) {
-      try {
-        await deleteSupplierService(supplier.id, dispatch);
-      } catch (err) {
-        console.error("Failed to delete supplier:", err);
-      }
-    }
-  };
+  // const handleDeleteClick = async (supplier) => {
+  //   const confirmDelete = window.confirm(
+  //     `Are you sure you want to delete ${supplier.supplier_name}?`
+  //   );
+  //   if (confirmDelete) {
+  //     try {
+  //       await deleteSupplierService(supplier.id, dispatch);
+  //     } catch (err) {
+  //       console.error("Failed to delete supplier:", err);
+  //     }
+  //   }
+  // };
 
   const handleToggleDelete = async (supplier) => {
     if (supplier.isDeleted) {
@@ -203,7 +208,6 @@ const SupplierPage = () => {
             <SupplierTable
               suppliers={sortedSuppliers}
               onDetailClick={handleDetailClick}
-              onDeleteClick={handleDeleteClick}
               onSort={handleSort}
               onToggleClick={handleToggleDelete}
               sortConfig={sortConfig}

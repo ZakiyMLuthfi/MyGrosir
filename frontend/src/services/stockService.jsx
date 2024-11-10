@@ -13,27 +13,69 @@ import { getAuthHeader } from "../utils/authService";
 const API_URL = "http://localhost:5000/api/stocks";
 const DEFAULT_URL = "http://localhost:5000/api";
 
-export const fetchProducts = async (dispatch) => {
+export const fetchProducts = async (
+  currentPage,
+  itemsPerPage,
+  dispatch,
+  searchTerm,
+  allData = false
+) => {
   try {
     const response = await axios.get(`${DEFAULT_URL}/products`, {
+      params: allData
+        ? { allData: true, sort: "updatedAt", search: searchTerm }
+        : {
+            page: currentPage,
+            itemsPerPage,
+            sort: "updatedAt",
+            search: searchTerm,
+          },
       headers: getAuthHeader(),
     });
-    dispatch(setProducts(response.data));
-  } catch (error) {
-    console.error("Error fetching products", error);
-    throw error;
+    console.log("Fetched Products:", response.data.products);
+    dispatch(setProducts(response.data.products));
+    return response.data.totalPages;
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      console.error("Unauthorized - Redirecting to login");
+      window.location.href = "/login";
+    } else {
+      console.error("Error fetching products", err);
+    }
+    throw err;
   }
 };
 
-export const fetchSuppliers = async (dispatch) => {
+export const fetchSuppliers = async (
+  currentPage,
+  itemsPerPage,
+  dispatch,
+  searchTerm,
+  allData = false
+) => {
   try {
     const response = await axios.get(`${DEFAULT_URL}/suppliers`, {
+      params: allData
+        ? { allData: true, sort: "updatedAt", search: searchTerm }
+        : {
+            page: currentPage,
+            itemsPerPage,
+            sort: "updatedAt",
+            search: searchTerm,
+          },
       headers: getAuthHeader(),
     });
-    dispatch(setSuppliers(response.data));
-  } catch (error) {
-    console.error("Error fetching suppliers", error);
-    throw error;
+    console.log("Fetched Suppliers:", response.data.suppliers);
+    dispatch(setSuppliers(response.data.suppliers));
+    return response.data.totalPages;
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      console.error("Unauthorized - Redirecting to login");
+      window.location.href = "/login";
+    } else {
+      console.error("Error fetching suppliers", err);
+    }
+    throw err;
   }
 };
 
@@ -89,22 +131,31 @@ export const fetchStockHistories = async (
   currentPage,
   itemsPerPage,
   dispatch,
-  searchTerm
+  searchTerm,
+  allData = false
 ) => {
   try {
     const response = await axios.get(`${API_URL}/stock-history`, {
-      params: {
-        page: currentPage,
-        itemsPerPage,
-        sort: "updatedAt",
-        search: searchTerm,
-      },
+      params: allData
+        ? { allData: true, sort: "updatedAt", search: searchTerm }
+        : {
+            page: currentPage,
+            itemsPerPage,
+            sort: "updatedAt",
+            search: searchTerm,
+          },
       headers: getAuthHeader(),
     });
+    console.log("Fetched stock histories:", response.data.stockHistories);
     dispatch(setStockHistories(response.data.stockHistories));
     return response.data.totalPages;
   } catch (err) {
-    console.error("Error fetching stock histories", err);
+    if (err.response && err.response.status === 401) {
+      console.error("Unauthorized - Redirecting to login");
+      window.location.href = "/login";
+    } else {
+      console.error("Error fetching stock histories", err);
+    }
     throw err;
   }
 };

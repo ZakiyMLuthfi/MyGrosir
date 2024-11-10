@@ -19,18 +19,18 @@ const StockHistoryTable = ({
       <thead className="thead-light">
         <tr>
           <th
-            onClick={() => onSort("stock_code")}
+            onClick={() => onSort("receipt_code")}
             style={{ cursor: "pointer" }}
           >
-            {sortConfig.key === "stock_code" &&
+            {sortConfig.key === "receipt_code" &&
             sortConfig.direction === "ascending" ? (
               <ArrowDropUp />
             ) : null}
-            {sortConfig.key === "stock_code" &&
+            {sortConfig.key === "receipt_code" &&
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Code
+            Receipt code
           </th>
           <th
             onClick={() => onSort("product_name")}
@@ -103,7 +103,7 @@ const StockHistoryTable = ({
         {stockHistories && stockHistories.length > 0 ? (
           stockHistories.map((stockHistory) => (
             <tr key={stockHistory.id}>
-              <td>{stockHistory.stock_code}</td>
+              <td>{stockHistory.receipt_code}</td>
               <td>
                 {stockHistory.product ? stockHistory.product.product_name : "-"}
               </td>

@@ -15,6 +15,7 @@ const UserTable = ({
   onSort,
   onToggleClick,
   role,
+  loggedInUserId,
   sortConfig = { key: "", direction: "ascending" },
 }) => {
   const getStatusStyle = (is_active) => {
@@ -28,6 +29,7 @@ const UserTable = ({
       minWidth: "60px",
     };
   };
+
   return (
     <table className="table table-bordered">
       <thead className="thead-light">
@@ -65,7 +67,7 @@ const UserTable = ({
             Status
           </th>
           <th>Detail</th>
-          {role === "superadmin" && <th>Delete</th>}
+          <th>Active Status</th>
           <th onClick={() => onSort("createdAt")} style={{ cursor: "pointer" }}>
             {sortConfig.key === "createdAt" &&
             sortConfig.direction === "ascending" ? (
@@ -87,7 +89,7 @@ const UserTable = ({
               <td>{user.username}</td>
               <td>
                 <span style={getStatusStyle(user.is_active)}>
-                  {user.is_active === false ? "Inactive" : "Active"}
+                  {user.is_active === false ? "Offline" : "Online"}
                 </span>
               </td>
               <td
@@ -100,45 +102,82 @@ const UserTable = ({
               >
                 <Article />
               </td>
-              {role === "superadmin" && (
-                <td
-                  onClick={() => onToggleClick(user)}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {user.is_deleted ? (
-                    <ToggleOn
-                      className="toggle-icon"
-                      style={{
-                        color: "red",
-                        cursor: "pointer",
-                        fontSize: "2.2rem",
-                        transform: "scale(1.5, 1.5)",
-                        transition: "transform 0.3s ease, color 0.3s ease",
-                      }}
-                    />
-                  ) : (
-                    <ToggleOff
-                      className="toggle-icon"
-                      style={{
-                        color: "green",
-                        cursor: "pointer",
-                        fontSize: "2.2rem",
-                        transform: "scale(1.5, 1.5)",
-                        transition: "transform 0.3s ease, color 0.3s ease",
-                      }}
-                    />
+              <td
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {role === "superadmin" &&
+                  user.id !== loggedInUserId &&
+                  (user.role === "admin" || user.role === "supervisor") && (
+                    <span
+                      onClick={() => onToggleClick(user)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {user.is_deleted ? (
+                        <ToggleOn
+                          className="toggle-icon"
+                          style={{
+                            color: "red",
+                            fontSize: "2.2rem",
+                            transform: "scale(1.5, 1.5)",
+                            transition: "transform 0.3s ease, color 0.3s ease",
+                          }}
+                        />
+                      ) : (
+                        <ToggleOff
+                          className="toggle-icon"
+                          style={{
+                            color: "green",
+                            fontSize: "2.2rem",
+                            transform: "scale(1.5, 1.5)",
+                            transition: "transform 0.3s ease, color 0.3s ease",
+                          }}
+                        />
+                      )}
+                    </span>
                   )}
-                </td>
-              )}
+
+                {role === "supervisor" &&
+                  user.id !== loggedInUserId &&
+                  user.role === "admin" && (
+                    <span
+                      onClick={() => onToggleClick(user)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {user.is_deleted ? (
+                        <ToggleOn
+                          className="toggle-icon"
+                          style={{
+                            color: "red",
+                            fontSize: "2.2rem",
+                            transform: "scale(1.5, 1.5)",
+                            transition: "transform 0.3s ease, color 0.3s ease",
+                          }}
+                        />
+                      ) : (
+                        <ToggleOff
+                          className="toggle-icon"
+                          style={{
+                            color: "green",
+                            fontSize: "2.2rem",
+                            transform: "scale(1.5, 1.5)",
+                            transition: "transform 0.3s ease, color 0.3s ease",
+                          }}
+                        />
+                      )}
+                    </span>
+                  )}
+              </td>
               <td>{formatDate(user.createdAt)}</td>
             </tr>
           ))
         ) : (
-          <td colSpan={role === "superadmin" ? 6 : 5}>No users available</td>
+          <tr>
+            <td colSpan={role === "supervisor" ? 6 : 5}>No users available</td>
+          </tr>
         )}
       </tbody>
     </table>

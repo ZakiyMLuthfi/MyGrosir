@@ -7,6 +7,7 @@ import {
   deleteUserService,
   restoreUserService,
 } from "../../services/userServices";
+import { setToken } from "../../reducers/userActions";
 import debounce from "lodash.debounce";
 import UserDetailModal from "../modals/userDetailModal";
 import UserTable from "../tables/UserTable";
@@ -18,14 +19,16 @@ const UserPage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.inventory.users || []);
   const role = useSelector((state) => state.inventory.role);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+  const loggedInUserId = localStorage.getItem("loggedInUserId");
 
   const handleSearch = useCallback(
     debounce(async (keyword) => {
@@ -81,15 +84,33 @@ const UserPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchAndSetUsers();
-  }, [fetchAndSetUsers]);
+    const storedRole = localStorage.getItem("accessRole");
+    const storedToken = localStorage.getItem("accessToken");
+    const storedId = localStorage.getItem("loggedInUserId");
+
+    if (storedRole && storedToken && !role) {
+      dispatch(
+        setToken({ token: storedToken, role: storedRole, userId: storedId })
+      );
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
+    console.log("Role in redux:", role);
+
+    if (role) {
+      fetchAndSetUsers();
+    }
+  }, [role, currentPage, itemsPerPage]);
 
   const handleToggleDelete = async (user) => {
     if (user.is_deleted) {
-      await restoreUserService(user.id, dispatch);
+      await restoreUserService(user.id, dispatch); // Restore user jika sudah dihapus
     } else {
-      await deleteUserService(user.id, dispatch);
+      await deleteUserService(user.id, dispatch); // Hapus user jika masih aktif
     }
+
+    // Update daftar pengguna
     fetchAndSetUsers();
   };
 
@@ -143,18 +164,15 @@ const UserPage = () => {
             setSearchTerm={setSearchTerm}
             role={role}
           />
-          <div className="mb-4">
-            {" "}
-            {/* Tambahkan margin bottom */}
-            <UserTable
-              users={sortedUsers}
-              onDetailClick={handleDetailClick}
-              onSort={handleSort}
-              onToggleClick={handleToggleDelete}
-              sortConfig={sortConfig}
-              role={role}
-            />
-          </div>
+          <UserTable
+            users={sortedUsers}
+            onDetailClick={handleDetailClick}
+            onSort={handleSort}
+            onToggleClick={handleToggleDelete}
+            sortConfig={sortConfig}
+            role={role}
+            loggedInUserId={loggedInUserId}
+          />
           <PaginationComponent
             currentPage={currentPage}
             totalPages={totalPages}

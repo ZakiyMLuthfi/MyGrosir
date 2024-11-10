@@ -21,15 +21,18 @@ const LoginForm = ({ onLoginSuccess }) => {
         }
       );
 
-      const { token, role } = response.data;
+      const { token, role, userId } = response.data;
       console.log(
-        `accessToken setelah dinyatakan sebagai respon token=${token} role=${role}`
+        `accessToken setelah dinyatakan sebagai respon token=${token} role=${role} userId=${userId}`
       );
       // Simpan token di localStorage dan Redux
+      console.log(typeof userId, "adalah tipe data userId");
+
       localStorage.setItem("accessToken", token);
       localStorage.setItem("accessRole", role);
+      localStorage.setItem("loggedInUserId", userId);
 
-      dispatch(setToken({ token, role }));
+      dispatch(setToken({ token, role, userId }));
 
       // Panggil callback untuk menangani sukses login
       onLoginSuccess();

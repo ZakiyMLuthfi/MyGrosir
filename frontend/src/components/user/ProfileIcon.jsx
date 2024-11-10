@@ -24,8 +24,9 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
     try {
       const token = localStorage.getItem("accessToken");
       const role = localStorage.getItem("accessRole");
+      const userId = localStorage.getItem("loggedInUserId");
 
-      if (!token && role) {
+      if (!token && !role && !userId) {
         console.warn("No token & role found, already logged out.");
         onLogoutSuccess();
         return;
@@ -47,6 +48,7 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
       dispatch(clearToken());
       localStorage.removeItem("accessToken"); // Hapus token dari localStorage
       localStorage.removeItem("accessRole");
+      localStorage.removeItem("loggedInUserId");
 
       console.log("User logged out");
       onLogoutSuccess();

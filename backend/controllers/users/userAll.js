@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 const userAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.itemsPerPage) || 5;
+    const limit = parseInt(req.query.itemsPerPage) || 10;
     const page = parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 

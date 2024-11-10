@@ -17,6 +17,7 @@ import StockHistoryPage from "./components/pages/StockHistoryPage";
 import DashboardPage from "./components/pages/DashboardPage";
 import UserPage from "./components/pages/UserPage";
 import LoginForm from "./components/pages/LoginForm";
+import CheckStatus from "./utils/CheckStatus";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -37,74 +38,78 @@ function App() {
 
   const handleLoginSuccess = () => {
     console.log("Login successful!");
-    navigate("/products"); // Navigasi ke halaman produk
+    navigate("/dashboard"); // Navigasi ke halaman produk
   };
 
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={<LoginForm onLoginSuccess={handleLoginSuccess} />}
-      />
-      <Route path="/" element={<LayoutTemp />}>
+    <>
+      <CheckStatus />
+
+      <Routes>
         <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
+          path="/login"
+          element={<LoginForm onLoginSuccess={handleLoginSuccess} />}
         />
-        <Route
-          path="/products"
-          element={
-            <ProtectedRoute>
-              <ProductPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/suppliers"
-          element={
-            <ProtectedRoute>
-              <SupplierPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/stocks/stock-in"
-          element={
-            <ProtectedRoute>
-              <StockInPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/stocks/stock-out"
-          element={
-            <ProtectedRoute>
-              <StockOutPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/stocks/stock-history"
-          element={
-            <ProtectedRoute>
-              <StockHistoryPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/users"
-          element={
-            <ProtectedRoute>
-              <UserPage />
-            </ProtectedRoute>
-          }
-        />
-      </Route>
-    </Routes>
+        <Route path="/" element={<LayoutTemp />}>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <ProductPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/suppliers"
+            element={
+              <ProtectedRoute>
+                <SupplierPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/stocks/stock-in"
+            element={
+              <ProtectedRoute>
+                <StockInPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/stocks/stock-out"
+            element={
+              <ProtectedRoute>
+                <StockOutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/stocks/stock-history"
+            element={
+              <ProtectedRoute>
+                <StockHistoryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute allowedRoles={["superadmin", "supervisor"]}>
+                <UserPage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

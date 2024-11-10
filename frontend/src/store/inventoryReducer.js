@@ -1,10 +1,10 @@
 // src/store/reducers/inventoryReducer.js
 const initialState = {
-  products: [],
-  suppliers: [],
+  products: { products: [] },
+  suppliers: { suppliers: [] },
   stockIns: [],
   stockOuts: [],
-  stockHistories: [],
+  stockHistories: { stockHistories: [] },
   users: [],
   token: null,
   role: null,
@@ -20,27 +20,39 @@ const initialState = {
 const inventoryReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_PRODUCTS":
-      return { ...state, products: action.payload };
+      return {
+        ...state,
+        products: { products: action.payload },
+      };
     case "ADD_PRODUCT":
       return { ...state, products: [...state.products, action.payload] };
     case "REMOVE_PRODUCT":
       return {
         ...state,
-        products: state.products.filter(
-          (product) => product.id !== action.payload
-        ),
+        products: {
+          ...state.products,
+          products: state.products.products.filter(
+            (product) => product.id !== action.payload
+          ),
+        },
       };
 
     case "SET_SUPPLIERS":
-      return { ...state, suppliers: action.payload };
+      return {
+        ...state,
+        suppliers: { suppliers: action.payload },
+      };
     case "ADD_SUPPLIER":
       return { ...state, suppliers: [...state.suppliers, action.payload] };
     case "REMOVE_SUPPLIER":
       return {
         ...state,
-        suppliers: state.suppliers.filter(
-          (supplier) => supplier.id !== action.payload
-        ),
+        suppliers: {
+          ...state.suppliers,
+          suppliers: state.suppliers.suppliers.filter(
+            (supplier) => supplier.id !== action.payload
+          ),
+        },
       };
 
     case "SET_STOCK_INS":
@@ -54,7 +66,7 @@ const inventoryReducer = (state = initialState, action) => {
       return { ...state, stockOuts: [...state.stockOuts, action.payload] };
 
     case "SET_STOCK_HISTORIES":
-      return { ...state, stockHistories: action.payload };
+      return { ...state, stockHistories: { stockHistories: action.payload } };
 
     case "SET_USERS":
       return { ...state, users: action.payload };
@@ -69,15 +81,18 @@ const inventoryReducer = (state = initialState, action) => {
     case "SET_TOKEN":
       return {
         ...state,
-        token: action.payload.token,
-        role: action.payload.role, // Menyimpan role dari payload
+        token: action.payload.token || "",
+        role: action.payload.role || "",
+        userId: action.payload.userId || "", // Menyimpan role dari payload
       };
 
     case "CLEAR_TOKEN":
       return {
         ...state,
-        token: null,
-        role: null, // Menghapus role saat logout
+        token: "",
+        role: "",
+        userId: "",
+        // Menghapus role saat logout
       };
 
     case "SET_TOTAL_ASSETS":

@@ -19,7 +19,11 @@ import "../css/Table.css";
 
 const ProductPage = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.inventory.products || []);
+  const products = useSelector(
+    (state) => state.inventory.products.products || []
+  );
+  console.log("products dari redux:", products);
+
   const users = useSelector((state) => state.inventory.users || []);
   const role = useSelector((state) => state.inventory.role);
 
@@ -29,7 +33,7 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -78,7 +82,11 @@ const ProductPage = () => {
         itemsPerPage,
         dispatch
       );
-      console.log("Total Pages from API:", totalPagesFromApi);
+      console.log(
+        "setTotalPages(totalPagesFromApi) adalah: ",
+        totalPagesFromApi
+      );
+
       setTotalPages(totalPagesFromApi); // Mengatur totalPages dari API
     } catch (err) {
       console.error("Error fetching products", err);
@@ -101,9 +109,12 @@ const ProductPage = () => {
   useEffect(() => {
     const storedRole = localStorage.getItem("accessRole");
     const storedToken = localStorage.getItem("accessToken");
+    const storedId = localStorage.getItem("loggedInUserId");
 
-    if (storedRole && !role && storedToken) {
-      dispatch(setToken({ token: storedToken, role: storedRole }));
+    if (storedRole && storedToken && !role) {
+      dispatch(
+        setToken({ token: storedToken, role: storedRole, userId: storedId })
+      );
     }
   }, [dispatch, role]);
 
@@ -119,7 +130,8 @@ const ProductPage = () => {
     } else {
       await deleteProductService(product.id, dispatch);
     }
-    fetchAndSetProducts();
+    // Memastikan data produk selalu terupdate
+    await fetchAndSetProducts();
   };
 
   const handleDetailClick = async (product) => {
@@ -165,6 +177,7 @@ const ProductPage = () => {
   const handleSaveChanges = async (updatedProductData) => {
     try {
       await updateProduct(selectedProduct.id, updatedProductData);
+      // Memastikan data produk selalu terupdate setelah perubahan
       await fetchAndSetProducts();
       handleCloseModal(); // Menutup modal dan reset state
     } catch (error) {
@@ -181,7 +194,6 @@ const ProductPage = () => {
           <h1 className="mb-4">Product List</h1>
 
           {/* Hanya admin yang bisa menambah dan mencari produk */}
-
           <TableAction
             type="product"
             onAdd={handleAddProduct}

@@ -7,6 +7,8 @@ import {
 } from "../../services/stockService";
 import { fetchUsers } from "../../services/userServices";
 import { setUsers } from "../../reducers/userActions";
+import { setToken } from "../../reducers/userActions";
+
 import debounce from "lodash.debounce";
 import StockDetailModal from "../modals/stockDetailModal";
 import StockOutTable from "../tables/StockOutTable";
@@ -25,7 +27,7 @@ const StockOutPage = () => {
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -108,6 +110,18 @@ const StockOutPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
+    const storedRole = localStorage.getItem("accessRole");
+    const storedToken = localStorage.getItem("accessToken");
+    const storedId = localStorage.getItem("loggedInUserId");
+
+    if (storedRole && storedToken && !role) {
+      dispatch(
+        setToken({ token: storedToken, role: storedRole, userId: storedId })
+      );
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
     if (role) {
       fetchAndSetStockOuts();
     }
@@ -144,9 +158,9 @@ const StockOutPage = () => {
     setSelectedStockOut(null);
   };
 
-  const handleUpdateClick = () => {
-    setIsEditing(true);
-  };
+  // const handleUpdateClick = () => {
+  //   setIsEditing(true);
+  // };
 
   const handleSaveChanges = async (updatedStockData) => {
     try {
@@ -194,7 +208,7 @@ const StockOutPage = () => {
             stockData={selectedStockOut}
             isEditing={isEditing}
             onUpdate={handleSaveChanges}
-            onToggleEdit={handleUpdateClick}
+            // onToggleEdit={handleUpdateClick}
             type="stock-out"
             users={users}
             role={role}

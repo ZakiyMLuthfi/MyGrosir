@@ -2,25 +2,24 @@ const { User } = require("../models");
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-  console.log(
-    "verifying token (from verifyToken): ",
-    req.headers.authorization
-  );
-
-  const token = req.header("Authorization").replace("Bearer ", "");
-  console.log("Extracted token:", token);
-  if (!token) return res.status(401).json({ error: "Access Denied" });
+  // Pastikan header authorization ada
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res
+      .status(401)
+      .json({ error: "No token provided or invalid format" });
+  }
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    // Ekstrak token dari header
+    const token = authHeader.replace("Bearer ", "");
+
+    // Verifikasi token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     next();
   } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token has expired" });
-    }
-    console.error("Invalid token error:", err);
-    res.status(400).json({ error: "Invalid Token" });
+    res.status(403).json({ error: "Invalid token" });
   }
 };
 
@@ -40,7 +39,22 @@ const checkActiveStatus = async (req, res, next) => {
   }
 };
 
-const authorizeSuperAdmin = (req, res, next) => {
+const checkUserStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ status: "not_found" });
+    }
+
+    res.json({ status: user.is_active ? "active" : "deactivated" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const authorizeSuperAdmin = async (req, res, next) => {
   if (req.user.role !== "superadmin") {
     return res.status(403).json({
       error: "Access denied. Only superadmin can perform this action.",
@@ -49,4 +63,9 @@ const authorizeSuperAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { verifyToken, checkActiveStatus, authorizeSuperAdmin };
+module.exports = {
+  verifyToken,
+  checkActiveStatus,
+  authorizeSuperAdmin,
+  checkUserStatus,
+};

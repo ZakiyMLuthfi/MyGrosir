@@ -186,7 +186,7 @@ const StockDetailModal = ({
                   />
                 </div>
               </Form.Group>
-              <Form.Group>
+              {/* <Form.Group>
                 <Form.Label>
                   Enter amount of stocks & Grosir destination
                 </Form.Label>
@@ -211,7 +211,7 @@ const StockDetailModal = ({
                     <option value="Grosir C">Grosir C</option>
                   </Form.Select>
                 </div>
-              </Form.Group>
+              </Form.Group> */}
               <Form.Group>
                 <Form.Label>Updated at / Updated by: </Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -279,7 +279,7 @@ const StockDetailModal = ({
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        {type === "stock-out" &&
+        {/* {type === "stock-out" &&
           role === "admin" &&
           (!isEditing ? (
             <Button variant="primary" onClick={onToggleEdit}>
@@ -289,7 +289,7 @@ const StockDetailModal = ({
             <Button variant="success" onClick={handleSaveChanges}>
               Save Changes
             </Button>
-          ))}
+          ))} */}
       </Modal.Footer>
     </Modal>
   );

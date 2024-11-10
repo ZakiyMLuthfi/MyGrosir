@@ -5,70 +5,64 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProducts,
   fetchSuppliers,
-  fetchStockIns,
-  updateStockOut,
+  fetchStockHistories,
 } from "../../services/stockService";
 import { getAuthHeader } from "../../utils/authService";
 import axios from "axios";
+import Select from "react-select";
 
 const AddStockOut = ({ onSubmit }) => {
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     supplierId: "",
     productId: "",
     quantity: "",
     grosir_choice: "",
-    receipt_code: "", // Nomor resi
+    receipt_code: "",
   });
-
   const [existingReceiptCodes, setExistingReceiptCodes] = useState([]);
-  const [isNewReceipt, setIsNewReceipt] = useState(false); // Flag untuk menentukan apakah nomor resi baru
-
-  const dispatch = useDispatch();
+  const [isNewReceipt, setIsNewReceipt] = useState(false);
 
   const products = useSelector(
     (state) => state.inventory.products.products || []
   );
-  const suppliers = useSelector(
-    (state) => state.inventory.suppliers.suppliers || []
-  );
   const stockIns = useSelector((state) => state.inventory.stockIns || []);
-  const stockHistories = useSelector(
-    (state) => state.inventory.stockHistories || []
+  const updatedStockHistories = useSelector(
+    (state) => state.inventory.stockHistories.stockHistories || []
   );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetchProducts(dispatch);
-        await fetchSuppliers(dispatch);
-        const currentPage = 1; // Atau sesuai dengan kebutuhan Anda
-        const itemsPerPage = 10; // Atau sesuai dengan kebutuhan Anda
-
-        // Memanggil fetchStockIns
-        await fetchStockIns(currentPage, itemsPerPage, dispatch);
-
-        // Ambil semua nomor resi yang ada dari stockHistories
-        const codes = [
-          ...new Set(stockHistories.map((history) => history.receipt_code)),
-        ];
-        setExistingReceiptCodes(codes);
+        await fetchProducts(null, null, dispatch, "", true);
+        await fetchSuppliers(null, null, dispatch, "", true);
+        await fetchStockHistories(null, null, dispatch, "", true);
+        if (updatedStockHistories && updatedStockHistories.length > 0) {
+          const codes = [
+            ...new Set(
+              updatedStockHistories.map((history) => history.receipt_code)
+            ),
+          ];
+          setExistingReceiptCodes(codes);
+        }
       } catch (err) {
-        console.error(
-          "Error fetching products, suppliers, or receipt codes",
-          err
-        );
+        console.error("Error fetching data:", err);
       }
     };
     fetchData();
-  }, [dispatch, stockHistories]);
+  }, [dispatch]);
 
   const generateReceiptCode = () => {
-    if (stockHistories.length === 0) {
+    if (!existingReceiptCodes || existingReceiptCodes.length === 0) {
       return "R0001";
     } else {
-      const lastHistory = stockHistories[stockHistories.length - 1];
-      const lastCode = lastHistory.receipt_code || "R0000";
+      const sortedCodes = existingReceiptCodes.sort((a, b) => {
+        const numA = parseInt(a.substring(1), 10);
+        const numB = parseInt(b.substring(1), 10);
+        return numA - numB;
+      });
+      const lastCode = sortedCodes[sortedCodes.length - 1];
       const numberPart = parseInt(lastCode.substring(1), 10);
       return `R${(numberPart + 1).toString().padStart(4, "0")}`;
     }
@@ -83,7 +77,7 @@ const AddStockOut = ({ onSubmit }) => {
   };
 
   const handleNewReceiptToggle = () => {
-    setIsNewReceipt(!isNewReceipt); // Toggle antara resi baru dan resi yang ada
+    setIsNewReceipt(!isNewReceipt);
     if (!isNewReceipt) {
       const newReceiptCode = generateReceiptCode();
       setFormData((prevData) => ({
@@ -95,46 +89,46 @@ const AddStockOut = ({ onSubmit }) => {
     }
   };
 
+  const handleShow = async () => {
+    setShowModal(true);
+    try {
+      await fetchProducts(null, null, dispatch, "", true);
+      await fetchSuppliers(null, null, dispatch, "", true);
+      await fetchStockHistories(null, null, dispatch, "", true);
+
+      // Generate receipt code setelah data berhasil diambil
+      setFormData({ ...formData, receipt_code: generateReceiptCode() });
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
   const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // Ambil data dari form
       const { productId, quantity, receipt_code, grosir_choice } = formData;
-
-      // Data yang dikirim ke backend, pastikan productId dan quantity adalah integer
       const data = {
-        productId: parseInt(productId, 10), // Convert productId to integer
-        totalReduction: parseInt(quantity, 10), // Convert quantity to integer
+        productId: parseInt(productId, 10),
+        totalReduction: parseInt(quantity, 10),
         receipt_code,
         grosir_choice,
       };
 
-      // Header dengan token otorisasi
       const headers = getAuthHeader();
-      console.log("Data sent to backend:", data);
-
-      // Kirim request ke backend menggunakan /batch-reduce
       const response = await axios.post(
         "http://localhost:5000/api/stocks/batch-reduce",
         data,
         { headers }
       );
 
-      // Log respons yang berhasil
       console.log("Stock reduced successfully:", response.data);
-
-      // Jika berhasil, tutup modal dan panggil onSubmit
       onSubmit(data);
       handleClose();
+      await fetchData();
     } catch (error) {
-      // Tangani error dari permintaan
       console.error("Error reducing stock in batch", error);
-
-      // Tangani jika error berasal dari respons backend
       if (error.response) {
         console.error("Error data:", error.response.data);
       }
@@ -152,6 +146,25 @@ const AddStockOut = ({ onSubmit }) => {
     );
     return totalQuantityRemaining;
   };
+
+  // Transform products data into format required by react-select
+  const productOptions = products
+    .map((product) => {
+      const totalQuantityRemaining = getStockInfoForProduct(product.id);
+      return totalQuantityRemaining > 0
+        ? {
+            value: product.id,
+            label: `${product.product_name} - Stock left: ${totalQuantityRemaining}`,
+          }
+        : null;
+    })
+    .filter((option) => option !== null);
+
+  // Transform receipt codes into format required by react-select
+  const receiptCodeOptions = existingReceiptCodes.map((code) => ({
+    value: code,
+    label: code,
+  }));
 
   return (
     <>
@@ -171,29 +184,17 @@ const AddStockOut = ({ onSubmit }) => {
           <Form onSubmit={handleFormSubmit}>
             <Form.Group controlId="formProduct">
               <Form.Label>Product</Form.Label>
-              <Form.Control
-                as="select"
-                name="productId"
-                value={formData.productId}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Product</option>
-                {products.map((product) => {
-                  const totalQuantityRemaining = getStockInfoForProduct(
-                    product.id
-                  );
-                  if (totalQuantityRemaining > 0) {
-                    return (
-                      <option key={product.id} value={product.id}>
-                        {product.product_name} - Stok Tersisa:{" "}
-                        {totalQuantityRemaining}
-                      </option>
-                    );
-                  }
-                  return null; // Jangan tampilkan produk dengan stok kosong
-                })}
-              </Form.Control>
+              <Select
+                options={productOptions}
+                onChange={(selectedOption) =>
+                  setFormData({ ...formData, productId: selectedOption.value })
+                }
+                value={productOptions.find(
+                  (option) => option.value === formData.productId
+                )}
+                placeholder="Select Product"
+                isClearable
+              />
             </Form.Group>
 
             <Form.Group controlId="formQuantity">
@@ -235,19 +236,20 @@ const AddStockOut = ({ onSubmit }) => {
                   disabled
                 />
               ) : (
-                <Form.Control
-                  as="select"
-                  name="receipt_code"
-                  value={formData.receipt_code}
-                  onChange={handleInputChange}
-                >
-                  <option value="">Select Existing Receipt Code</option>
-                  {existingReceiptCodes.map((code) => (
-                    <option key={code} value={code}>
-                      {code}
-                    </option>
-                  ))}
-                </Form.Control>
+                <Select
+                  options={receiptCodeOptions}
+                  onChange={(selectedOption) =>
+                    setFormData({
+                      ...formData,
+                      receipt_code: selectedOption.value,
+                    })
+                  }
+                  value={receiptCodeOptions.find(
+                    (option) => option.value === formData.receipt_code
+                  )}
+                  placeholder="Select Existing Receipt Code"
+                  isClearable
+                />
               )}
             </Form.Group>
 

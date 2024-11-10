@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 const stockInAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.itemsPerPage) || 5;
+    const limit = parseInt(req.query.itemsPerPage) || 10;
     const page = parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 
@@ -14,6 +14,7 @@ const stockInAll = async (req, res) => {
         [Op.or]: [
           { "$supplier.supplier_name$": { [Op.iLike]: `%${search}%` } },
           { "$product.product_name$": { [Op.iLike]: `%${search}%` } },
+          { stock_code: { [Op.iLike]: `%${search}%` } },
         ],
       }),
     };

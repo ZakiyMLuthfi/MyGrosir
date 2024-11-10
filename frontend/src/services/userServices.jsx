@@ -1,16 +1,9 @@
 // src/services/UserService.js
 import axios from "axios";
 import { addUser, setUsers, removeUser } from "../reducers/userActions";
-import store from "../store/index";
-
 const API_URL = "http://localhost:5000/api/users";
 
-// Fungsi untuk mendapatkan header autentikasi
-const getAuthHeader = () => {
-  const state = store.getState(); // Mengambil state dari store
-  const token = state.inventory.token; // Mengambil token dari state Redux
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import { getAuthHeader } from "../utils/authService";
 // Fungsi untuk mendapatkan header autentikasi
 
 // Fungsi untuk mengambil user

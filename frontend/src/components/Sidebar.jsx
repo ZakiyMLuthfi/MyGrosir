@@ -11,14 +11,20 @@ import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { useSelector } from "react-redux";
 import "./Sidebar.css";
 
 const Sidebar = ({ isOpen }) => {
   const [openStocks, setOpenStocks] = useState(false);
-
+  const role = useSelector((state) => state.inventory.role);
   const toggleStocks = () => {
     setOpenStocks((prev) => !prev);
   };
+
+  const upperRoles = ["superadmin", "supervisor"]; // Role yang dapat mengakses halaman Users
+
+  // Cek apakah role pengguna memiliki akses ke item tertentu
+  const canAccessUsers = upperRoles.includes(role);
 
   return (
     <div>
@@ -90,15 +96,17 @@ const Sidebar = ({ isOpen }) => {
             </ListGroup>
           </Accordion.Collapse>
         </Accordion>
-        <ListGroup.Item
-          as={Link}
-          to="/users"
-          action
-          className="sidebar-item no-border"
-        >
-          <PersonIcon className="sidebar-icon" />
-          {isOpen ? "Users" : ""}
-        </ListGroup.Item>
+        {canAccessUsers && (
+          <ListGroup.Item
+            as={Link}
+            to="/users"
+            action
+            className="sidebar-item no-border"
+          >
+            <PersonIcon className="sidebar-icon" />
+            {isOpen ? "Users" : ""}
+          </ListGroup.Item>
+        )}
       </ListGroup>
     </div>
   );

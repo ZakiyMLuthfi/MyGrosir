@@ -13,16 +13,19 @@ export const fetchSuppliers = async (
   currentPage,
   itemsPerPage,
   dispatch,
-  searchTerm
+  searchTerm,
+  allData = false
 ) => {
   try {
     const response = await axios.get(API_URL, {
-      params: {
-        page: currentPage,
-        itemsPerPage,
-        sort: "updatedAt",
-        search: searchTerm,
-      },
+      params: allData
+        ? { allData: true, sort: "updatedAt", search: searchTerm }
+        : {
+            page: currentPage,
+            itemsPerPage,
+            sort: "updatedAt",
+            search: searchTerm,
+          },
       headers: getAuthHeader(),
     });
     dispatch(setSuppliers(response.data.suppliers));
@@ -30,9 +33,9 @@ export const fetchSuppliers = async (
   } catch (err) {
     if (err.response && err.response.status === 401) {
       console.error("Unauthorized - Redirecting to login");
-      window.location.href = "/login"; // Arahkan ke halaman login
+      window.location.href = "/login";
     } else {
-      console.error("Error fetching products", err);
+      console.error("Error fetching suppliers", err);
     }
     throw err;
   }
@@ -43,6 +46,8 @@ export const addSupplierService = async (formData, dispatch) => {
     const response = await axios.post(API_URL, formData, {
       headers: getAuthHeader(),
     });
+
+    console.log("Response from API:", response.data); // Log response untuk memeriksa struktur data
 
     if (response.data.supplier) {
       dispatch(addSupplier(response.data.supplier));

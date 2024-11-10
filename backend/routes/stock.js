@@ -11,6 +11,7 @@ const stockOutUpdate = require("../controllers/stocks/stockOutUpdate");
 const stockHistoryAll = require("../controllers/stocks/stockHistoryAll");
 const stockHistoryDetail = require("../controllers/stocks/stockHistoryDetail");
 const batchReduce = require("../controllers/stocks/stockOutBatchReduce");
+const getReceiptCodes = require("../controllers/stocks/getReceiptCode");
 
 router.get("/stock-in", verifyToken, stockInAll);
 router.post("/stock-in", verifyToken, checkActiveStatus, stockInAdd);
@@ -21,5 +22,6 @@ router.put("/stock-out/:id", verifyToken, checkActiveStatus, stockOutUpdate);
 router.post("/batch-reduce", verifyToken, batchReduce);
 router.get("/stock-history", verifyToken, stockHistoryAll);
 router.get("/stock-history/:id", verifyToken, stockHistoryDetail);
+router.get("/receipt-codes", verifyToken, getReceiptCodes);
 
 module.exports = router;

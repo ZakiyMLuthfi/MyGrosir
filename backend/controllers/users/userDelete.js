@@ -13,7 +13,7 @@ const userDelete = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "User not found" });
     }
-    await user.update({ is_deleted: true }),
+    await user.update({ is_deleted: true, is_active: false }),
       res.status(200).json({ message: "User deleted successfuly" });
   } catch (err) {
     console.error("Error deleting user", err);

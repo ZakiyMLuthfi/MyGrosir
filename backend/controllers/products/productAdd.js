@@ -52,7 +52,7 @@ const productAdd = async (req, res) => {
         .format("YYYY-MM-DD HH:mm:ss");
 
       console.log("Product added", newProduct);
-      res.status(201).json({ product: newProduct });
+      res.status(201).json(newProduct);
     } catch (err) {
       console.error("Error adding product", err);
       res.status(500).json({ error: "Error adding product" });

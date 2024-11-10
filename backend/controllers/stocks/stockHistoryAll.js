@@ -3,28 +3,28 @@ const { Op } = require("sequelize");
 
 const stockHistoryAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
-    const page = parseInt(req.query.page) || 1;
-    const search = req.query.search || "";
+    const allData = req.query.allData === "true"; // Cek jika allData true, ambil semua data
+    const limit = allData ? null : parseInt(req.query.limit) || 10; // Jika allData, tidak ada limit
+    const page = allData ? null : parseInt(req.query.page) || 1; // Jika allData, tidak ada paging
+    const search = req.query.search || ""; // Pencarian berdasarkan nama produk atau kode resi
 
-    const offset = (page - 1) * limit;
+    const offset = allData ? null : (page - 1) * limit; // Paginasi offset jika allData false
 
+    // Kondisi pencarian dengan menggunakan search
     const whereCondition = {
       ...(search && {
         [Op.or]: [
-          { "$product.product_name$": { [Op.iLike]: `%${search}%` } },
-          { receipt_code: { [Op.iLike]: `%${search}%` } },
+          { "$product.product_name$": { [Op.iLike]: `%${search}%` } }, // Pencarian berdasarkan nama produk
+          { receipt_code: { [Op.iLike]: `%${search}%` } }, // Pencarian berdasarkan receipt_code
           { stock_code: { [Op.iLike]: `%${search}%` } },
           { grosir_choice: { [Op.iLike]: `%${search}%` } },
         ],
       }),
     };
 
-    // Mengambil data StockHistory dengan pagination
-    const { count, rows: stockHistories } = await StockHistory.findAndCountAll({
+    let queryOptions = {
       where: whereCondition,
-      limit: limit,
-      offset: offset,
+      order: [["createdAt", "DESC"]], // Mengurutkan berdasarkan createdAt, terbaru pertama
       include: [
         { model: Product, as: "product" },
         {
@@ -33,13 +33,25 @@ const stockHistoryAll = async (req, res) => {
           attributes: ["username"],
         },
       ],
-      order: [["createdAt", "DESC"]],
-    });
+    };
 
-    const totalPages = Math.ceil(count / limit);
+    // Jika tidak mengambil semua data, tambahkan limit dan offset
+    if (!allData) {
+      queryOptions = {
+        ...queryOptions,
+        limit,
+        offset,
+      };
+    }
+
+    const { count, rows: stockHistories } = await StockHistory.findAndCountAll(
+      queryOptions
+    );
+
+    const totalPages = allData ? 1 : Math.ceil(count / limit); // Menghitung total halaman jika ada paginasi
 
     res.status(200).json({
-      stockHistories,
+      stockHistories, // Mengembalikan data stock histories
       totalPages,
       currentPage: page,
       totalItems: count,

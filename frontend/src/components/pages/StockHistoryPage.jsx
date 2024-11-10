@@ -13,16 +13,17 @@ import StockHistoryTable from "../tables/StockHistoryTable";
 const StockHistoryPage = () => {
   const dispatch = useDispatch();
   const stockHistories = useSelector(
-    (state) => state.inventory.stockHistories || []
+    (state) => state.inventory.stockHistories.stockHistories || []
   );
   const users = useSelector((state) => state.inventory.users || []);
+  const role = useSelector((state) => state.inventory.role);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedStockHistory, setSelectedStockHistory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
 
   const handleSearch = useCallback(
@@ -108,8 +109,10 @@ const StockHistoryPage = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchAndSetStockHistories();
-  }, [fetchAndSetStockHistories]);
+    if (role) {
+      fetchAndSetStockHistories();
+    }
+  }, [role, currentPage, itemsPerPage]);
 
   const handleDetailClick = async (stockHistory) => {
     const stockHistoryDetail = await fetchStockHistoryDetail(stockHistory.id);

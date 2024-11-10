@@ -3,38 +3,54 @@ const { Op } = require("sequelize");
 
 const productAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.itemsPerPage) || 5;
-    const page = parseInt(req.query.page) || 1;
+    const allData = req.query.allData === "true";
+    const limit = allData ? null : parseInt(req.query.itemsPerPage) || 10;
+    const page = allData ? null : parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 
-    const offset = (page - 1) * limit;
+    const offset = allData ? null : (page - 1) * limit;
 
     const whereCondition = {
-      ...(search && { product_name: { [Op.iLike]: `%${search}%` } }),
+      ...(req.user.role === "admin" && { isDeleted: false }),
+      ...(search && {
+        [Op.or]: [
+          { product_name: { [Op.iLike]: `%${search}%` } },
+          { product_code: { [Op.iLike]: `%${search}%` } },
+        ],
+      }),
     };
 
-    const { count, rows: products } = await Product.findAndCountAll({
+    let queryOptions = {
       where: whereCondition,
-      limit: limit,
-      offset: offset,
       order: [["updatedAt", "DESC"]],
       include: [
         {
           model: User,
-          as: "Creator", // Alias untuk pengguna yang membuat
-          attributes: ["username"], // Hanya ambil username
+          as: "Creator",
+          attributes: ["username"],
         },
         {
           model: User,
-          as: "Updater", // Alias untuk pengguna yang mengupdate
-          attributes: ["username"], // Hanya ambil username
+          as: "Updater",
+          attributes: ["username"],
         },
       ],
-    });
+    };
+
+    if (!allData) {
+      queryOptions = {
+        ...queryOptions,
+        limit,
+        offset,
+      };
+    }
+
+    const { count, rows: products } = await Product.findAndCountAll(
+      queryOptions
+    );
 
     console.log("Products with Creator and Updater:", products);
-
-    const totalPages = Math.ceil(count / limit);
+    const totalPages = allData ? 1 : Math.ceil(count / limit);
 
     res.status(200).json({
       products,

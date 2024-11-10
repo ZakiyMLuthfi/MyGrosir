@@ -3,37 +3,59 @@ const { Op } = require("sequelize");
 
 const supplierAll = async (req, res) => {
   try {
-    const limit = parseInt(req.query.itemsPerPage) || 5;
-    const page = parseInt(req.query.page) || 1;
+    console.log("supplierAll: Called");
+    const allData = req.query.allData === "true";
+    const limit = allData ? null : parseInt(req.query.itemsPerPage) || 10;
+    const page = allData ? null : parseInt(req.query.page) || 1;
     const search = req.query.search || "";
 
-    const offset = (page - 1) * limit;
+    // Logging untuk memeriksa parameter
+    console.log("Request parameters:", { allData, limit, page, search });
+
+    const offset = allData ? null : (page - 1) * limit;
 
     const whereCondition = {
-      ...(search && { supplier_name: { [Op.iLike]: `%${search}%` } }),
+      ...(req.user.role === "admin" && { isDeleted: false }),
+      ...(search && {
+        [Op.or]: [
+          { supplier_name: { [Op.iLike]: `%${search}%` } },
+          { supplier_code: { [Op.iLike]: `%${search}%` } },
+        ],
+      }),
     };
 
-    const { count, rows: suppliers } = await Supplier.findAndCountAll({
+    let queryOptions = {
       where: whereCondition,
-      limit: limit,
-      offset: offset,
       order: [["updatedAt", "DESC"]],
       include: [
         {
           model: User,
-          as: "Creator", // Alias untuk pengguna yang membuat
-          attributes: ["username"], // Hanya ambil username
+          as: "Creator",
+          attributes: ["username"],
         },
         {
           model: User,
-          as: "Updater", // Alias untuk pengguna yang mengupdate
-          attributes: ["username"], // Hanya ambil username
+          as: "Updater",
+          attributes: ["username"],
         },
       ],
-    });
+    };
 
-    console.log("Suppliers with Creator and Updater:", suppliers);
-    const totalPages = Math.ceil(count / limit);
+    if (!allData) {
+      queryOptions = {
+        ...queryOptions,
+        limit,
+        offset,
+      };
+    }
+
+    const { count, rows: suppliers } = await Supplier.findAndCountAll(
+      queryOptions
+    );
+
+    console.log("Suppliers data retrieved:", suppliers);
+
+    const totalPages = allData ? 1 : Math.ceil(count / limit);
 
     res.status(200).json({
       suppliers,
@@ -42,6 +64,7 @@ const supplierAll = async (req, res) => {
       totalItems: count,
     });
   } catch (err) {
+    console.error("Error fetching suppliers:", err);
     res.status(500).json({ error: "Error fetching suppliers" });
   }
 };
