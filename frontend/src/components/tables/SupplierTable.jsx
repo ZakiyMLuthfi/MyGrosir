@@ -137,7 +137,7 @@ const SupplierTable = ({
                     marginRight: "4px",
                   }}
                 >
-                  <Article />
+                  <Article style={{ fontSize: "2rem", textAlign: "center" }} />
                 </span>
               </td>
             </tr>

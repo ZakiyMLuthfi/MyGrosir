@@ -13,7 +13,6 @@ import UserDetailModal from "../modals/userDetailModal";
 import UserTable from "../tables/UserTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
-import "../css/Table.css";
 
 const UserPage = () => {
   const dispatch = useDispatch();

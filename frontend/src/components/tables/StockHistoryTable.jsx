@@ -33,6 +33,20 @@ const StockHistoryTable = ({
             Receipt code
           </th>
           <th
+            onClick={() => onSort("stock_code")}
+            style={{ cursor: "pointer" }}
+          >
+            {sortConfig.key === "stock_code" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "stock_code" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Stock code
+          </th>
+          <th
             onClick={() => onSort("product_name")}
             style={{ cursor: "pointer" }}
           >
@@ -69,7 +83,7 @@ const StockHistoryTable = ({
             sortConfig.direction === "descending" ? (
               <ArrowDropDown />
             ) : null}
-            Grosir destination
+            Destination
           </th>
           <th
             onClick={() => onSort("created_by")}
@@ -104,6 +118,7 @@ const StockHistoryTable = ({
           stockHistories.map((stockHistory) => (
             <tr key={stockHistory.id}>
               <td>{stockHistory.receipt_code}</td>
+              <td>{stockHistory.stock_code}</td>
               <td>
                 {stockHistory.product ? stockHistory.product.product_name : "-"}
               </td>

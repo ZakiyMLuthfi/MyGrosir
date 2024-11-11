@@ -21,7 +21,6 @@ export const fetchUsers = async (
         sort: "updatedAt",
         search: searchTerm,
       },
-      headers: getAuthHeader(),
     });
     dispatch(setUsers(response.data.users));
     return response.data.totalPages;

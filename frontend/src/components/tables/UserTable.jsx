@@ -8,6 +8,7 @@ import {
   ToggleOn,
   ToggleOff,
 } from "@mui/icons-material";
+import "../css/Table.css";
 
 const UserTable = ({
   users,
@@ -28,6 +29,40 @@ const UserTable = ({
       textAlign: "center",
       minWidth: "60px",
     };
+  };
+
+  const getRoleStyle = (role) => {
+    switch (role) {
+      case "admin":
+        return {
+          backgroundColor: "#4caf50", // Green for admin
+          color: "white",
+          borderRadius: "4px",
+          padding: "5px 10px",
+          display: "inline-block",
+          minWidth: "60px",
+        };
+      case "supervisor":
+        return {
+          backgroundColor: "#ffa500", // Orange for supervisor
+          color: "white",
+          borderRadius: "4px",
+          padding: "5px 10px",
+          display: "inline-block",
+          minWidth: "60px",
+        };
+      case "superadmin":
+        return {
+          backgroundColor: "#007bff", // Blue for superadmin
+          color: "white",
+          borderRadius: "4px",
+          padding: "5px 10px",
+          display: "inline-block",
+          minWidth: "60px",
+        };
+      default:
+        return {}; // Default to empty if role is unknown
+    }
   };
 
   return (
@@ -66,8 +101,19 @@ const UserTable = ({
             ) : null}
             Status
           </th>
-          <th>Detail</th>
-          <th>Active Status</th>
+          <th onClick={() => onSort("role")} style={{ cursor: "pointer" }}>
+            {sortConfig.key === "role" &&
+            sortConfig.direction === "ascending" ? (
+              <ArrowDropUp />
+            ) : null}
+            {sortConfig.key === "role" &&
+            sortConfig.direction === "descending" ? (
+              <ArrowDropDown />
+            ) : null}
+            Role
+          </th>
+          <th style={{ textAlign: "center" }}>Detail</th>
+          <th style={{ textAlign: "center" }}>Active Status</th>
           <th onClick={() => onSort("createdAt")} style={{ cursor: "pointer" }}>
             {sortConfig.key === "createdAt" &&
             sortConfig.direction === "ascending" ? (
@@ -92,12 +138,16 @@ const UserTable = ({
                   {user.is_active === false ? "Offline" : "Online"}
                 </span>
               </td>
+              <td style={{ ...getRoleStyle(user.role), textAlign: "center" }}>
+                {user.role}
+              </td>
               <td
                 onClick={() => onDetailClick(user)}
                 style={{
                   cursor: "pointer",
                   color: "blue",
                   marginRight: "4px",
+                  textAlign: "center",
                 }}
               >
                 <Article />

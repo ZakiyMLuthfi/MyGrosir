@@ -17,6 +17,7 @@ import StockHistoryPage from "./components/pages/StockHistoryPage";
 import DashboardPage from "./components/pages/DashboardPage";
 import UserPage from "./components/pages/UserPage";
 import LoginForm from "./components/pages/LoginForm";
+import ForgotPasswordPage from "./components/pages/ForgotPasswordPage"; // Import ForgotPasswordPage
 import CheckStatus from "./utils/CheckStatus";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -50,6 +51,11 @@ function App() {
           path="/login"
           element={<LoginForm onLoginSuccess={handleLoginSuccess} />}
         />
+        <Route
+          path="/forgot-password" // Tambahkan route untuk ForgotPasswordPage
+          element={<ForgotPasswordPage />} // Komponen halaman forgot password
+        />
+
         <Route path="/" element={<LayoutTemp />}>
           <Route
             path="/dashboard"

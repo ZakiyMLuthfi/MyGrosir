@@ -108,6 +108,7 @@ const inventoryReducer = (state = initialState, action) => {
       return { ...state, totalIncoming: action.payload };
 
     case "SET_STOCK_FLOW_DATA":
+      console.log("Stock Flow Data being set:", action.payload);
       return { ...state, stockFlowData: action.payload };
 
     case "SET_RECENT_STOCK_HISTORY":

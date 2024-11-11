@@ -1,11 +1,30 @@
-/* DashboardPage.css, yang isinya data dan grafik */
-
+/* Container untuk dashboard */
 .dashboard-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* Tombol toggle view */
+.toggle-view-button {
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-view-button:hover {
+  background-color: var(--primary-color-hover);
+}
+
+/* Kotak statistik */
 .stat-boxes {
   display: flex;
   gap: 20px;
@@ -13,29 +32,103 @@
 }
 
 .stat-box {
+  flex: 1;
   background-color: var(--primary-color);
   color: #fff;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px;
+  height: 120px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
   transition: transform 0.3s;
 }
+
 .stat-box:hover {
-  transform: scale(1.02); /* Efek hover yang ringan */
+  transform: scale(1.02); /* Efek hover ringan */
 }
 
-.total-assets {
-  background-color: #4caf50; /* Hijau untuk total aset */
+.incoming-items {
+  background-color: #5bd15f; /* Hijau untuk Stock in */
 }
 
 .warehouse-items {
-  background-color: #2196f3; /* Biru untuk barang di gudang */
+  background-color: #2e9ef9; /* Biru untuk Warehouse */
 }
 
 .outgoing-items {
-  background-color: #ff5722; /* Oranye untuk barang keluar */
+  background-color: #f4754e; /* Oranye untuk Stock out */
 }
 
+.total-assets {
+  background-color: #9c27b0; /* Ungu untuk Total Assets */
+}
+
+/* Kontainer utama menggunakan Flexbox */
+.dashboard-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between; /* Agar elemen diposisikan dengan ruang di antara mereka */
+}
+
+/* Kontainer untuk grafik (Stock Flows) */
 .chart-container {
-  margin-top: 40px;
+  flex: 2 1 60%; /* Menggunakan 2 bagian untuk grafik, dan 1 bagian untuk ruang kosong */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Kontainer untuk riwayat terbaru (Recent History) */
+.recent-history-container {
+  flex: 1 1 35%; /* Menyediakan 1 bagian untuk recent history dan menyesuaikan dengan ruang yang tersedia */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Kontainer untuk Low Stock */
+.low-stock-container {
+  flex: 1 1 35%; /* Menyediakan 1 bagian untuk Low Stock */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px; /* Memberikan jarak dengan elemen di atasnya */
+}
+
+/* Tabel untuk riwayat stok */
+.stock-history-table,
+.low-stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.stock-history-table th,
+.low-stock-table th {
+  background-color: #f4f4f4;
+  color: #333;
+  text-align: left;
+  padding: 8px;
+}
+
+.stock-history-table td,
+.low-stock-table td {
+  padding: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Warna baris untuk data stok */
+.stock-in-row {
+  background-color: #5bd15f !important; /* Hijau muda untuk Stock in */
+}
+
+.stock-history-row {
+  background-color: #e7423c !important; /* Merah muda untuk Stock history */
 }

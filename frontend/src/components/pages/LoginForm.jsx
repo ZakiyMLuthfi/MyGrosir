@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../reducers/userActions"; // Sesuaikan dengan path yang tepat
 import axios from "axios";
+import "../css/LoginForm.css";
 
 const LoginForm = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState("");
@@ -22,19 +23,12 @@ const LoginForm = ({ onLoginSuccess }) => {
       );
 
       const { token, role, userId } = response.data;
-      console.log(
-        `accessToken setelah dinyatakan sebagai respon token=${token} role=${role} userId=${userId}`
-      );
-      // Simpan token di localStorage dan Redux
-      console.log(typeof userId, "adalah tipe data userId");
-
       localStorage.setItem("accessToken", token);
       localStorage.setItem("accessRole", role);
       localStorage.setItem("loggedInUserId", userId);
 
       dispatch(setToken({ token, role, userId }));
 
-      // Panggil callback untuk menangani sukses login
       onLoginSuccess();
     } catch (error) {
       console.error("Login error:", error.message);
@@ -42,27 +36,40 @@ const LoginForm = ({ onLoginSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+    <div className="login-form-page">
+      <div className="overlay"></div>
+      <div className="wrapper-vertical">
+        <h1 className="welcome-message">Welcome to MyGrosir!</h1>
+        <div className="login-box-container">
+          <div className="login-container">
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label>Password:</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="forgot-password-link">
+                <a href="/forgot-password">Forgot password?</a>
+              </div>
+              <button type="submit">Login</button>
+            </form>
+          </div>
+        </div>
       </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
+    </div>
   );
 };
 

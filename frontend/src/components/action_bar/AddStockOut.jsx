@@ -11,7 +11,7 @@ import { getAuthHeader } from "../../utils/authService";
 import axios from "axios";
 import Select from "react-select";
 
-const AddStockOut = ({ onSubmit }) => {
+const AddStockOut = ({ onAdd }) => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -122,11 +122,9 @@ const AddStockOut = ({ onSubmit }) => {
         data,
         { headers }
       );
-
+      onAdd();
       console.log("Stock reduced successfully:", response.data);
-      onSubmit(data);
       handleClose();
-      await fetchData();
     } catch (error) {
       console.error("Error reducing stock in batch", error);
       if (error.response) {

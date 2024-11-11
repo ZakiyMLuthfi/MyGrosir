@@ -181,7 +181,7 @@ const StockOutPage = () => {
           <h1 className="mb-4">Stock-out List</h1>
           <TableAction
             type="stockOut"
-            onAdd={handleAddStockOut}
+            onAdd={fetchAndSetStockOuts}
             onSearch={handleSearch}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}

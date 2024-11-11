@@ -1,3 +1,4 @@
+// TableAction.jsx
 import React from "react";
 import AddProduct from "./action_bar/AddProduct";
 import AddSupplier from "./action_bar/AddSupplier";
@@ -39,7 +40,7 @@ const TableAction = ({
             <AddStockIn onSubmit={onAdd} style={{ marginRight: "1rem" }} />
           )}
           {type === "stockOut" && role === "admin" && (
-            <AddStockOut onSubmit={onAdd} style={{ marginRight: "1rem" }} />
+            <AddStockOut onAdd={onAdd} style={{ marginRight: "1rem" }} />
           )}
           {type === "user" &&
             (role === "superadmin" || role === "supervisor") && (

@@ -124,7 +124,7 @@ const StockInTable = ({
               Author
             </th>
           )}
-          {role === "admin" || role === "superadmin" ? <th>Detail</th> : null}
+          <th>Detail</th>
         </tr>
       </thead>
       <tbody>
@@ -144,29 +144,25 @@ const StockInTable = ({
               {role === "superadmin" && (
                 <td>{stockIn.Creator ? stockIn.Creator.username : "-"}</td>
               )}
-              {(role === "admin" || role === "superadmin") && (
-                <td>
-                  <div
-                    onClick={() => onDetailClick(stockIn)}
-                    style={{
-                      cursor: "pointer",
-                      color: "blue",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Article style={{ fontSize: "2rem" }} />
-                  </div>
-                </td>
-              )}
+              <td>
+                <div
+                  onClick={() => onDetailClick(stockIn)}
+                  style={{
+                    cursor: "pointer",
+                    color: "blue",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Article style={{ fontSize: "2rem" }} />
+                </div>
+              </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={role === "superadmin" ? 8 : 7}>
-              No Stock-in available
-            </td>
+            <td colSpan={8}>No Stock-in available</td>
           </tr>
         )}
       </tbody>

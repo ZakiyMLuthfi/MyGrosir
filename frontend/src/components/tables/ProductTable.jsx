@@ -101,7 +101,7 @@ const ProductTable = ({
                     marginRight: "4px",
                   }}
                 >
-                  <Article />
+                  <Article style={{ fontSize: "2rem", textAlign: "center" }} />
                 </span>
               </td>
 

@@ -155,7 +155,7 @@ const StockHistoryPage = () => {
         <p>Loading...</p>
       ) : (
         <div className="container mt-4">
-          <h1 className="mb-4">Stock History List</h1>
+          <h1 className="mb-4">Histories</h1>
           <TableAction
             onSearch={handleSearch}
             searchTerm={searchTerm}

@@ -97,17 +97,6 @@ const StockOutTable = ({
             ) : null}
             Status
           </th>
-          <th onClick={() => onSort("createdAt")} style={{ cursor: "pointer" }}>
-            {sortConfig.key === "createdAt" &&
-            sortConfig.direction === "ascending" ? (
-              <ArrowDropUp />
-            ) : null}
-            {sortConfig.key === "createdAt" &&
-            sortConfig.direction === "descending" ? (
-              <ArrowDropDown />
-            ) : null}
-            Entry date
-          </th>
           <th onClick={() => onSort("updatedAt")} style={{ cursor: "pointer" }}>
             {sortConfig.key === "updatedAt" &&
             sortConfig.direction === "ascending" ? (
@@ -149,7 +138,6 @@ const StockOutTable = ({
                   {stockOut.quantity_remaining === 0 ? "Empty" : "Ready"}
                 </span>
               </td>
-              <td>{formatDate(stockOut.createdAt)}</td>
               <td>{formatDate(stockOut.updatedAt)}</td>
               <td>{stockOut.Creator ? stockOut.Creator.username : "-"}</td>
               <td>

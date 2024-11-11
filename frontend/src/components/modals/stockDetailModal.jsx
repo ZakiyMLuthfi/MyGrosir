@@ -42,14 +42,6 @@ const StockDetailModal = ({
     return typeof value === "string" ? value.replace(search, replace) : value;
   };
 
-  const handleSaveChanges = () => {
-    if (formData.quantity_reduction > formData.quantity_remaining) {
-      alert("Reduction quantity cannot be greater than remaining quantity.");
-      return;
-    }
-    onUpdate(formData);
-  };
-
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
@@ -241,7 +233,7 @@ const StockDetailModal = ({
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Stock Price</Form.Label>
+                <Form.Label>Values</Form.Label>
                 <Form.Control
                   name="stock_price"
                   value={formData.stock_price || ""}

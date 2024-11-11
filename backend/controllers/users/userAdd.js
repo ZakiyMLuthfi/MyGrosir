@@ -15,8 +15,8 @@ const generateRandomPassword = (length = 8) => {
 
 const sendEmail = async (email, username, password) => {
   let transporter = nodemailer.createTransport({
-    service: "Zoho", // Nama layanan
-    host: "smtp.zoho.com", // Zoho SMTP server
+    service: "Zoho",
+    host: "smtp.zoho.com",
     port: 465, // Port untuk SSL
     secure: true, // Menggunakan SSL
     auth: {
