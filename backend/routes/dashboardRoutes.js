@@ -11,6 +11,7 @@ const {
 } = require("../controllers/dashboards/totalStocks");
 const {
   getSupervisorStockSummary,
+  getStockPerformance,
 } = require("../controllers/dashboards/spvDashboardData");
 
 router.get("/total-assets", getTotalAssets);
@@ -21,5 +22,6 @@ router.get("/stock-flow", getStockFlow);
 router.get("/recent-stock-history", getRecentStockHistory);
 router.get("/low-stock-notifications", getLowStockNotifications);
 router.get("/supervisor-stock-summary", getSupervisorStockSummary);
+router.get("/stock-performance", getStockPerformance);
 
 module.exports = router;

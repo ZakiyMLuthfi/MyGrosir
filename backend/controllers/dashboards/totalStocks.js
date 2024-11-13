@@ -50,65 +50,59 @@ const getTotalOutgoingItems = async (req, res) => {
 
 const getStockFlow = async (req, res) => {
   try {
-    // Ambil data pemasukan (stock in)
     const stockIns = await StockIn.findAll({
       attributes: [
-        [Sequelize.fn("DATE", Sequelize.col("createdAt")), "date"], // Pastikan format tanggal seragam
+        [Sequelize.fn("DATE", Sequelize.col("createdAt")), "date"],
         [Sequelize.col("quantity"), "quantity"],
       ],
-      order: [["createdAt", "ASC"]], // Pengurutan berdasarkan tanggal yang benar
+      order: [["createdAt", "ASC"]],
     });
 
     const stockOuts = await StockHistory.findAll({
       attributes: [
-        [Sequelize.fn("DATE", Sequelize.col("createdAt")), "date"], // Pastikan format tanggal seragam
+        [Sequelize.fn("DATE", Sequelize.col("createdAt")), "date"],
         [Sequelize.col("quantity"), "quantity"],
       ],
-      order: [["createdAt", "ASC"]], // Pengurutan berdasarkan tanggal yang benar
+      order: [["createdAt", "ASC"]],
     });
 
-    // Gabungkan data stock in dan stock out
-    const combinedData = [...stockIns, ...stockOuts]
-      .map((entry) => {
-        const { date, quantity } = entry.dataValues;
-        return {
-          date: new Date(date), // pastikan format date sebagai objek Date
-          quantity,
-          type: entry instanceof StockIn ? "in" : "out",
-        };
-      })
-      .sort((a, b) => a.date - b.date); // Urutkan berdasarkan tanggal
+    const combinedData = [
+      ...stockIns.map((entry) => ({
+        date: entry.dataValues.date,
+        quantity: entry.dataValues.quantity,
+        type: "in",
+      })),
+      ...stockOuts.map((entry) => ({
+        date: entry.dataValues.date,
+        quantity: entry.dataValues.quantity,
+        type: "out",
+      })),
+    ].sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    // Hitung stok kumulatif berdasarkan pemasukan dan pengeluaran
-    let totalRemaining = 0;
-    const stockFlowData = [];
+    const endDate = new Date();
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - 29);
 
-    // Tentukan rentang tanggal yang ingin Anda tampilkan
-    const startDate = new Date(); // Hari ini
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() - 7); // 7 hari ke belakang
-
-    // Membuat daftar tanggal dalam rentang waktu
     const dateList = [];
-    let currentDate = new Date(endDate);
-    while (currentDate <= startDate) {
-      dateList.push(new Date(currentDate));
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      dateList.push(currentDate.toISOString().split("T")[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // Perbarui data stock flow dengan tanggal yang tetap ada meskipun tanpa data
-    dateList.forEach((currentDate) => {
-      const formattedDate = currentDate.toISOString().split("T")[0]; // Format tanggal YYYY-MM-DD
-      const dataForDate = combinedData.find(
-        (entry) => entry.date.toISOString().split("T")[0] === formattedDate
+    let totalRemaining = 0;
+    const stockFlowData = [];
+
+    dateList.forEach((formattedDate) => {
+      const dataForDate = combinedData.filter(
+        (entry) => entry.date === formattedDate
       );
 
-      if (dataForDate) {
+      dataForDate.forEach((entry) => {
         totalRemaining +=
-          dataForDate.type === "in"
-            ? dataForDate.quantity
-            : -dataForDate.quantity;
-      }
+          entry.type === "in" ? entry.quantity : -entry.quantity;
+      });
+
       stockFlowData.push({
         date: formattedDate,
         totalRemaining,
@@ -117,10 +111,7 @@ const getStockFlow = async (req, res) => {
 
     res.json({ stockFlowData });
   } catch (error) {
-    console.error("Error fetching stock flow data", error.message || error);
-    res
-      .status(500)
-      .json({ error: error.message || "Error fetching stock flow data" });
+    res.status(500).json({ error: error.message });
   }
 };
 

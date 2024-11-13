@@ -31,9 +31,6 @@ function App() {
 
     if (savedToken && savedRole) {
       dispatch(setToken({ token: savedToken, role: savedRole })); // Set token di Redux state
-      console.log(
-        `Token dari localStorage berhasil di-set ke Redux: ${savedToken} & ${savedRole}`
-      );
     }
   }, [dispatch]);
 

@@ -190,7 +190,7 @@ const AddStockOut = ({ onAdd }) => {
                 value={productOptions.find(
                   (option) => option.value === formData.productId
                 )}
-                placeholder="Select Product"
+                placeholder="Select Product (required)"
                 isClearable
               />
             </Form.Group>
@@ -245,7 +245,7 @@ const AddStockOut = ({ onAdd }) => {
                   value={receiptCodeOptions.find(
                     (option) => option.value === formData.receipt_code
                   )}
-                  placeholder="Select Existing Receipt Code"
+                  placeholder="Select Existing Receipt Code (required)"
                   isClearable
                 />
               )}

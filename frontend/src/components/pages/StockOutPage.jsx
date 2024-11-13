@@ -158,10 +158,6 @@ const StockOutPage = () => {
     setSelectedStockOut(null);
   };
 
-  // const handleUpdateClick = () => {
-  //   setIsEditing(true);
-  // };
-
   const handleSaveChanges = async (updatedStockData) => {
     try {
       await updateStockOut(selectedStockOut.id, updatedStockData);

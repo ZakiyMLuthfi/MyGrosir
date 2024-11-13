@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ListGroup, Accordion } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -16,15 +16,28 @@ import "./Sidebar.css";
 
 const Sidebar = ({ isOpen }) => {
   const [openStocks, setOpenStocks] = useState(false);
+  const [username, setUsername] = useState("");
   const role = useSelector((state) => state.inventory.role);
+
   const toggleStocks = () => {
     setOpenStocks((prev) => !prev);
   };
 
   const upperRoles = ["superadmin", "supervisor"]; // Role yang dapat mengakses halaman Users
-
-  // Cek apakah role pengguna memiliki akses ke item tertentu
+  const isSuperAdmin = role === "superadmin";
+  const users = useSelector((state) => state.inventory.users || []);
   const canAccessUsers = upperRoles.includes(role);
+
+  // useEffect(() => {
+  //   // Ambil userId dari localStorage
+  //   const userId = Number(localStorage.getItem("loggedInUserId"));
+
+  //   const user = users.find((users) => users.id === userId);
+
+  //   if (user) {
+  //     setUsername(user.username);
+  //   }
+  // }, [users, role]);
 
   return (
     <div>
@@ -39,63 +52,72 @@ const Sidebar = ({ isOpen }) => {
           <DashboardIcon className="sidebar-icon" />
           {isOpen ? "Dashboard" : ""}
         </ListGroup.Item>
-        <ListGroup.Item
-          as={Link}
-          to="/products"
-          action
-          className="sidebar-item no-border"
-        >
-          <InventoryIcon className="sidebar-icon" />
-          {isOpen ? "Products" : ""}
-        </ListGroup.Item>
-        <ListGroup.Item
-          as={Link}
-          to="/suppliers"
-          action
-          className="sidebar-item no-border"
-        >
-          <PeopleAltIcon className="sidebar-icon" />
-          {isOpen ? "Suppliers" : ""}
-        </ListGroup.Item>
-        <Accordion>
-          <ListGroup.Item
-            action
-            className="sidebar-item accordion-toggle no-border"
-            onClick={toggleStocks}
-          >
-            <WarehouseIcon className="sidebar-icon" />
-            {isOpen ? "Stocks" : ""}
-            {isOpen && (openStocks ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
-          </ListGroup.Item>
-          <Accordion.Collapse in={openStocks}>
-            <ListGroup variant="flush">
+
+        {/* Hanya tampilkan item berikut jika role bukan superadmin */}
+        {!isSuperAdmin && (
+          <>
+            <ListGroup.Item
+              as={Link}
+              to="/products"
+              action
+              className="sidebar-item no-border"
+            >
+              <InventoryIcon className="sidebar-icon" />
+              {isOpen ? "Products" : ""}
+            </ListGroup.Item>
+            <ListGroup.Item
+              as={Link}
+              to="/suppliers"
+              action
+              className="sidebar-item no-border"
+            >
+              <PeopleAltIcon className="sidebar-icon" />
+              {isOpen ? "Suppliers" : ""}
+            </ListGroup.Item>
+            <Accordion>
               <ListGroup.Item
-                as={Link}
-                to="/stocks/stock-in"
-                className="sidebar-item no-border"
+                action
+                className="sidebar-item accordion-toggle no-border"
+                onClick={toggleStocks}
               >
-                <AssignmentIcon className="sidebar-icon" />
-                {isOpen ? "Stock-in" : ""}
+                <WarehouseIcon className="sidebar-icon" />
+                {isOpen ? "Stocks" : ""}
+                {isOpen &&
+                  (openStocks ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
               </ListGroup.Item>
-              <ListGroup.Item
-                as={Link}
-                to="/stocks/stock-out"
-                className="sidebar-item no-border"
-              >
-                <LocalShippingIcon className="sidebar-icon" />
-                {isOpen ? "Stock-out" : ""}
-              </ListGroup.Item>
-              <ListGroup.Item
-                as={Link}
-                to="/stocks/stock-history"
-                className="sidebar-item no-border"
-              >
-                <HistoryIcon className="sidebar-icon" />
-                {isOpen ? "Stock History" : ""}
-              </ListGroup.Item>
-            </ListGroup>
-          </Accordion.Collapse>
-        </Accordion>
+              <Accordion.Collapse in={openStocks}>
+                <ListGroup variant="flush">
+                  <ListGroup.Item
+                    as={Link}
+                    to="/stocks/stock-in"
+                    className="sidebar-item no-border"
+                  >
+                    <AssignmentIcon className="sidebar-icon" />
+                    {isOpen ? "Stock-in" : ""}
+                  </ListGroup.Item>
+                  <ListGroup.Item
+                    as={Link}
+                    to="/stocks/stock-out"
+                    className="sidebar-item no-border"
+                  >
+                    <LocalShippingIcon className="sidebar-icon" />
+                    {isOpen ? "Stock-out" : ""}
+                  </ListGroup.Item>
+                  <ListGroup.Item
+                    as={Link}
+                    to="/stocks/stock-history"
+                    className="sidebar-item no-border"
+                  >
+                    <HistoryIcon className="sidebar-icon" />
+                    {isOpen ? "Histories" : ""}
+                  </ListGroup.Item>
+                </ListGroup>
+              </Accordion.Collapse>
+            </Accordion>
+          </>
+        )}
+
+        {/* Tampilkan kolom Users hanya jika pengguna memiliki akses */}
         {canAccessUsers && (
           <ListGroup.Item
             as={Link}
@@ -108,6 +130,7 @@ const Sidebar = ({ isOpen }) => {
           </ListGroup.Item>
         )}
       </ListGroup>
+      {/* <div className="p-3 sidebar-username">Logged in as {username}</div> */}
     </div>
   );
 };

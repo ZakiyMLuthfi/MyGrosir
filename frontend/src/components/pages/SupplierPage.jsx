@@ -15,6 +15,7 @@ import SupplierDetailModal from "../modals/supplierDetailModal";
 import SupplierTable from "../tables/SupplierTable";
 import TableAction from "../TableAction";
 import PaginationComponent from "../PaginationComponent";
+import ErrorToast from "../../utils/ErrorToast";
 import "../css/Table.css";
 
 const SupplierPage = () => {
@@ -34,6 +35,7 @@ const SupplierPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSearch = useCallback(
     debounce(async (keyword) => {
@@ -117,19 +119,6 @@ const SupplierPage = () => {
     }
   }, [role, currentPage, itemsPerPage]);
 
-  // const handleDeleteClick = async (supplier) => {
-  //   const confirmDelete = window.confirm(
-  //     `Are you sure you want to delete ${supplier.supplier_name}?`
-  //   );
-  //   if (confirmDelete) {
-  //     try {
-  //       await deleteSupplierService(supplier.id, dispatch);
-  //     } catch (err) {
-  //       console.error("Failed to delete supplier:", err);
-  //     }
-  //   }
-  // };
-
   const handleToggleDelete = async (supplier) => {
     if (supplier.isDeleted) {
       await restoreSupplierService(supplier.id, dispatch);
@@ -161,12 +150,24 @@ const SupplierPage = () => {
   };
 
   const handleAddSupplier = async (formData) => {
+    if (
+      !formData.supplier_name.trim() ||
+      !formData.supplier_address ||
+      !formData.supplier_contact_name.trim() ||
+      !formData.supplier_contact ||
+      !formData.goods_type
+    ) {
+      setErrorMessage("Please fill in all required fields."); // Set error message
+      return;
+    }
+
     try {
       await addSupplierService(formData, dispatch);
       setShowModal(false);
       await fetchAndSetSuppliers();
     } catch (err) {
       console.error("Error adding supplier", err);
+      setErrorMessage("Failed to add product. Please try again.");
     }
   };
 
@@ -234,6 +235,13 @@ const SupplierPage = () => {
             role={role}
           />
         </div>
+      )}
+
+      {errorMessage && (
+        <ErrorToast
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
       )}
     </>
   );

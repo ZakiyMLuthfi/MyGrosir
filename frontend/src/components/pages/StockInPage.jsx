@@ -8,7 +8,7 @@ import {
 import { fetchUsers } from "../../services/userServices";
 import { setUsers } from "../../reducers/userActions";
 import { setToken } from "../../reducers/userActions";
-
+import ErrorToast from "../../utils/ErrorToast";
 import debounce from "lodash.debounce";
 import StockDetailModal from "../modals/stockDetailModal";
 import StockInTable from "../tables/StockInTable";
@@ -30,6 +30,7 @@ const StockInPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSearch = useCallback(
     debounce(async (keyword) => {
@@ -128,12 +129,22 @@ const StockInPage = () => {
   };
 
   const handleAddStockIn = async (formData) => {
+    if (
+      !formData.supplierId ||
+      !formData.productId ||
+      !formData.quantity ||
+      !formData.purchase_price
+    ) {
+      setErrorMessage("Please fill in all required fields."); // Set error message
+      return;
+    }
     try {
       await addStockInService(formData, dispatch);
       setShowModal(false);
       await fetchAndSetStockIns();
     } catch (err) {
       console.error("Error adding stock-in", err);
+      setErrorMessage("Please fill in all required fields.");
     }
   };
 
@@ -185,6 +196,12 @@ const StockInPage = () => {
             role={role}
           />
         </div>
+      )}
+      {errorMessage && (
+        <ErrorToast
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
       )}
     </>
   );

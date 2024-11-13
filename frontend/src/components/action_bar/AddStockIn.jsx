@@ -129,7 +129,7 @@ const AddStockIn = ({ onSubmit }) => {
               <Form.Label>Quantity</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter quantity"
+                placeholder="Enter quantity (required)"
                 name="quantity"
                 value={formData.quantity}
                 onChange={handleInputChange}
@@ -142,7 +142,7 @@ const AddStockIn = ({ onSubmit }) => {
               <Form.Label>Purchase Price (1 pkg)</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter purchase price"
+                placeholder="Enter purchase price (required)"
                 name="purchase_price"
                 value={formData.purchase_price}
                 onChange={handleInputChange}

@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Text,
 } from "recharts";
 import axios from "axios";
 
@@ -15,7 +16,6 @@ const SupervisorStockSummary = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // Mengambil data total stok masuk dan keluar
     const fetchSupervisorStockSummary = async () => {
       try {
         const response = await axios.get(
@@ -25,15 +25,17 @@ const SupervisorStockSummary = () => {
         // Data yang diterima dari backend
         const formattedData = [
           {
-            name: "Total Stock In", // Label untuk Stok Masuk
-            value: response.data.stockIn, // Jumlah stok yang masuk
+            name: "Total Stock In",
+            total: response.data.stockIn,
+            percentage: response.data.stockInPercentage,
           },
           {
-            name: "Total Stock Out", // Label untuk Stok Keluar
-            value: response.data.stockOut, // Jumlah stok yang keluar
+            name: "Total Stock Out",
+            total: response.data.stockOut,
+            percentage: response.data.stockOutPercentage,
           },
         ];
-        setData(formattedData); // Menyimpan data ke state
+        setData(formattedData);
       } catch (error) {
         console.error("Error fetching stock-in and stock-out data:", error);
       }
@@ -44,15 +46,35 @@ const SupervisorStockSummary = () => {
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
+      <BarChart
+        data={data}
+        margin={{ top: 30, right: 30, left: 20, bottom: 5 }} // Tambahkan margin atas
+      >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />{" "}
-        {/* Label sumbu X, Total Stock In / Stock Out */}
-        <YAxis /> {/* Total jumlah stok pada sumbu Y */}
-        <Tooltip /> {/* Menampilkan informasi saat hover */}
-        <Legend /> {/* Menampilkan legenda */}
-        <Bar dataKey="value" fill="#82ca9d" />{" "}
-        {/* Grafik batang dengan nilai */}
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar
+          dataKey="total"
+          fill="#82ca9d"
+          label={({ x, y, width, index }) => {
+            // Menampilkan persentase dari data
+            const percentage = data[index]?.percentage;
+            const offset = 10;
+            return (
+              <Text
+                x={x + width / 2}
+                y={y - offset}
+                fill="#000"
+                textAnchor="middle"
+                fontSize={12}
+              >
+                {`${percentage}%`}
+              </Text>
+            );
+          }}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

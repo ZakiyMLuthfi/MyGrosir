@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import moment from "moment-timezone";
+import formatToRupiah from "../../utils/RupiahConverter";
 
 const StockDetailModal = ({
   show,
@@ -126,12 +127,12 @@ const StockDetailModal = ({
                   <Form.Control
                     name="purchase_price"
                     disabled
-                    value={formData.purchase_price || ""}
+                    value={formatToRupiah(formData.purchase_price) || ""}
                   />
                   <Form.Control
                     name="total_purchase_price"
                     disabled
-                    value={formData.total_purchase_price || ""}
+                    value={formatToRupiah(formData.total_purchase_price) || ""}
                   />
                 </div>
               </Form.Group>
@@ -178,32 +179,7 @@ const StockDetailModal = ({
                   />
                 </div>
               </Form.Group>
-              {/* <Form.Group>
-                <Form.Label>
-                  Enter amount of stocks & Grosir destination
-                </Form.Label>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <Form.Control
-                    name="quantity_reduction"
-                    type="number"
-                    value={formData.quantity_reduction || ""}
-                    disabled={!isEditing}
-                    onChange={handleInputChange}
-                  />
-                  <Form.Select
-                    name="grosir_choice"
-                    disabled={!isEditing}
-                    value={formData.grosir_choice || ""}
-                    onChange={handleInputChange}
-                    aria-label="Destination"
-                  >
-                    <option>-Select Grosir-</option>
-                    <option value="Grosir A">Grosir A</option>
-                    <option value="Grosir B">Grosir B</option>
-                    <option value="Grosir C">Grosir C</option>
-                  </Form.Select>
-                </div>
-              </Form.Group> */}
+
               <Form.Group>
                 <Form.Label>Updated at / Updated by: </Form.Label>
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -236,7 +212,7 @@ const StockDetailModal = ({
                 <Form.Label>Values</Form.Label>
                 <Form.Control
                   name="stock_price"
-                  value={formData.stock_price || ""}
+                  value={formatToRupiah(formData.stock_price) || ""}
                   disabled
                 />
               </Form.Group>

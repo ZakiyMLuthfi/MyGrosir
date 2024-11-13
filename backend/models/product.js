@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       weight_type: {
-        type: DataTypes.ENUM("kilogram", "gram", "liter", "ml"),
+        type: DataTypes.ENUM("kilogram", "gram", "liter", "mililiter"),
         allowNull: false,
       },
       weight_per_pkg: {

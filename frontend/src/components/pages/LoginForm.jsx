@@ -62,7 +62,7 @@ const LoginForm = ({ onLoginSuccess }) => {
                 />
               </div>
               <div className="forgot-password-link">
-                <a href="/forgot-password">Forgot password?</a>
+                <a href="/forgot-password">Change/forgot password</a>
               </div>
               <button type="submit">Login</button>
             </form>

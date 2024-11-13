@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import SupervisorStockSummary from "../../utils/SupervisorStockSummary";
+import SupervisorBoxes from "../../utils/SupervisorBoxes";
 import {
   setTotalAssets,
   setTotalItems,
@@ -21,7 +22,8 @@ import {
 } from "../../reducers/dashboardActions";
 import { useDispatch, useSelector } from "react-redux";
 import formatDate from "../../utils/converter";
-import ScrollToBottomButton from "./ScrollToBottomButton";
+import ScrollToBottomButton from "./ScrollToBottomButton ";
+import formatToRupiah from "../../utils/RupiahConverter";
 import "../css/DashboardPage.css";
 
 const DashboardPage = () => {
@@ -65,7 +67,7 @@ const DashboardPage = () => {
         break;
       case "last7Days":
         startDate = new Date(today);
-        startDate.setDate(today.getDate() - 7); // 7 hari ke belakang
+        startDate.setDate(today.getDate() - 6); // 7 hari ke belakang
         break;
       case "last14Days":
         startDate = new Date(today);
@@ -73,7 +75,7 @@ const DashboardPage = () => {
         break;
       case "last30Days":
         startDate = new Date(today);
-        startDate.setDate(today.getDate() - 30); // 30 hari ke belakang
+        startDate.setDate(today.getDate() - 29); // 30 hari ke belakang
         break;
       case "monthly":
         startDate = new Date(today.getFullYear(), today.getMonth(), 1); // Awal bulan ini
@@ -220,10 +222,13 @@ const DashboardPage = () => {
             </div>
           </>
         ) : (
-          <div className="stat-box total-assets">
-            <h2>Total Assets</h2>
-            <p>{totalAssets}</p>
-          </div>
+          <>
+            <div className="stat-box total-assets">
+              <h6>Total Assets</h6>
+              <h1>{formatToRupiah(totalAssets)}</h1>
+            </div>
+            <SupervisorBoxes />
+          </>
         )}
       </div>
 
@@ -233,7 +238,11 @@ const DashboardPage = () => {
           {role === "admin" || (role === "superadmin" && !isSuperAdminView) ? (
             <>
               <h2>Trend Stocks</h2>
-              <select value={selectedRange} onChange={handleRangeChange}>
+              <select
+                className="trend-stocks-filter"
+                value={selectedRange}
+                onChange={handleRangeChange}
+              >
                 <option value="thisWeek">This Week</option>
                 <option value="last7Days">Last 7 Days</option>
                 <option value="last14Days">Last 14 Days</option>

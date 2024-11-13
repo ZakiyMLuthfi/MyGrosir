@@ -8,6 +8,7 @@ import {
   deleteProductService,
   restoreProductService,
 } from "../../services/productService";
+import ErrorToast from "../../utils/ErrorToast";
 import { fetchUsers } from "../../services/userServices";
 import { setToken } from "../../reducers/userActions";
 import debounce from "lodash.debounce";
@@ -36,6 +37,7 @@ const ProductPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSearch = useCallback(
     debounce(async (keyword) => {
@@ -156,12 +158,23 @@ const ProductPage = () => {
   };
 
   const handleAddProduct = async (formData) => {
+    if (
+      !formData.product_name.trim() ||
+      !formData.package_quantity ||
+      !formData.weight_type.trim() ||
+      !formData.weight_per_pkg
+    ) {
+      setErrorMessage("Please fill in all required fields."); // Set error message
+      return;
+    }
+
     try {
       await addProductService(formData, dispatch);
       setShowModal(false);
       await fetchAndSetProducts();
     } catch (err) {
       console.error("Error adding product", err);
+      setErrorMessage("Failed to add product. Please try again.");
     }
   };
 
@@ -234,6 +247,13 @@ const ProductPage = () => {
             role={role}
           />
         </div>
+      )}
+
+      {errorMessage && (
+        <ErrorToast
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
       )}
     </>
   );

@@ -59,7 +59,7 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
 
   return (
     <div>
-      <Notifications style={{ fontSize: "42px", marginRight: "8px" }} />
+      {/* <Notifications style={{ fontSize: "42px", marginRight: "8px" }} /> */}
       <AccountCircle
         style={{ cursor: "pointer", fontSize: 40 }}
         onClick={handleProfileMenuOpen}
@@ -80,7 +80,7 @@ const ProfileIcon = ({ onLogoutSuccess }) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+        {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>

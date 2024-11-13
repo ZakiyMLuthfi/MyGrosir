@@ -1,0 +1,59 @@
+/* Tambahkan SupervisorBoxes ke gaya yang sama */
+.supervisor-boxes {
+  display: flex;
+  gap: 20px;
+  flex: 1; /* Agar kotak menyesuaikan ruang yang tersedia */
+}
+
+/* Kotak Supervisor, mirip dengan stat-box */
+.supervisor-box {
+  flex: 1;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  height: 120px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.most-delivered {
+  background-color: #9c27b0; /* Warna dasar yang disediakan */
+  flex: 1;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  height: 120px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan kotak */
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.avg-stock-duration {
+  background-color: #ab47bc; /* Sedikit lebih terang */
+  flex: 1;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  height: 120px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan kotak */
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.rarely-sent {
+  background-color: #7b1fa2; /* Sedikit lebih gelap */
+  flex: 1;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  height: 120px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan kotak */
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.supervisor-box:hover {
+  transform: scale(1.02); /* Efek hover ringan */
+}

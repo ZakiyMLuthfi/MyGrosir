@@ -17,6 +17,12 @@
   font-weight: bold;
 }
 
+.sidebar-username {
+  position: absolute;
+  bottom: 0;
+  width: 100%; /* Pastikan elemen mengisi lebar penuh sidebar */
+  text-align: center; /* Pusatkan teks jika diperlukan */
+}
 .sidebar-item {
   padding: 12px 20px;
   border-radius: 5px;

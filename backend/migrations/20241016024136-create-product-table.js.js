@@ -32,7 +32,7 @@ module.exports = {
         allowNull: false,
       },
       weight_type: {
-        type: Sequelize.ENUM("kilogram", "gram", "liter", "ml"),
+        type: Sequelize.ENUM("kilogram", "gram", "liter", "mililiter"),
         allowNull: false,
       },
       weight_per_pkg: {
